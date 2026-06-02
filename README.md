@@ -1,43 +1,56 @@
-# Astro Starter Kit: Minimal
+# Kharisbuilders Church Website
+
+Full-stack church website — fast public site plus a staff-maintainable admin — built on
+Astro + Cloudflare. Design and phased implementation plans live in `docs/superpowers/`.
+
+## Stack
+
+Astro 6 (SSR, Cloudflare adapter) · React islands (admin, later phases) · Tailwind CSS v4 ·
+Cloudflare **D1** (database) · **R2** (media) · Cloudflare Access (admin auth) · Paystack (giving).
+
+Two theme-switchable palettes — `sacred` (midnight/gold) and `purple` — driven by the
+`theme` cookie and the `data-theme` attribute. Runtime tokens use a `--kb-*` prefix and are
+mapped into Tailwind via `@theme inline` in `src/styles/global.css`.
+
+## Develop
+
+| Command | Action |
+| :------ | :----- |
+| `npm install` | Install dependencies |
+| `npm run dev` | Local dev server at `localhost:4321` (Cloudflare platform proxy enabled) |
+| `npm test` | Unit tests (Vitest) |
+| `npm run test:watch` | Unit tests in watch mode |
+| `npm run build` | Production build to `./dist/` |
+| `npm run preview` | Preview the production build locally |
+| `npm run generate-types` | Regenerate `worker-configuration.d.ts` from `wrangler.jsonc` |
+| `npm run deploy` | Build and deploy the Worker (`wrangler deploy`) |
+
+## Cloudflare setup
+
+Bindings are declared in `wrangler.jsonc`: `DB` (D1) and `MEDIA` (R2). One-time provisioning
+(requires `wrangler login`):
 
 ```sh
-npm create astro@latest -- --template minimal
+wrangler d1 create kharisbuilders      # paste the printed database_id into wrangler.jsonc
+wrangler r2 bucket create kharisbuilders-media
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Local secrets go in `.dev.vars` (see `.dev.vars.example`); production secrets via
+`wrangler secret put <NAME>` or the dashboard.
 
-## 🚀 Project Structure
+Deployment connects to GitHub (`ghwmelite-dotcom/kharisbuilders`) via Cloudflare's
+Workers & Pages → Connect to Git: build command `npm run build`, output `dist`.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Project layout
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+src/
+  components/   shared UI (Nav, Footer, Button, Card, Icon)
+  layouts/      PublicLayout (sets data-theme, wraps Nav + Footer)
+  lib/          theme.ts, env.ts (Cloudflare bindings accessor), cn.ts
+  pages/        public routes (admin + API added in later phases)
+  styles/       tokens.css (both palettes), global.css (Tailwind entry)
+tests/          Vitest unit tests
+db/migrations/  D1 migrations (later phases)
+docs/superpowers/  design spec + phased implementation plans
 ```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
