@@ -7,7 +7,12 @@ export interface TestDb {
   dispose: () => Promise<void>;
 }
 
-/** Split a .sql file into individual statements (strips `--` line comments). */
+/**
+ * Split a .sql file into individual statements (strips `--` line comments).
+ * NOTE: naive — splits on every `;` and strips every `--`. Safe for the current
+ * migrations (no `;`/`--` inside string literals). If a future migration adds a
+ * trigger body, CHECK with a string literal, or similar, replace with a quote-aware splitter.
+ */
 function splitStatements(sql: string): string[] {
   return sql
     .replace(/--[^\n]*/g, '')
