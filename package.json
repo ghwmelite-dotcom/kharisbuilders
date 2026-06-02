@@ -10,7 +10,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "generate-types": "wrangler types"
+    "generate-types": "wrangler types",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "deploy": "astro build && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.6.1",
@@ -27,6 +30,7 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.0",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "^4.3.0",
+    "vitest": "^4.1.8"
   }
 }
