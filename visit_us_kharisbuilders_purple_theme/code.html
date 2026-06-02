@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "primary-container": "#4d3b5c",
+                "surface-dim": "#e0d7e1",
+                "surface-bright": "#fff7fe",
+                "error": "#ba1a1a",
+                "on-secondary-fixed": "#261239",
+                "outline-variant": "#ccc4cd",
+                "surface-tint": "#6a577a",
+                "on-error-container": "#93000a",
+                "tertiary-fixed-dim": "#c8c5cc",
+                "on-secondary-fixed-variant": "#533e68",
+                "on-background": "#1e1a21",
+                "error-container": "#ffdad6",
+                "secondary-fixed": "#f0dbff",
+                "secondary-container": "#e6cafd",
+                "primary-fixed": "#f1daff",
+                "on-surface": "#1e1a21",
+                "surface": "#fff7fe",
+                "surface-variant": "#e9e0ea",
+                "on-tertiary-fixed-variant": "#47464c",
+                "on-surface-variant": "#4a454d",
+                "surface-container": "#f4ebf5",
+                "on-secondary": "#ffffff",
+                "on-primary": "#ffffff",
+                "inverse-on-surface": "#f7eef8",
+                "on-secondary-container": "#69527e",
+                "on-primary-container": "#bda6ce",
+                "on-tertiary-fixed": "#1c1b20",
+                "inverse-primary": "#d6bee6",
+                "tertiary": "#2d2c31",
+                "primary-fixed-dim": "#d6bee6",
+                "on-primary-fixed-variant": "#523f61",
+                "on-primary-fixed": "#241433",
+                "surface-container-high": "#efe5f0",
+                "outline": "#7b757d",
+                "background": "#fff7fe",
+                "on-error": "#ffffff",
+                "secondary": "#6c5581",
+                "surface-container-low": "#faf1fb",
+                "surface-container-lowest": "#ffffff",
+                "primary": "#362545",
+                "on-tertiary-container": "#b1aeb5",
+                "surface-container-highest": "#e9e0ea",
+                "inverse-surface": "#332f36",
+                "tertiary-container": "#434247",
+                "tertiary-fixed": "#e5e1e8",
+                "on-tertiary": "#ffffff",
+                "secondary-fixed-dim": "#d8bcee",
+                "heritage-gold": "#8C734B"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "margin-mobile": "20px",
+                "margin-desktop": "64px",
+                "gutter": "24px",
+                "container-max": "1280px",
+                "unit": "8px"
+            },
+            "fontFamily": {
+                "body-lg": ["Manrope"],
+                "label-sm": ["Manrope"],
+                "headline-lg": ["Playfair Display"],
+                "headline-lg-mobile": ["Playfair Display"],
+                "display": ["Playfair Display"],
+                "body-md": ["Manrope"],
+                "headline-md": ["Playfair Display"]
+            },
+            "fontSize": {
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600"}],
+                "headline-lg": ["48px", {"lineHeight": "56px", "fontWeight": "600"}],
+                "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                "display": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .vellum-glass {
+            backdrop-filter: blur(12px);
+            background-color: rgba(255, 247, 254, 0.8);
+        }
+        .architectural-shadow {
+            box-shadow: 0 10px 30px -10px rgba(54, 37, 69, 0.12);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-container/30">
+<!-- TopNavBar -->
+<header class="bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky border-b border-primary/10 shadow-sm z-50">
+<div class="flex justify-between items-center px-margin-desktop w-full max-w-container-max mx-auto h-20">
+<div class="font-display text-headline-md text-primary">Kharisbuilders</div>
+<nav class="hidden md:flex items-center space-x-12">
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Home</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">About</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Ministries</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-primary font-bold border-b-2 border-heritage-gold pb-1 transition-colors duration-300" href="#">Visit</a>
+</nav>
+<button class="bg-primary text-on-primary font-label-sm px-6 py-3 uppercase tracking-widest border-b-2 border-transparent hover:border-heritage-gold transition-all duration-300 scale-95 active:scale-90">
+            New Here?
+        </button>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative h-[614px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 bg-primary/40 z-10"></div>
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A cinematic, wide-angle interior shot of a modern architectural sanctuary with soaring ceilings and light streaming through high windows. The atmosphere is serene and sacred, reflecting a minimalist aesthetic with deep purple shadows and heritage gold accents. The lighting is soft and ethereal, creating a sense of profound peace and spiritual weight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRq72oFlNvMf6RbVTzQRIYrSVn9h5iu_qQy_dnl8h0pC5cLs5XL3CKgYstzlZgXEnghMIGbNB3uG5vN8El3aEYEzQRvLvtJpabdHigyWpc75LbxeDlO63qOWf9ScYosscuZk5z5InZzq1NJbnSZFLUHWlQaxb31cj4_txXXFn3JZyJ0pJDAVSjSZ0uZWJeCXQ90tPE23LyhQK9Y0OgIWQVhEmMi4FsHWmQh7CkxjryqHGaTKj-uFXOphHCjYiimi_itj5kZTMBX11Q"/>
+<div class="relative z-20 text-center text-white px-margin-mobile">
+<h1 class="font-display text-headline-lg-mobile md:text-display mb-4">A Place to Belong</h1>
+<p class="font-body-lg text-body-lg max-w-2xl mx-auto opacity-90">Experience the intersection of tradition and transformation. We can't wait to welcome you home.</p>
+</div>
+</section>
+<!-- Service Times & CTA -->
+<section class="py-24 px-margin-desktop max-w-container-max mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+<div class="lg:col-span-7">
+<h2 class="font-headline-lg text-headline-lg mb-12 flex items-center gap-4">
+<span class="w-12 h-px bg-heritage-gold"></span>
+                    Service Times
+                </h2>
+<div class="space-y-6">
+<div class="flex justify-between items-center py-6 border-b border-heritage-gold/20">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Sunday Morning</h3>
+<p class="font-body-md text-on-surface-variant">Main Auditorium • Worship &amp; Word</p>
+</div>
+<div class="text-right">
+<span class="font-display text-headline-md text-heritage-gold block">09:00 AM</span>
+<span class="font-label-sm uppercase text-on-surface-variant">Traditional</span>
+</div>
+</div>
+<div class="flex justify-between items-center py-6 border-b border-heritage-gold/20">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Sunday Evening</h3>
+<p class="font-body-md text-on-surface-variant">Atmosphere of Grace • Contemporary</p>
+</div>
+<div class="text-right">
+<span class="font-display text-headline-md text-heritage-gold block">05:30 PM</span>
+<span class="font-label-sm uppercase text-on-surface-variant">Modern</span>
+</div>
+</div>
+<div class="flex justify-between items-center py-6">
+<div>
+<h3 class="font-headline-md text-headline-md text-primary">Midweek Communion</h3>
+<p class="font-body-md text-on-surface-variant">Chapel • Every Wednesday</p>
+</div>
+<div class="text-right">
+<span class="font-display text-headline-md text-heritage-gold block">07:00 PM</span>
+<span class="font-label-sm uppercase text-on-surface-variant">Liturgical</span>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5 bg-surface-container p-12 architectural-shadow">
+<div class="space-y-8">
+<div>
+<span class="font-label-sm uppercase tracking-widest text-heritage-gold block mb-2">First Time?</span>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-4">Plan Your Visit</h2>
+<p class="font-body-md text-on-surface-variant mb-8">Let us know you're coming so we can have a special welcome pack ready and help you find your way.</p>
+</div>
+<form class="space-y-6">
+<div class="relative">
+<label class="block font-label-sm uppercase text-on-surface-variant mb-1">Full Name</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-primary transition-colors py-2 px-0" type="text"/>
+</div>
+<div class="relative">
+<label class="block font-label-sm uppercase text-on-surface-variant mb-1">Email Address</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-primary transition-colors py-2 px-0" type="email"/>
+</div>
+<div class="relative">
+<label class="block font-label-sm uppercase text-on-surface-variant mb-1">I'm coming on...</label>
+<select class="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-primary transition-colors py-2 px-0">
+<option>Sunday 09:00 AM</option>
+<option>Sunday 05:30 PM</option>
+<option>Wednesday 07:00 PM</option>
+</select>
+</div>
+<button class="w-full bg-primary text-on-primary font-label-sm py-4 uppercase tracking-widest border-b-2 border-transparent hover:border-heritage-gold transition-all" type="submit">
+                            Confirm Attendance
+                        </button>
+</form>
+</div>
+</div>
+</div>
+</section>
+<!-- Location Section -->
+<section class="py-24 bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+<div class="order-2 md:order-1">
+<div class="h-[500px] bg-surface-dim relative overflow-hidden architectural-shadow">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="text-center">
+<span class="material-symbols-outlined text-heritage-gold text-5xl mb-4">location_on</span>
+<p class="font-label-sm uppercase text-on-surface-variant">Interactive Map Loading...</p>
+</div>
+</div>
+<!-- Mock Map Visual -->
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, #362545 1px, transparent 0); background-size: 24px 24px;"></div>
+</div>
+</div>
+<div class="order-1 md:order-2 space-y-8">
+<h2 class="font-headline-lg text-headline-lg text-primary">Find Us</h2>
+<div class="space-y-6">
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-heritage-gold">apartment</span>
+<div>
+<h4 class="font-label-sm uppercase text-primary mb-1">Our Address</h4>
+<p class="font-body-md text-on-surface-variant">12 Cathedral Way, West End<br/>London, SW1E 5RS</p>
+</div>
+</div>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-heritage-gold">directions_car</span>
+<div>
+<h4 class="font-label-sm uppercase text-primary mb-1">Parking</h4>
+<p class="font-body-md text-on-surface-variant">Free on-site parking available in the North Lot. Valet service for elderly visitors.</p>
+</div>
+</div>
+<div class="pt-8">
+<a class="inline-flex items-center gap-4 font-label-sm uppercase text-primary border-b border-heritage-gold pb-1 group" href="#">
+                                Get Directions via Google Maps
+                                <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- What to Expect Section (Bento Style) -->
+<section class="py-32 px-margin-desktop max-w-container-max mx-auto">
+<div class="text-center mb-20">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">What to Expect</h2>
+<div class="w-24 h-px bg-heritage-gold mx-auto"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Question 1 -->
+<div class="md:col-span-2 bg-white p-12 architectural-shadow border-t-2 border-heritage-gold">
+<span class="material-symbols-outlined text-heritage-gold mb-6 text-4xl">checkroom</span>
+<h3 class="font-headline-md text-headline-md text-primary mb-4">What should I wear?</h3>
+<p class="font-body-md text-on-surface-variant leading-relaxed">At Kharisbuilders, we value your presence more than your attire. You’ll find some people in suits and others in jeans and t-shirts. Wear whatever makes you feel comfortable and ready to connect with the community.</p>
+</div>
+<!-- Question 2 -->
+<div class="bg-primary p-12 architectural-shadow text-on-primary">
+<span class="material-symbols-outlined text-secondary-fixed mb-6 text-4xl">child_care</span>
+<h3 class="font-headline-md text-headline-md mb-4">Kids?</h3>
+<p class="font-body-md opacity-80 leading-relaxed">Our 'Kharis Kids' program offers a safe, fun, and spiritually enriching environment for ages 2–11 during the 09:00 AM service.</p>
+</div>
+<!-- Question 3 -->
+<div class="bg-surface-container-high p-12 architectural-shadow">
+<span class="material-symbols-outlined text-primary mb-6 text-4xl">history_edu</span>
+<h3 class="font-headline-md text-headline-md text-primary mb-4">The Service?</h3>
+<p class="font-body-md text-on-surface-variant leading-relaxed">Services typically last 75 minutes. They include soulful music, communal prayer, and a message that is both ancient in truth and modern in application.</p>
+</div>
+<!-- Question 4 -->
+<div class="md:col-span-2 relative min-h-[300px] overflow-hidden group">
+<img class="absolute inset-0 w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" data-alt="A warm, candid photograph of diverse community members sharing coffee and conversation in a brightly lit, modern lounge area. The space features mid-century modern furniture, soft champagne tones, and heritage gold details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEWFj9hi3_VlL5MdoRKFWHbShp5WnsiKH1sJYm50e9eohqaFiDqny-nZsxiC9guipPLXB_BHh5pZsytDzprMCGwd6u_u9POEbz70Ix06mgsOi0XVccAKSVo7PWpcO7NK7OAkSlhyTa13gQ9wXg2AWiPS2ELbs4QwlrrZtGffp4lbPwqWlkt7W32SnrtXysVW86j4LXJreCgJnT_LXHCL1uu0vGBYNjKy4_3CD3s6e0xkLcjOxsTEidBJr6ywCLAhXB6yAk5GzJpXfB"/>
+<div class="absolute inset-0 bg-primary/60 flex items-end p-12">
+<div class="text-white">
+<h3 class="font-headline-md text-headline-md mb-2">Afterward</h3>
+<p class="font-body-md opacity-90 max-w-md">Join us in the Glass Atrium for artisanal coffee and a chance to meet our leadership team.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-primary py-16 border-t border-heritage-gold/20">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="md:col-span-2">
+<div class="font-display text-headline-md text-heritage-gold mb-6">Kharisbuilders</div>
+<p class="font-body-md text-on-primary/70 max-w-xs mb-8">
+                Building lives through grace, shaping destinies through faith. Join our architectural journey of the soul.
+            </p>
+</div>
+<div>
+<h4 class="font-label-sm text-on-primary uppercase tracking-widest mb-6">Connect</h4>
+<ul class="space-y-4">
+<li><a class="font-body-md text-on-primary/70 hover:text-heritage-gold transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="font-body-md text-on-primary/70 hover:text-heritage-gold transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-sm text-on-primary uppercase tracking-widest mb-6">Support</h4>
+<ul class="space-y-4">
+<li><a class="font-body-md text-on-primary/70 hover:text-heritage-gold transition-colors" href="#">Give</a></li>
+<li><a class="font-body-md text-on-primary/70 hover:text-heritage-gold transition-colors" href="#">Careers</a></li>
+</ul>
+</div>
+</div>
+<div class="mt-16 pt-8 border-t border-heritage-gold/10 px-margin-desktop max-w-container-max mx-auto text-center">
+<p class="font-body-md text-on-primary/50">© 2024 Kharisbuilders. Building Lives, Shaping Destinies.</p>
+</div>
+</footer>
+<!-- Mobile Navigation Shell -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-surface/90 backdrop-blur-lg border-t border-primary/10 flex justify-around items-center py-4 px-6 z-50">
+<span class="material-symbols-outlined text-on-surface-variant">home</span>
+<span class="material-symbols-outlined text-heritage-gold" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="material-symbols-outlined text-on-surface-variant">groups</span>
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<script>
+    // Subtle scroll effects
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('header');
+        if (window.scrollY > 20) {
+            header.classList.add('shadow-lg');
+        } else {
+            header.classList.remove('shadow-lg');
+        }
+    });
+
+    // Form submission micro-interaction
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = form.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'PREPARING FOR YOU...';
+            btn.style.opacity = '0.7';
+            setTimeout(() => {
+                btn.innerText = 'WE\'LL SEE YOU SOON';
+                btn.style.backgroundColor = '#8C734B';
+                btn.style.opacity = '1';
+            }, 1500);
+        });
+    }
+</script>
+</body></html>

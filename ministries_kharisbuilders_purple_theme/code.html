@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ministries | Kharisbuilders</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#4d3b5c",
+                    "surface-dim": "#e0d7e1",
+                    "surface-bright": "#fff7fe",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#261239",
+                    "outline-variant": "#ccc4cd",
+                    "surface-tint": "#6a577a",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#c8c5cc",
+                    "on-secondary-fixed-variant": "#533e68",
+                    "on-background": "#1e1a21",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed": "#f0dbff",
+                    "secondary-container": "#e6cafd",
+                    "primary-fixed": "#f1daff",
+                    "on-surface": "#1e1a21",
+                    "surface": "#fff7fe",
+                    "surface-variant": "#e9e0ea",
+                    "on-tertiary-fixed-variant": "#47464c",
+                    "on-surface-variant": "#4a454d",
+                    "surface-container": "#f4ebf5",
+                    "on-secondary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#f7eef8",
+                    "on-secondary-container": "#69527e",
+                    "on-primary-container": "#bda6ce",
+                    "on-tertiary-fixed": "#1c1b20",
+                    "inverse-primary": "#d6bee6",
+                    "tertiary": "#2d2c31",
+                    "primary-fixed-dim": "#d6bee6",
+                    "on-primary-fixed-variant": "#523f61",
+                    "on-primary-fixed": "#241433",
+                    "surface-container-high": "#efe5f0",
+                    "outline": "#7b757d",
+                    "background": "#fff7fe",
+                    "on-error": "#ffffff",
+                    "secondary": "#6c5581",
+                    "surface-container-low": "#faf1fb",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#362545",
+                    "on-tertiary-container": "#b1aeb5",
+                    "surface-container-highest": "#e9e0ea",
+                    "inverse-surface": "#332f36",
+                    "tertiary-container": "#434247",
+                    "tertiary-fixed": "#e5e1e8",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed-dim": "#d8bcee"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "margin-desktop": "64px",
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Manrope"],
+                    "label-sm": ["Manrope"],
+                    "headline-lg": ["Playfair Display"],
+                    "headline-lg-mobile": ["Playfair Display"],
+                    "display": ["Playfair Display"],
+                    "body-md": ["Manrope"],
+                    "headline-md": ["Playfair Display"],
+                    "label-md": ["Manrope"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600"}],
+                    "headline-lg": ["48px", {"lineHeight": "56px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "display": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "500"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .heritage-underline {
+            position: relative;
+        }
+        .heritage-underline::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: #6a577a;
+            transition: width 0.3s ease;
+        }
+        .heritage-underline:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-surface-tint/30">
+<!-- TopNavBar -->
+<nav class="bg-surface/80 dark:bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky border-b border-secondary/20 shadow-sm z-50">
+<div class="flex justify-between items-center px-margin-desktop w-full max-w-container-max mx-auto h-20">
+<div class="font-display text-headline-md text-primary">Kharisbuilders</div>
+<div class="hidden md:flex items-center gap-10">
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Home</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">About</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-primary font-bold border-b-2 border-surface-tint pb-1 transition-colors duration-300" href="#">Ministries</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Visit</a>
+</div>
+<button class="bg-primary text-on-primary font-label-md px-6 py-3 uppercase tracking-widest scale-95 active:scale-90 transition-all hover:bg-primary-container hover:shadow-lg">
+            New Here?
+        </button>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative w-full h-[614px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover grayscale-[20%] brightness-[40%]" data-alt="A cinematic low-angle shot of a modern architectural church interior with soaring concrete pillars and soft sunlight streaming through high windows. The atmosphere is serene and sacred, using a palette of warm champagne tones and deep midnight blues. The lighting is high-key and atmospheric, emphasizing clean lines and spiritual growth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDm3RFH8Zk0D4GHzdjOx2yOXbHYds0qC7RdTX5n3hBzKFxCa0765cLSNYi4gejm03JlAQ3XXJMP_av8YlxSv_Uw0yhySSguOsc2oJhs8DneTM88z4sKNebKmoudKzSRP3hk5C_9rd8-MWAB7H--64MsT3XTvQWh6X0rw77jYtYTpxm58wjKsnlvqHFcOj9ya_ETZnBg4zAjF-ZWmAgk8kyZW0kcznK_x1RCwPfJOdCwlaMk99HG5GoqcMguCxJziB9OsbaDG9pgHBGz"/>
+</div>
+<div class="relative z-10 text-center px-4 max-w-4xl">
+<span class="font-label-sm text-surface-tint uppercase tracking-[0.3em] mb-4 block">Our Community</span>
+<h1 class="font-display text-display text-on-primary mb-6">Ministries</h1>
+<p class="font-body-lg text-body-lg text-on-primary/80 max-w-2xl mx-auto">
+            Finding your place in the body of Christ. We believe every individual has a unique calling and a part to play in building the Kingdom.
+        </p>
+</div>
+</header>
+<!-- Content Section -->
+<main class="py-24 px-margin-desktop max-w-container-max mx-auto">
+<!-- Bento-style Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Worship - Large Featured Card -->
+<div class="md:col-span-8 group relative overflow-hidden bg-surface-container border border-outline-variant">
+<div class="aspect-[16/9] overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A professional close-up of a contemporary worship setting, featuring a person playing an acoustic guitar with blurred stage lights in the background. The lighting is warm and golden, creating a sense of reverence and intimacy. The aesthetic is clean and modern, following the architectural spirit of Kharisbuilders with high contrast and deep blue shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHm1rrXA9l6mPw8oJhazS1qhfXgnbv16rj2M8PCE50zRCRH7n4EsBcAUiFBLwlgMvzJ4qqPT4SAl8J8dM76YPKOPoLEwdY1XLOV7Jod0S2JvXRq5rzE1NbbMJHO2nrsQxz8mJW4WU836yIgRV9g3wVOBWjDeaLH49Hh79k5eOtCaidkaPBGyz1ub0fvghoBMSMIZcQNUCLpRQp0tJj2sbQzuuW-OT19uCoppmtIyYtrxFa-k9524_3IQ5IMQawLZeCa0LFyZDEDqgJ"/>
+</div>
+<div class="p-10">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-4">Worship</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8 max-w-xl">
+                    Creating a space where heaven meets earth. Our worship team leads the congregation in authentic, spirit-filled praise that honors tradition while embracing modern expression.
+                </p>
+<a class="inline-flex items-center gap-2 font-label-md text-primary uppercase tracking-widest heritage-underline" href="#">
+                    Learn More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Youth -->
+<div class="md:col-span-4 group relative overflow-hidden bg-surface-container border border-outline-variant">
+<div class="aspect-square overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A group of diverse young adults engaged in a passionate discussion in a modern, minimalist lounge setting. The environment is bright and welcoming, with soft daylight and high-quality wooden textures. The visual style is professional and clean, using the brand's midnight blue and champagne-light tones to evoke a sense of belonging and growth." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9BE2sWGs8AKcpPASaybzjbdL4kkKfqARn2OpsZg35WV3F1a-m03pGEboO6MN6gNvpidq2z-uT9bxAnL6nHwGzeWbfRxlVmtQ7VYhZWYMaF7SxrywJxmY6s5d40c6Fk83WG4jNvgQuaeEtCBMnD3tw42U39jQ67F6NT2wByRP48vgX5vUkchiLZsgwdy03Ck6XZxrNm-1UNb3C_nqOUNgSffts8fpBAObDGPQq6p_hxoRJ6qqAAdhNg6BYWYhAeKEek59GNnH7og1e"/>
+</div>
+<div class="p-8">
+<h2 class="font-headline-md text-headline-md text-primary mb-4">Youth</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                    Empowering the next generation to lead with faith, character, and vision.
+                </p>
+<a class="inline-flex items-center gap-2 font-label-md text-primary uppercase tracking-widest heritage-underline" href="#">
+                    Learn More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Kids -->
+<div class="md:col-span-4 group relative overflow-hidden bg-surface-container border border-outline-variant">
+<div class="aspect-square overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A bright and airy classroom for children featuring high-quality minimalist toys and educational materials. The room is flooded with natural light, creating a safe and joyful atmosphere. The color palette is dominated by soft whites and heritage gold accents, maintaining a professional yet warm environment for young spiritual learners." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0KT5ZpHcW7yQ_UNFArYvQ1bVRfHrUHdHYrt2xIU-MacyB7hKdgfIhsLBccoNKl_gMgKQU9KzpNTJziyyB38ZyknmapWDtQnT9syeLXMD9nLYg7PtJKQN1rVJ4CriZ2b979P8_jGr3SN7cB-e7O-LHx2yAFNYuifItepr774nt8XDsnq_dvHr3pPRwaFNHwiAJuOeK9hhF_kXLE0IQn_3vuLm-mD_9zRf0_XmZuc91_MPoL1H7qeyAf5km-cOOx5HllGHWbhSuEXYW"/>
+</div>
+<div class="p-8">
+<h2 class="font-headline-md text-headline-md text-primary mb-4">Kids</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                    Nurturing small seeds of faith in a safe, vibrant, and fun-filled environment.
+                </p>
+<a class="inline-flex items-center gap-2 font-label-md text-primary uppercase tracking-widest heritage-underline" href="#">
+                    Learn More <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Outreach - Wide Section -->
+<div class="md:col-span-8 group relative overflow-hidden bg-primary text-on-primary">
+<div class="absolute inset-0 opacity-40">
+<img class="w-full h-full object-cover grayscale transition-transform duration-700 group-hover:scale-105 group-hover:grayscale-0" data-alt="A cinematic shot of volunteers working together in a community garden during the golden hour. The lighting is rich and saturated, emphasizing a sense of service and communal effort. The scene is framed with architectural precision, utilizing deep midnight blue overlays to create a solemn yet hopeful mood for the Kharisbuilders outreach initiative." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjBf7OPFcuXpXqh9IcMGZWeNm4ldlls9DtYFmopgTCTKAN4dTpHrBm04ih5CeGwrKcEqw8nB1g8iwUlFcbULSSlmWBi3kzzLiJ_rPhyPQTgm3fwSprrTblE-BA2Ynn36VkcqKd0t04kgA47ZeoBjTDDUTGC8TdkM88f6a1HMlPu9JXx08AbZrC1lXYTfYbHh3_NIs2BFN4VNyT-psBy4ZTzFK8G5VO5inpLYAowkVSD2WxD-Ejv6fwYnkSh8UFX_APoo6ya_qFQiZq"/>
+</div>
+<div class="relative z-10 p-12 flex flex-col justify-end h-full min-h-[400px]">
+<h2 class="font-display text-headline-lg text-on-primary mb-4">Outreach</h2>
+<p class="font-body-lg text-body-lg text-on-primary/80 mb-8 max-w-lg">
+                    Taking the message of hope beyond our walls. We are committed to building lives by serving our local and global community.
+                </p>
+<a class="w-fit bg-surface-tint text-on-primary font-label-md px-8 py-4 uppercase tracking-widest hover:bg-secondary-container hover:text-on-secondary-container transition-all" href="#">
+                    Learn More
+                </a>
+</div>
+</div>
+<!-- Life Groups -->
+<div class="md:col-span-12 group relative overflow-hidden bg-surface-container border border-outline-variant flex flex-col md:flex-row">
+<div class="md:w-1/2 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A high-end modern living room where a small group of adults is gathered around a table with coffee and bibles, sharing a meal. The lighting is warm and sophisticated, with long shadows and soft highlights. The aesthetic reflects a premium architectural home environment, emphasizing the community aspect of 'building lives' in a private, sacred space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGqV4GcXuuyNLa6Q80vuRTFkzKczDqm0WAkBH1I8oEMvdmrcm126QUN_3D26x_NFNTPVXfIMG1CzWteH0PPGiPaQtKsciqYBeuJB5PuEhU1uRUT8sHmHmj45oI6kbvRR8DGspqoFTHV86qtxayY3jksnTINFx5bd1vLXtDD_cPpHDRRSydcJzu8ifKnC6geJ-yLnavxZ-7my4E80-xROJKIJiS21z7YAcjdrckrppCKEuEHTViNyV33F-dUp228SXd4pTB4yucJnkm"/>
+</div>
+<div class="md:w-1/2 p-12 flex flex-col justify-center">
+<span class="font-label-sm text-surface-tint uppercase tracking-widest mb-4">The Heart of Our Church</span>
+<h2 class="font-display text-headline-lg text-primary mb-6">Life Groups</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8">
+                    Real life happens in circles, not just rows. Join a small group to find community, support, and friendship as we navigate life together.
+                </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary text-on-primary font-label-md px-8 py-4 uppercase tracking-widest hover:bg-primary-container hover:shadow-xl transition-all">
+                        Find a Group
+                    </button>
+<button class="border border-surface-tint text-surface-tint font-label-md px-8 py-4 uppercase tracking-widest hover:bg-surface-tint/5 transition-all">
+                        Learn More
+                    </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- CTA Banner -->
+<section class="bg-surface-container-high py-24 text-center">
+<div class="max-w-3xl mx-auto px-4">
+<h2 class="font-display text-headline-lg text-primary mb-6">Can't find what you're looking for?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10">
+            Our team is here to help you navigate your spiritual journey and find the ministry that best fits your gifts and season of life.
+        </p>
+<button class="group inline-flex items-center gap-3 font-label-md text-primary uppercase tracking-[0.2em] heritage-underline">
+            Contact Our Team
+            <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-primary full-width py-16 border-t border-surface-tint/20">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="flex flex-col gap-6">
+<div class="font-display text-headline-md text-surface-tint">Kharisbuilders</div>
+<p class="text-on-primary/70 font-body-md">
+                Building Lives, Shaping Destinies through the power of community and faith.
+            </p>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="text-on-primary font-label-md uppercase tracking-widest">Connect</h4>
+<nav class="flex flex-col gap-2">
+<a class="text-on-primary/70 hover:text-surface-tint transition-colors font-body-md" href="#">Visit Us</a>
+<a class="text-on-primary/70 hover:text-surface-tint transition-colors font-body-md" href="#">Watch Live</a>
+<a class="text-on-primary/70 hover:text-surface-tint transition-colors font-body-md" href="#">Events</a>
+</nav>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="text-on-primary font-label-md uppercase tracking-widest">Resources</h4>
+<nav class="flex flex-col gap-2">
+<a class="text-on-primary/70 hover:text-surface-tint transition-colors font-body-md" href="#">Privacy Policy</a>
+<a class="text-on-primary/70 hover:text-surface-tint transition-colors font-body-md" href="#">Terms of Service</a>
+<a class="text-on-primary/70 hover:text-surface-tint transition-colors font-body-md" href="#">Give</a>
+<a class="text-on-primary/70 hover:text-surface-tint transition-colors font-body-md" href="#">Careers</a>
+</nav>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="text-on-primary font-label-md uppercase tracking-widest">Contact</h4>
+<p class="text-on-primary/70 font-body-md">
+                123 Cathedral Way<br/>
+                Sanctuary City, SC 45678<br/>
+                hello@kharisbuilders.org
+            </p>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop mt-16 pt-8 border-t border-on-primary/10">
+<p class="text-on-primary/50 text-label-sm">© 2024 Kharisbuilders. Building Lives, Shaping Destinies.</p>
+</div>
+</footer>
+<script>
+    // Subtle scroll effect for the header
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('nav');
+        if (window.scrollY > 50) {
+            nav.classList.add('shadow-md');
+        } else {
+            nav.classList.remove('shadow-md');
+        }
+    });
+</script>
+</body></html>
