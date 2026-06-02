@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/* Map Tailwind's color namespace to the runtime --kb-* vars so utilities
+   like `bg-primary` / `text-on-surface` follow [data-theme] live.
+   `inline` makes the generated utilities reference the var (not freeze its value). */
+@theme inline {
+  --color-surface: var(--kb-surface);
+  --color-on-surface: var(--kb-on-surface);
+  --color-on-surface-variant: var(--kb-on-surface-variant);
+  --color-primary: var(--kb-primary);
+  --color-on-primary: var(--kb-on-primary);
+  --color-primary-container: var(--kb-primary-container);
+  --color-accent: var(--kb-accent);
+  --color-accent-deep: var(--kb-accent-deep);
+  --color-muted: var(--kb-muted);
+  --color-champagne: var(--kb-champagne);
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+  src: local('Playfair Display');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: local('Manrope');
+}
+
+body {
+  background-color: var(--kb-surface);
+  color: var(--kb-on-surface);
+  font-family: var(--font-body);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
