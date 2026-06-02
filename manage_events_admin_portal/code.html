@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Events Management | Kharisbuilders</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#241433",
+                        "on-tertiary-fixed-variant": "#47464c",
+                        "on-surface": "#1e1a21",
+                        "primary-fixed-dim": "#d6bee6",
+                        "inverse-primary": "#d6bee6",
+                        "primary-fixed": "#f1daff",
+                        "secondary-fixed-dim": "#d8bcee",
+                        "primary": "#362545",
+                        "on-surface-variant": "#4a454d",
+                        "tertiary-fixed-dim": "#c8c5cc",
+                        "tertiary-container": "#434247",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#e6cafd",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#faf1fb",
+                        "tertiary-fixed": "#e5e1e8",
+                        "on-secondary-fixed": "#261239",
+                        "surface-container": "#f4ebf5",
+                        "surface": "#fff7fe",
+                        "outline-variant": "#ccc4cd",
+                        "background": "#fff7fe",
+                        "inverse-on-surface": "#f7eef8",
+                        "surface-tint": "#6a577a",
+                        "on-tertiary-fixed": "#1c1b20",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#e0d7e1",
+                        "on-background": "#1e1a21",
+                        "on-tertiary-container": "#b1aeb5",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#523f61",
+                        "error": "#ba1a1a",
+                        "tertiary": "#2d2c31",
+                        "surface-container-highest": "#e9e0ea",
+                        "secondary": "#6c5581",
+                        "surface-bright": "#fff7fe",
+                        "secondary-fixed": "#f0dbff",
+                        "inverse-surface": "#332f36",
+                        "on-secondary-fixed-variant": "#533e68",
+                        "on-primary-container": "#bda6ce",
+                        "surface-variant": "#e9e0ea",
+                        "on-error-container": "#93000a",
+                        "outline": "#7b757d",
+                        "on-secondary-container": "#69527e",
+                        "surface-container-high": "#efe5f0",
+                        "primary-container": "#4d3b5c",
+                        "heritage-gold": "#D4AF37"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "margin-mobile": "20px",
+                        "unit": "8px",
+                        "margin-desktop": "64px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "display": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-sm": ["Manrope"],
+                        "headline-lg": ["Playfair Display"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(77, 59, 92, 0.1);
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d6bee6;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky z-50 border-b border-secondary/20 shadow-sm">
+<div class="flex justify-between items-center px-margin-desktop w-full max-w-container-max mx-auto h-20">
+<div class="font-display text-headline-md text-primary tracking-tight">Kharisbuilders</div>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Home</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">About</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-primary font-bold border-b-2 border-heritage-gold pb-1 transition-colors duration-300" href="#">Ministries</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Visit</a>
+</nav>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-sm uppercase tracking-widest scale-95 active:scale-90 transition-transform">
+                New Here?
+            </button>
+</div>
+</header>
+<main class="flex-grow max-w-container-max mx-auto w-full px-margin-desktop py-12">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+<div>
+<h1 class="font-display text-headline-lg text-primary mb-2">Events &amp; Gatherings</h1>
+<p class="text-on-surface-variant max-w-2xl">Manage the sacred moments of our community. Oversee scheduling, logistics, and registration for upcoming spiritual gatherings and fellowships.</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 px-5 py-3 border border-primary/20 rounded-lg font-label-sm text-primary hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+                    Filter
+                </button>
+<button class="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-lg font-label-sm transition-all hover:shadow-lg hover:-translate-y-0.5">
+<span class="material-symbols-outlined">add</span>
+                    Create Event
+                </button>
+</div>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Calendar View -->
+<div class="lg:col-span-8 space-y-gutter">
+<div class="glass-panel p-8 rounded-xl">
+<div class="flex items-center justify-between mb-8">
+<h2 class="font-display text-headline-md text-primary">December 2024</h2>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-full transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="calendar-grid text-center mb-4">
+<div class="font-label-sm text-on-surface-variant opacity-60">SUN</div>
+<div class="font-label-sm text-on-surface-variant opacity-60">MON</div>
+<div class="font-label-sm text-on-surface-variant opacity-60">TUE</div>
+<div class="font-label-sm text-on-surface-variant opacity-60">WED</div>
+<div class="font-label-sm text-on-surface-variant opacity-60">THU</div>
+<div class="font-label-sm text-on-surface-variant opacity-60">FRI</div>
+<div class="font-label-sm text-on-surface-variant opacity-60">SAT</div>
+</div>
+<div class="calendar-grid border-t border-l border-primary/5">
+<!-- Simplified Calendar Cells -->
+<script>
+                            for(let i=1; i<=31; i++) {
+                                let hasEvent = [4, 12, 18, 24].includes(i);
+                                document.write(`
+                                    <div class="aspect-square border-r border-b border-primary/5 p-2 group cursor-pointer hover:bg-surface-container-low transition-colors flex flex-col items-center">
+                                        <span class="text-sm ${i === 12 ? 'bg-primary text-on-primary w-7 h-7 flex items-center justify-center rounded-full' : 'text-on-surface-variant'}">${i}</span>
+                                        ${hasEvent ? '<div class="w-1.5 h-1.5 rounded-full bg-heritage-gold mt-2"></div>' : ''}
+                                    </div>
+                                `);
+                            }
+                        </script>
+</div>
+</div>
+<!-- Featured Event Management -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Night of Adoration Card -->
+<div class="group relative overflow-hidden rounded-xl bg-primary-container text-on-primary-container p-8 shadow-md">
+<div class="absolute top-0 right-0 w-32 h-32 bg-heritage-gold/10 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-150"></div>
+<div class="relative z-10">
+<span class="inline-block px-3 py-1 rounded-full bg-heritage-gold/20 text-heritage-gold font-label-sm mb-4">Worship Night</span>
+<h3 class="font-display text-headline-md mb-2">Night of Adoration</h3>
+<div class="flex items-center gap-2 font-body-md opacity-80 mb-6">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                Dec 18, 2024 • 7:00 PM
+                            </div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-on-primary text-primary rounded font-label-sm hover:bg-surface-bright transition-colors">Edit Details</button>
+<button class="p-2 border border-on-primary/30 rounded hover:bg-on-primary/10 transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+</div>
+</div>
+<!-- First Steps Luncheon Card -->
+<div class="group relative overflow-hidden rounded-xl border border-primary/10 bg-surface-container-lowest p-8 shadow-sm">
+<div class="relative z-10">
+<span class="inline-block px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm mb-4">Community</span>
+<h3 class="font-display text-headline-md text-primary mb-2">First Steps Luncheon</h3>
+<div class="flex items-center gap-2 font-body-md text-on-surface-variant mb-6">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                Heritage Hall • Dec 12, 12:30 PM
+                            </div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-primary text-on-primary rounded font-label-sm hover:opacity-90 transition-opacity">Manage Guests</button>
+<button class="p-2 border border-primary/10 rounded hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-primary">edit</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Sidebar Stats & Quick List -->
+<div class="lg:col-span-4 space-y-gutter">
+<!-- Registration Metrics -->
+<div class="glass-panel p-6 rounded-xl border-l-4 border-heritage-gold">
+<h4 class="font-label-sm text-primary uppercase tracking-widest mb-4">Total Registrations</h4>
+<div class="flex items-end gap-2">
+<span class="text-4xl font-display text-primary">1,284</span>
+<span class="text-green-600 font-label-sm mb-1 flex items-center">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                            12%
+                        </span>
+</div>
+<p class="text-sm text-on-surface-variant mt-2">Active sign-ups across 6 upcoming gatherings.</p>
+</div>
+<!-- Upcoming List -->
+<div class="glass-panel rounded-xl overflow-hidden flex flex-col h-[500px]">
+<div class="p-6 border-b border-primary/5 flex items-center justify-between">
+<h3 class="font-display text-headline-md text-primary text-xl">Upcoming</h3>
+<a class="text-primary font-label-sm hover:underline" href="#">View All</a>
+</div>
+<div class="flex-grow overflow-y-auto custom-scrollbar p-6 space-y-6">
+<!-- Entry 1 -->
+<div class="flex gap-4 items-start group">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex flex-col items-center justify-center flex-shrink-0 text-primary">
+<span class="text-xs font-bold leading-none">DEC</span>
+<span class="text-lg font-bold">24</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-bold text-primary group-hover:text-secondary transition-colors cursor-pointer">Christmas Eve Service</h4>
+<p class="text-sm text-on-surface-variant">Grand Sanctuary • 6:00 PM</p>
+<div class="mt-2 flex items-center gap-2">
+<div class="h-1 flex-grow bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[85%] h-full bg-heritage-gold"></div>
+</div>
+<span class="text-[10px] font-label-sm">85% Capacity</span>
+</div>
+</div>
+</div>
+<!-- Entry 2 -->
+<div class="flex gap-4 items-start group">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex flex-col items-center justify-center flex-shrink-0 text-primary">
+<span class="text-xs font-bold leading-none">JAN</span>
+<span class="text-lg font-bold">05</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-bold text-primary group-hover:text-secondary transition-colors cursor-pointer">Youth Vision Night</h4>
+<p class="text-sm text-on-surface-variant">The Loft • 5:30 PM</p>
+<div class="mt-2 flex items-center gap-2">
+<div class="h-1 flex-grow bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[40%] h-full bg-primary"></div>
+</div>
+<span class="text-[10px] font-label-sm">40% Capacity</span>
+</div>
+</div>
+</div>
+<!-- Entry 3 -->
+<div class="flex gap-4 items-start group">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high flex flex-col items-center justify-center flex-shrink-0 text-primary">
+<span class="text-xs font-bold leading-none">JAN</span>
+<span class="text-lg font-bold">12</span>
+</div>
+<div class="flex-grow">
+<h4 class="font-bold text-primary group-hover:text-secondary transition-colors cursor-pointer">Founders Day Gala</h4>
+<p class="text-sm text-on-surface-variant">Grand Ballroom • 7:00 PM</p>
+<div class="mt-2 flex items-center gap-2">
+<div class="h-1 flex-grow bg-surface-container-high rounded-full overflow-hidden">
+<div class="w-[20%] h-full bg-secondary"></div>
+</div>
+<span class="text-[10px] font-label-sm">20% Capacity</span>
+</div>
+</div>
+</div>
+<!-- Image Prompt Visual -->
+<div class="pt-4">
+<img class="w-full h-32 object-cover rounded-lg grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer" data-alt="A sophisticated black and white cinematic photograph of a grand, architecturally stunning event space with high vaulted ceilings and soft ambient lighting. The scene captures the essence of a sacred community gathering with silhouettes of people engaged in quiet conversation. Subtle purple lighting accents the structural columns, reflecting the professional and spiritual brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHN9TJ-LiylOp_A_Uow76F2992xIHiorujI8aRoVsb7-Az_vo2TDos8MZYYrMAPVB_trtMEO9x0qckgFEO5KpQCoR0I-EGw-xYJgh9K8zfTBaf0bctxjGUfHwAscGPfJxkJEMJj28292RK9kKkcZIezz98Nv8ZM_p0cu-cQQa_9yyrMtNZNcMnTtXzoSlQQpmraH2VBM0Dg2PwjKujG7hWouyP28HAmo6dDCankVRk1zQpkx2dp5RQu79nzmTU5ICTDgW5QbPfxWUb"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-primary dark:bg-surface-container-lowest full-width py-16 mt-20 border-t border-heritage-gold/20">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-2">
+<div class="font-display text-headline-md text-heritage-gold mb-4">Kharisbuilders</div>
+<p class="text-on-primary/70 max-w-sm font-body-md mb-8">Building lives and shaping destinies through architectural grace and intentional community gathering.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full border border-on-primary/20 flex items-center justify-center hover:text-heritage-gold transition-colors" href="#">
+<span class="material-symbols-outlined">public</span>
+</a>
+<a class="w-10 h-10 rounded-full border border-on-primary/20 flex items-center justify-center hover:text-heritage-gold transition-colors" href="#">
+<span class="material-symbols-outlined">mail</span>
+</a>
+</div>
+</div>
+<div>
+<h5 class="font-label-sm text-heritage-gold uppercase tracking-widest mb-6">Quick Links</h5>
+<ul class="space-y-4">
+<li><a class="text-on-primary/70 hover:text-heritage-gold transition-colors" href="#">Give</a></li>
+<li><a class="text-on-primary/70 hover:text-heritage-gold transition-colors" href="#">Careers</a></li>
+<li><a class="text-on-primary/70 hover:text-heritage-gold transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-on-primary/70 hover:text-heritage-gold transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-label-sm text-heritage-gold uppercase tracking-widest mb-6">Connect</h5>
+<p class="text-on-primary/70 mb-4">Subscribe to our seasonal journals and updates.</p>
+<div class="flex">
+<input class="bg-on-primary/10 border-none text-on-primary placeholder:text-on-primary/40 rounded-l-lg px-4 py-2 w-full focus:ring-1 focus:ring-heritage-gold" placeholder="Email Address" type="email"/>
+<button class="bg-heritage-gold text-primary px-4 py-2 rounded-r-lg font-bold">Join</button>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop mt-16 pt-8 border-t border-on-primary/10 text-center">
+<p class="text-on-primary/50 text-sm">© 2024 Kharisbuilders. Building Lives, Shaping Destinies.</p>
+</div>
+</footer>
+<script>
+        // Micro-interactions and effects
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                btn.classList.add('opacity-90');
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.classList.remove('opacity-90');
+            });
+        });
+    </script>
+</body></html>

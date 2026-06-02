@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kharisbuilders | Building Lives, Shaping Destinies</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#4d3b5c",
+                    "surface-dim": "#e0d7e1",
+                    "surface-bright": "#fff7fe",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#261239",
+                    "outline-variant": "#ccc4cd",
+                    "surface-tint": "#6a577a",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#c8c5cc",
+                    "on-secondary-fixed-variant": "#533e68",
+                    "on-background": "#1e1a21",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed": "#f0dbff",
+                    "secondary-container": "#e6cafd",
+                    "primary-fixed": "#f1daff",
+                    "on-surface": "#1e1a21",
+                    "surface": "#fff7fe",
+                    "surface-variant": "#e9e0ea",
+                    "on-tertiary-fixed-variant": "#47464c",
+                    "on-surface-variant": "#4a454d",
+                    "surface-container": "#f4ebf5",
+                    "on-secondary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#f7eef8",
+                    "on-secondary-container": "#69527e",
+                    "on-primary-container": "#bda6ce",
+                    "on-tertiary-fixed": "#1c1b20",
+                    "inverse-primary": "#d6bee6",
+                    "tertiary": "#2d2c31",
+                    "primary-fixed-dim": "#d6bee6",
+                    "on-primary-fixed-variant": "#523f61",
+                    "on-primary-fixed": "#241433",
+                    "surface-container-high": "#efe5f0",
+                    "outline": "#7b757d",
+                    "background": "#fff7fe",
+                    "on-error": "#ffffff",
+                    "secondary": "#6c5581",
+                    "surface-container-low": "#faf1fb",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#362545",
+                    "on-tertiary-container": "#b1aeb5",
+                    "surface-container-highest": "#e9e0ea",
+                    "inverse-surface": "#332f36",
+                    "tertiary-container": "#434247",
+                    "tertiary-fixed": "#e5e1e8",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed-dim": "#d8bcee"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "margin-desktop": "64px",
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Manrope"],
+                    "label-sm": ["Manrope"],
+                    "headline-lg": ["Playfair Display"],
+                    "headline-lg-mobile": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"],
+                    "display": ["Playfair Display"],
+                    "body-md": ["Manrope"],
+                    "headline-md": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600"}],
+                    "headline-lg": ["48px", {"lineHeight": "56px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "display": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hero-gradient {
+            background: linear-gradient(to bottom, rgba(54, 37, 69, 0.5), rgba(54, 37, 69, 0.85));
+        }
+        .text-shadow-sm {
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .vellum-glass {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface/80 dark:bg-surface/80 backdrop-blur-xl docked full-width top-0 sticky border-b border-primary/10 shadow-sm z-50">
+<nav class="flex justify-between items-center px-margin-desktop w-full max-w-container-max mx-auto h-20">
+<div class="font-display-lg text-headline-md text-primary">Kharisbuilders</div>
+<!-- Desktop Nav -->
+<div class="hidden md:flex items-center gap-10">
+<a class="text-primary font-bold border-b-2 border-primary-container pb-1 font-body-md text-body-md uppercase tracking-wider transition-colors duration-300" href="#">Home</a>
+<a class="text-on-surface-variant font-body-md text-body-md uppercase tracking-wider hover:text-primary transition-colors duration-300" href="#">About</a>
+<a class="text-on-surface-variant font-body-md text-body-md uppercase tracking-wider hover:text-primary transition-colors duration-300" href="#">Ministries</a>
+<a class="text-on-surface-variant font-body-md text-body-md uppercase tracking-wider hover:text-primary transition-colors duration-300" href="#">Visit</a>
+<button class="bg-primary text-white font-label-sm px-6 py-3 border-b-2 border-transparent hover:border-primary-container transition-all duration-300 scale-95 active:scale-90 uppercase tracking-widest">
+                    New Here?
+                </button>
+</div>
+<!-- Mobile Menu Trigger -->
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative h-[921px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover" data-alt="A cinematic, wide-angle shot of a breathtaking modern church interior with high vaulted ceilings and warm wooden accents. Soft sunlight streams through high clerestory windows, creating long shadows and a spiritual atmosphere. The color palette features deep royal purples and soft surface tones. The lighting is low-key and dramatic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDO2pkW3k8wCUk8aAabZsuf63VFxO55Zu_16PMrJn0xBBssh3ZVf_YO-OhzkmdroFACrcC2Z4DJvW7bB4oVVPYVzYbgSPI7D5jSO0xMK7-7gE02MJeOo2XroyCbB94wnlfQqqqZL41-cHjgYxr0xfjISsk1TwWZiFi6vRTlzGVLmzJ24Ng736Ga4Ogdriu0eTcXj3n8LeeQVTLsLQ7ygS4In1m_vFSfsmfRUMvGUZXvHz2RczYMVI9smn76ZAFU2OszJ2hdhwX9BaCS"/>
+<div class="absolute inset-0 hero-gradient"></div>
+</div>
+<div class="relative z-10 text-center px-margin-mobile md:px-0">
+<h1 class="font-display text-display-lg-mobile md:text-display text-white mb-8 text-shadow-sm max-w-4xl mx-auto">
+                    Building Lives, Shaping Destinies.
+                </h1>
+<div class="flex flex-col md:flex-row gap-6 justify-center items-center">
+<button class="bg-primary text-white font-label-sm px-10 py-5 text-lg border-b-2 border-primary-container hover:bg-primary-container transition-all duration-300 uppercase tracking-widest">
+                        JOIN US THIS SUNDAY
+                    </button>
+<button class="border border-surface text-surface font-label-sm px-10 py-5 text-lg bg-transparent hover:bg-surface hover:text-primary transition-all duration-300 uppercase tracking-widest">
+                        WATCH ONLINE
+                    </button>
+</div>
+</div>
+</section>
+<!-- Welcome Message -->
+<section class="py-24 md:py-40 bg-surface">
+<div class="max-w-container-max mx-auto px-margin-desktop grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+<div class="md:col-span-5 relative">
+<div class="aspect-[3/4] overflow-hidden border border-primary/10 shadow-xl">
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" data-alt="A professional and soulful portrait of a Lead Pastor in a modern, minimalist study environment. The lighting is soft and directional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDIG6Us6rhOxXTXzNcojcel-SPsVfDZ2p1Hzk2OX8XcBvlR0E8_RyfzXB1eooLOWeOfTe6cQvfaJex8AFHDxQRerKh-CpoQyJ5bxWjFRaZ6SGkSwFXaEWjF7rTQZsZtT_0WOy-3GPTwUdydx3v5RU4d_CedINsIBFBt2GpduCtWP5sODW6GkCU8RrRJygmXMrCKdKgw66i9Dhol4VBz1qD4pmqXYCnk5wWZD6rYn2hsXv296-xdNytv_RHTOQUXUqtUGghx_lIMi2b"/>
+</div>
+<div class="absolute -bottom-8 -right-8 w-48 h-48 bg-primary/5 -z-10"></div>
+</div>
+<div class="md:col-span-7 md:pl-16 mt-16 md:mt-0">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-8">A Message from Our Pastor</h2>
+<p class="font-body-lg text-on-surface-variant mb-6 leading-relaxed">
+                        Welcome to Kharisbuilders. We believe that every individual has a divine blueprint—a destiny waiting to be realized. Our mission is to provide the spiritual foundation and community support needed to build that life.
+                    </p>
+<p class="font-body-lg text-on-surface-variant mb-10 leading-relaxed">
+                        Whether you are exploring faith for the first time or seeking a deeper connection with your Creator, there is a place for you in our sanctuary. We are more than a congregation; we are architects of hope.
+                    </p>
+<div class="flex items-center gap-4">
+<div class="h-[1px] w-12 bg-primary"></div>
+<span class="font-display text-headline-md text-primary italic">Lead Pastor David Anderson</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Latest Sermon -->
+<section class="bg-primary-container py-24 md:py-32">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-4">
+<div>
+<span class="text-primary-fixed font-label-sm uppercase tracking-widest mb-4 block">Current Series</span>
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white">Latest Sermon</h2>
+</div>
+<a class="flex items-center gap-2 text-primary-fixed font-label-sm border-b border-primary-fixed/40 hover:border-primary-fixed transition-all uppercase tracking-widest" href="#">
+                        VIEW ARCHIVE <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<div class="relative aspect-video group cursor-pointer overflow-hidden border border-white/10">
+<img class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" data-alt="A cinematic wide shot of a speaker on a modern stage with sophisticated lighting rigs." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5oIMHkkYUFo-JFt7gOEQuyRcfWJowHiO9mtMDemH35CUEt42KQ0ZiDkGhzqSNN749evehtyMhd48zUvZj--pAZX5kO-wOKX7xQEnrD1skrh4dMrh8Q6hwtZ7EHPz6SMQrUGsmjBwIzym8c4dnHGws_wB4_wNPWArFjZVSwNYOxKi5FY0axETi0eEmxsRw9lSSlp1N20J1atJCUvHIew7amquNrwNNV9pcOmNueX-MdFilTLV-eZA8h7bcIgW6MECMXxch0vniakpy"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-24 h-24 rounded-full border border-primary-fixed/50 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:scale-110 transition-transform duration-500">
+<span class="material-symbols-outlined text-white text-5xl translate-x-1" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 p-8 md:p-12 bg-gradient-to-t from-black/80 to-transparent w-full">
+<h3 class="text-white font-headline-md text-headline-md-mobile md:text-headline-md mb-2">The Architecture of Faith: Part IV</h3>
+<p class="text-white/70 font-body-md">Streamed Live on Sunday, Oct 27, 2024</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Upcoming Events -->
+<section class="py-24 md:py-40 bg-surface">
+<div class="max-w-container-max mx-auto px-margin-desktop">
+<div class="text-center mb-20">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">Upcoming Gatherings</h2>
+<div class="h-1 w-20 bg-primary mx-auto"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<!-- Event Card 1 -->
+<div class="group border border-outline-variant hover:border-primary transition-colors duration-500 bg-surface-container-lowest">
+<div class="aspect-[4/3] overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A warm and inviting social gathering in a modern, light-filled hall." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEnoUloY2W3Casij4L2qjpCzhyk6tq4NbAxKz1DpNWTGNY_wDpTDybzlrYN1Ox1TUCUz8lnT4R-Er45KIOpB2oF5NmBqRPeDjz_UoIuZsOA7ywjAPYcquu9M5A7CCsRmJluqh8mXDgCVmLhj2Jv-Q39LHMmtr2mmKBzPLE6LqWoEq11X8Y6sGd7MzToFSdtVmoVPSerqLNDKwTKVo0cDDcbXCzMYmhJbiI623en6a8Mez6ektsaMzv_J5Vh_PGLKWX-IwBbdPpVCqF"/>
+</div>
+<div class="p-8">
+<div class="flex justify-between items-start mb-4">
+<span class="text-primary font-label-sm font-bold uppercase tracking-widest">Community</span>
+<span class="text-on-surface-variant font-label-sm">NOV 03</span>
+</div>
+<h3 class="font-headline-md text-headline-md-mobile md:text-2xl text-primary mb-4">First Steps Luncheon</h3>
+<p class="text-on-surface-variant font-body-md mb-8">For our new members to meet the leadership team and understand our vision.</p>
+<a class="text-primary font-label-sm border-b border-primary/20 group-hover:border-primary transition-colors inline-block uppercase tracking-widest" href="#">REGISTER NOW</a>
+</div>
+</div>
+<!-- Event Card 2 -->
+<div class="group border border-outline-variant hover:border-primary transition-colors duration-500 bg-surface-container-lowest">
+<div class="aspect-[4/3] overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Close-up of high-quality musical instruments on a dimly lit stage." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjXjI4zBWNfgpqqqZ84OIJzqIx8N7Rf6p_fg832fHxLJjaebE11CNvS8y8duWpw0GVuz1hQ57mC7q2N_4TfSVJkAygXJwipkNi6Ry154hVdn9ATPjRyNwxaWIm5Oj7K8rW2pS_4cqnKg2p7ynCeNwtiClBCjuJZul4Njhw691pw_479qv3QCKlWd_Y8EaiKgleBhXtHYrWCfHmohDNbo-lixLQnSC7Bh37DwUcctVzdUmRvA0mHBu4x2VUEWrcZHoBkOR2IhF8SraG"/>
+</div>
+<div class="p-8">
+<div class="flex justify-between items-start mb-4">
+<span class="text-primary font-label-sm font-bold uppercase tracking-widest">Worship</span>
+<span class="text-on-surface-variant font-label-sm">NOV 08</span>
+</div>
+<h3 class="font-headline-md text-headline-md-mobile md:text-2xl text-primary mb-4">Night of Adoration</h3>
+<p class="text-on-surface-variant font-body-md mb-8">An immersive acoustic worship experience designed for deep spiritual renewal.</p>
+<a class="text-primary font-label-sm border-b border-primary/20 group-hover:border-primary transition-colors inline-block uppercase tracking-widest" href="#">SAVE MY SEAT</a>
+</div>
+</div>
+<!-- Event Card 3 -->
+<div class="group border border-outline-variant hover:border-primary transition-colors duration-500 bg-surface-container-lowest">
+<div class="aspect-[4/3] overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="A wide, minimalist overhead shot of people seated in a circular formation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgWTSAEy6nNM8s7lqdYnwmpp5c2CZDGqFUZd9cYedo-QK1nK_xSoIGA4GdOv85_gSXzD2yEUM65lbsRY-p4wKhgY88Ywu6FLWpbxlbvgcieOEdnFPFxcECim8J4o6Ul3-GuwxzkX2zYBwP0As8m0SbJf7w4d5yJ24SsEEv8LOSBFpttvfJ-yBnnTloFG0NoGNa5Cx0UsLbLjTZmlMFI2ovWiJ4l7Wxq143zDehgwMWwLH4uChw3Bbg2TXClY6yM1FXkAfzyEFbJQ4V"/>
+</div>
+<div class="p-8">
+<div class="flex justify-between items-start mb-4">
+<span class="text-primary font-label-sm font-bold uppercase tracking-widest">Leadership</span>
+<span class="text-on-surface-variant font-label-sm">NOV 15</span>
+</div>
+<h3 class="font-headline-md text-headline-md-mobile md:text-2xl text-primary mb-4">Builders Masterclass</h3>
+<p class="text-on-surface-variant font-body-md mb-8">Developing practical leadership skills rooted in eternal biblical principles.</p>
+<a class="text-primary font-label-sm border-b border-primary/20 group-hover:border-primary transition-colors inline-block uppercase tracking-widest" href="#">LEARN MORE</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Giving Section -->
+<section class="relative py-32 overflow-hidden">
+<div class="absolute inset-0 bg-primary z-0">
+<img class="w-full h-full object-cover opacity-20 mix-blend-luminosity" data-alt="A beautiful, abstract macro shot of shimmering purple textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuq52ccsQkXd5iYAWlt5pFqgIGaCKjkk_JoEpKHgSAeLOZYtb9HP9zOibH4BM41XyeGiimgWeYpOtidVKZHiojtdJ25Z3uTjrAzGkG5dS_njIrJRDd6VyeaRd6IBA_4GNZdK_bH2gE8sGiKKbRD0yKW5huIOfWqf55aa3hjMmM-cutQod1gkj2U6x_8snQD1ZDQGSTWtoPOfzj7QEFGK-zp4_s3x2f6_f7bQvvMHPH8bBI3nlZQMjzUv9UoFjQFKt7pYBr9A9y5e9c"/>
+</div>
+<div class="relative z-10 max-w-container-max mx-auto px-margin-desktop text-center">
+<div class="max-w-2xl mx-auto">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-white mb-6">Invest in Destinies</h2>
+<p class="text-white/80 font-body-lg mb-12">Your generosity fuels our mission to build lives and shape destinies. Together, we can make an eternal impact on our community and beyond.</p>
+<div class="flex flex-col md:flex-row gap-6 justify-center">
+<button class="bg-primary-fixed text-primary font-label-sm px-12 py-5 text-lg hover:bg-white transition-all uppercase tracking-widest">GIVE ONLINE</button>
+<button class="border border-white/30 text-white font-label-sm px-12 py-5 text-lg hover:bg-white hover:text-primary transition-all uppercase tracking-widest">OTHER WAYS TO GIVE</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-primary full-width py-16 border-t border-primary-container flat no shadows">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1">
+<div class="font-display text-headline-md text-primary-fixed mb-6">Kharisbuilders</div>
+<p class="text-on-primary-container font-body-md mb-6 leading-relaxed">
+                    123 Sanctuary Avenue<br/>
+                    Grace Heights, ST 45678
+                </p>
+<div class="flex gap-4">
+<a class="text-primary-fixed/70 hover:text-primary-fixed transition-colors" href="#"><span class="material-symbols-outlined">social_leaderboard</span></a>
+<a class="text-primary-fixed/70 hover:text-primary-fixed transition-colors" href="#"><span class="material-symbols-outlined">camera</span></a>
+<a class="text-primary-fixed/70 hover:text-primary-fixed transition-colors" href="#"><span class="material-symbols-outlined">play_circle</span></a>
+</div>
+</div>
+<div class="col-span-1">
+<h4 class="text-white font-label-sm uppercase tracking-widest mb-6">Explore</h4>
+<ul class="space-y-4">
+<li><a class="text-on-primary-container hover:text-primary-fixed transition-colors font-body-md" href="#">Home</a></li>
+<li><a class="text-on-primary-container hover:text-primary-fixed transition-colors font-body-md" href="#">About Us</a></li>
+<li><a class="text-on-primary-container hover:text-primary-fixed transition-colors font-body-md" href="#">Ministries</a></li>
+<li><a class="text-on-primary-container hover:text-primary-fixed transition-colors font-body-md" href="#">Visit</a></li>
+</ul>
+</div>
+<div class="col-span-1">
+<h4 class="text-white font-label-sm uppercase tracking-widest mb-6">Quick Links</h4>
+<ul class="space-y-4">
+<li><a class="text-on-primary-container hover:text-primary-fixed transition-colors font-body-md" href="#">Give</a></li>
+<li><a class="text-on-primary-container hover:text-primary-fixed transition-colors font-body-md" href="#">Careers</a></li>
+<li><a class="text-on-primary-container hover:text-primary-fixed transition-colors font-body-md" href="#">Privacy Policy</a></li>
+<li><a class="text-on-primary-container hover:text-primary-fixed transition-colors font-body-md" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div class="col-span-1">
+<h4 class="text-white font-label-sm uppercase tracking-widest mb-6">Service Times</h4>
+<div class="space-y-2">
+<p class="text-on-primary-container font-body-md">Sunday: 8:00 AM | 11:00 AM</p>
+<p class="text-on-primary-container font-body-md">Wednesday: 7:00 PM</p>
+<p class="text-primary-fixed font-bold font-body-md mt-4">Streaming Live at 11:00 AM</p>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-desktop mt-16 pt-8 border-t border-white/10 text-center">
+<p class="text-on-primary-container/50 font-body-md">© 2024 Kharisbuilders. Building Lives, Shaping Destinies.</p>
+</div>
+</footer>
+<script>
+        // Simple atmospheric interaction
+        document.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('vellum-glass');
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('vellum-glass');
+                header.classList.remove('shadow-md');
+            }
+        });
+
+        // Hover effects for cards
+        const cards = document.querySelectorAll('.group');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+                card.style.transition = 'transform 0.3s ease-out';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

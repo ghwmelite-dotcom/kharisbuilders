@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kharisbuilders | Sermon Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed": "#241433",
+                        "on-tertiary-fixed-variant": "#47464c",
+                        "on-surface": "#1e1a21",
+                        "primary-fixed-dim": "#d6bee6",
+                        "inverse-primary": "#d6bee6",
+                        "primary-fixed": "#f1daff",
+                        "secondary-fixed-dim": "#d8bcee",
+                        "primary": "#362545",
+                        "on-surface-variant": "#4a454d",
+                        "tertiary-fixed-dim": "#c8c5cc",
+                        "tertiary-container": "#434247",
+                        "error-container": "#ffdad6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#e6cafd",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#faf1fb",
+                        "tertiary-fixed": "#e5e1e8",
+                        "on-secondary-fixed": "#261239",
+                        "surface-container": "#f4ebf5",
+                        "surface": "#fff7fe",
+                        "outline-variant": "#ccc4cd",
+                        "background": "#fff7fe",
+                        "inverse-on-surface": "#f7eef8",
+                        "surface-tint": "#6a577a",
+                        "on-tertiary-fixed": "#1c1b20",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#e0d7e1",
+                        "on-background": "#1e1a21",
+                        "on-tertiary-container": "#b1aeb5",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#523f61",
+                        "error": "#ba1a1a",
+                        "tertiary": "#2d2c31",
+                        "surface-container-highest": "#e9e0ea",
+                        "secondary": "#6c5581",
+                        "surface-bright": "#fff7fe",
+                        "secondary-fixed": "#f0dbff",
+                        "inverse-surface": "#332f36",
+                        "on-secondary-fixed-variant": "#533e68",
+                        "on-primary-container": "#bda6ce",
+                        "surface-variant": "#e9e0ea",
+                        "on-error-container": "#93000a",
+                        "outline": "#7b757d",
+                        "on-secondary-container": "#69527e",
+                        "surface-container-high": "#efe5f0",
+                        "primary-container": "#4d3b5c",
+                        "heritage-gold": "#D4AF37"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "margin-mobile": "20px",
+                        "unit": "8px",
+                        "margin-desktop": "64px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "display": ["Playfair Display"],
+                        "headline-md": ["Playfair Display"],
+                        "body-md": ["Manrope"],
+                        "body-lg": ["Manrope"],
+                        "label-sm": ["Manrope"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "headline-lg": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "display": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600"}],
+                        "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                        "headline-lg": ["48px", {"lineHeight": "56px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active {
+            @apply bg-primary-container text-on-primary-container;
+        }
+        .glass-panel {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 247, 254, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-secondary-container selection:text-on-secondary-container">
+<!-- TopNavBar -->
+<header class="bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-secondary/20 shadow-sm dark:shadow-none docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center px-6 md:px-16 w-full max-w-container-max mx-auto h-20">
+<div class="font-display-lg text-headline-md text-primary dark:text-primary-fixed">
+                Kharisbuilders
+            </div>
+<nav class="hidden md:flex gap-8 items-center">
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-300" href="#">Home</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-300" href="#">About</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-primary dark:text-primary-fixed font-bold border-b-2 border-heritage-gold pb-1" href="#">Ministries</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant dark:text-surface-variant hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-300" href="#">Visit</a>
+</nav>
+<button class="bg-primary text-on-primary px-6 py-2 font-label-sm text-label-sm uppercase tracking-widest hover:bg-primary-container transition-all scale-95 active:scale-90">
+                New Here?
+            </button>
+</div>
+</header>
+<div class="flex max-w-container-max mx-auto min-h-[calc(100vh-80px)]">
+<!-- Sidebar Navigation -->
+<aside class="hidden md:flex flex-col w-64 border-r border-secondary/10 py-12 px-6 space-y-2">
+<p class="text-label-sm font-label-sm text-outline mb-6 px-4">MANAGEMENT</p>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container text-on-primary-container font-semibold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_stories</span>
+<span class="font-body-md">Sermons</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-body-md">Ministries</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="font-body-md">Events</span>
+</a>
+<div class="pt-8">
+<p class="text-label-sm font-label-sm text-outline mb-6 px-4">SETTINGS</p>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md">Preferences</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-6 md:p-12">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+<div>
+<h1 class="font-display text-headline-lg text-primary mb-2">Sermon Library</h1>
+<p class="font-body-md text-on-surface-variant">Manage your digital cathedral's teachings and series archive.</p>
+</div>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-8 py-4 font-label-sm text-label-sm uppercase tracking-widest shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+<span class="material-symbols-outlined">upload</span>
+                    Upload New Sermon
+                </button>
+</div>
+<!-- Controls & Filters -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-8">
+<div class="md:col-span-8 relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-none border-b-2 border-secondary/10 focus:border-primary focus:ring-0 font-body-md transition-all" placeholder="Search by title, speaker, or series..." type="text"/>
+</div>
+<div class="md:col-span-4 flex gap-4">
+<select class="flex-1 px-4 py-4 bg-surface-container-low border-none border-b-2 border-secondary/10 focus:border-primary focus:ring-0 font-body-md appearance-none">
+<option>All Series</option>
+<option>Architects of Faith</option>
+<option>Ancient Paths</option>
+</select>
+<button class="px-4 py-4 bg-surface-container-highest text-primary hover:bg-secondary-container transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Sermon Table / List -->
+<div class="bg-white border border-primary/10 rounded-xl overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-high">
+<tr>
+<th class="px-6 py-5 font-label-sm text-label-sm text-outline uppercase tracking-wider">Sermon Title</th>
+<th class="px-6 py-5 font-label-sm text-label-sm text-outline uppercase tracking-wider">Series</th>
+<th class="px-6 py-5 font-label-sm text-label-sm text-outline uppercase tracking-wider">Date</th>
+<th class="px-6 py-5 font-label-sm text-label-sm text-outline uppercase tracking-wider">Status</th>
+<th class="px-6 py-5 font-label-sm text-label-sm text-outline uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/5">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded bg-secondary-fixed flex items-center justify-center text-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A serene architectural interior of a modern church with sunlight streaming through minimalist geometric windows. The scene captures a sense of sacred geometry and peaceful atmosphere with soft shadows and high-key lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjW3hRX9y5GQ9c9v9AHBALSRj4mpOLujNHD33CVbsSJx0G_N_inwv0uCtoTTIIuFMGSwC2NQS6Qed6CZvqFaVan-ETA0kaZw6RzAarYsVydXscSTEJWrQEYGShs-l1OHHG3Slibuc3OtNbFd3kzZM7CU2jLL7NFbrBOj-Ar47thzYmhEfr_iHEcpsB1W_G89UpPekOg8yTpw1iMPXN9ya4kJUKFVdFwxUk30cSAyi6kkhpVOWESc4uJdbcTLCGb6tF4jNEFJc5VSPG"/>
+</div>
+<div>
+<p class="font-body-md font-bold text-primary">The Architecture of Stillness</p>
+<p class="text-label-sm text-on-surface-variant uppercase">Pastor Elian Thorne</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 font-body-md text-on-surface-variant">Sacred Rhythms</td>
+<td class="px-6 py-6 font-body-md text-on-surface-variant">Oct 24, 2024</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full bg-primary-container/10 text-primary-container text-label-sm font-bold border border-primary-container/20">Published</span>
+</td>
+<td class="px-6 py-6 text-right">
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded bg-secondary-fixed flex items-center justify-center text-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A minimalist library with ancient leather-bound books resting on sleek white marble shelves. The lighting is soft and intentional, highlighting the textures of the paper and stone, evoking a mood of timeless wisdom and intellectual reverence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKo2k0J0ne6D3GSst1rhd0fo_jd7-vRaXjfLqdz1ep89O7iB18b7nBWCJCrJRzgU3-3ZcrBhmJyOLJbk4oYrPIUJlraGkOG37DFwo5QDWtsn8OBn4ubl9j-HwidgIaB1gyhtV4BtH1jJ8bpMFESxz5Z5jt_bav6d479FIC2VD4wVnM_hRe3ZCrITtlp9cKXefTGAGaJHdTvHuMCDQihkI9iZtIcJisngjsGrv0431ooGckudbMV2yOq3g60NVIpYO5LnW1zvWUrNd9"/>
+</div>
+<div>
+<p class="font-body-md font-bold text-primary">Foundations of the Unseen</p>
+<p class="text-label-sm text-on-surface-variant uppercase">Dr. Sarah Vance</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 font-body-md text-on-surface-variant">Ancient Paths</td>
+<td class="px-6 py-6 font-body-md text-on-surface-variant">Oct 17, 2024</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full bg-primary-container/10 text-primary-container text-label-sm font-bold border border-primary-container/20">Published</span>
+</td>
+<td class="px-6 py-6 text-right">
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded bg-secondary-fixed flex items-center justify-center text-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A macro photograph of golden dust motes dancing in a single shaft of light against a deep purple background. The visual is ethereal and poetic, emphasizing a sense of divine presence and the beauty of the intangible in a minimalist artistic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDVNciQ94NXZXDPWXlFZUjHSII_ONxL63sDiHfpRhCwhIiIgjqJUniXHsT6tOzOahCMKek6i8nQM5I8HpAe1Rpmx7JEaB53nrJxcMHnYMPzxv4oVdilH8BZbK3en6dL1kJPsxcCJAK7YVqApD2NDhXcqp5eMwO4spR3pQnmdwnOsZgdkWQdDN_EVbsyvA853rONF-PJ3TrT4bMUQ_jd9lbiGqN7fpp2oSC9vy45BegmlCw9Fd2lL-t-rRKjpXsm7rPLxwgGR9kjIbi"/>
+</div>
+<div>
+<p class="font-body-md font-bold text-primary">Living as Living Stones</p>
+<p class="text-label-sm text-on-surface-variant uppercase">Pastor Elian Thorne</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 font-body-md text-on-surface-variant">Architects of Faith</td>
+<td class="px-6 py-6 font-body-md text-on-surface-variant">Oct 10, 2024</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant text-label-sm font-bold border border-tertiary/20">Draft</span>
+</td>
+<td class="px-6 py-6 text-right">
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-6">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded bg-secondary-fixed flex items-center justify-center text-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="An abstract visual representing clarity and wisdom with intersecting lines of light on a smooth obsidian-like surface. The composition is clean, using a palette of deep violet and bright silver to create a sense of professional authority and sacred precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU5daJ8xwEKc95fDteoZQzQ5GAZ-N5IhvM4Qhydwp4DlFwxAX576OJR7c6ka1hJQW63eeAljyGd_vRgRhkdqz0ghLkZZ56UN8Ol35zr-3bc1sQaAOJeenE6Dk_OKV7eH7BwtPNCu3exEbdRmDnv8v5WI-mSr-1xDKZY4X3Ip6FWM-JCea-jse89BuDHX_9QitHOv6H1XXiaqwZKQyex5XuAshVYIQvIrpUk_0ZSD618HLu_7IiRIIJMAhab1vt_KbFFWXVvPLP3Xki"/>
+</div>
+<div>
+<p class="font-body-md font-bold text-primary">The Silence Between Notes</p>
+<p class="text-label-sm text-on-surface-variant uppercase">Minister Chloe James</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 font-body-md text-on-surface-variant">Sacred Rhythms</td>
+<td class="px-6 py-6 font-body-md text-on-surface-variant">Oct 03, 2024</td>
+<td class="px-6 py-6">
+<span class="px-3 py-1 rounded-full bg-primary-container/10 text-primary-container text-label-sm font-bold border border-primary-container/20">Published</span>
+</td>
+<td class="px-6 py-6 text-right">
+<button class="text-outline hover:text-primary transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-6 py-4 bg-surface-container-low flex justify-between items-center">
+<p class="font-body-md text-on-surface-variant text-sm">Showing 4 of 124 sermons</p>
+<div class="flex gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded border border-primary/10 hover:bg-white transition-all text-primary"><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="w-10 h-10 flex items-center justify-center rounded bg-primary text-on-primary shadow-md">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded border border-primary/10 hover:bg-white transition-all text-primary">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded border border-primary/10 hover:bg-white transition-all text-primary">3</button>
+<button class="w-10 h-10 flex items-center justify-center rounded border border-primary/10 hover:bg-white transition-all text-primary"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-primary dark:bg-surface-container-lowest border-t border-heritage-gold/20 full-width py-16">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-6 md:px-16 max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1">
+<div class="font-display-lg text-headline-md text-heritage-gold mb-4">Kharisbuilders</div>
+<p class="text-on-primary/70 dark:text-on-surface/70 font-body-md">Building Lives, Shaping Destinies through the architectural power of word and spirit.</p>
+</div>
+<div class="space-y-4">
+<h4 class="font-label-sm text-label-sm text-heritage-gold uppercase tracking-widest">Connect</h4>
+<ul class="space-y-2">
+<li><a class="font-body-md text-on-primary/70 dark:text-on-surface/70 hover:text-heritage-gold transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="font-body-md text-on-primary/70 dark:text-on-surface/70 hover:text-heritage-gold transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="font-label-sm text-label-sm text-heritage-gold uppercase tracking-widest">Support</h4>
+<ul class="space-y-2">
+<li><a class="font-body-md text-on-primary/70 dark:text-on-surface/70 hover:text-heritage-gold transition-colors" href="#">Give</a></li>
+<li><a class="font-body-md text-on-primary/70 dark:text-on-surface/70 hover:text-heritage-gold transition-colors" href="#">Careers</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="font-label-sm text-label-sm text-heritage-gold uppercase tracking-widest">Contact</h4>
+<p class="font-body-md text-on-primary/70 dark:text-on-surface/70">123 Cathedral Way<br/>Legacy District, LV 89012</p>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-6 md:px-16 mt-16 pt-8 border-t border-heritage-gold/10">
+<p class="text-on-primary/50 dark:text-on-surface/50 font-body-md text-sm">© 2024 Kharisbuilders. Building Lives, Shaping Destinies.</p>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for search bar focus
+        const searchInput = document.querySelector('input[type="text"]');
+        const searchIcon = document.querySelector('.material-symbols-outlined.absolute');
+        
+        searchInput.addEventListener('focus', () => {
+            searchIcon.style.color = '#362545';
+            searchIcon.style.transform = 'translateY(-50%) scale(1.1)';
+        });
+        
+        searchInput.addEventListener('blur', () => {
+            searchIcon.style.color = '#7b757d';
+            searchIcon.style.transform = 'translateY(-50%) scale(1)';
+        });
+    </script>
+</body></html>
