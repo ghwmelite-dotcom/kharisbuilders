@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-container": "#4d3b5c",
+                    "surface-dim": "#e0d7e1",
+                    "surface-bright": "#fff7fe",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#261239",
+                    "outline-variant": "#ccc4cd",
+                    "surface-tint": "#6a577a",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#c8c5cc",
+                    "on-secondary-fixed-variant": "#533e68",
+                    "on-background": "#1e1a21",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed": "#f0dbff",
+                    "secondary-container": "#e6cafd",
+                    "primary-fixed": "#f1daff",
+                    "on-surface": "#1e1a21",
+                    "surface": "#fff7fe",
+                    "surface-variant": "#e9e0ea",
+                    "on-tertiary-fixed-variant": "#47464c",
+                    "on-surface-variant": "#4a454d",
+                    "surface-container": "#f4ebf5",
+                    "on-secondary": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#f7eef8",
+                    "on-secondary-container": "#69527e",
+                    "on-primary-container": "#bda6ce",
+                    "on-tertiary-fixed": "#1c1b20",
+                    "inverse-primary": "#d6bee6",
+                    "tertiary": "#2d2c31",
+                    "primary-fixed-dim": "#d6bee6",
+                    "on-primary-fixed-variant": "#523f61",
+                    "on-primary-fixed": "#241433",
+                    "surface-container-high": "#efe5f0",
+                    "outline": "#7b757d",
+                    "background": "#fff7fe",
+                    "on-error": "#ffffff",
+                    "secondary": "#6c5581",
+                    "surface-container-low": "#faf1fb",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#362545",
+                    "on-tertiary-container": "#b1aeb5",
+                    "surface-container-highest": "#e9e0ea",
+                    "inverse-surface": "#332f36",
+                    "tertiary-container": "#434247",
+                    "tertiary-fixed": "#e5e1e8",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed-dim": "#d8bcee"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-mobile": "20px",
+                    "margin-desktop": "64px",
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Manrope"],
+                    "label-sm": ["Manrope"],
+                    "headline-lg": ["Playfair Display"],
+                    "headline-lg-mobile": ["Playfair Display"],
+                    "display": ["Playfair Display"],
+                    "body-md": ["Manrope"],
+                    "headline-md": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600"}],
+                    "headline-lg": ["48px", {"lineHeight": "56px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "display": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hero-gradient {
+            background: linear-gradient(rgba(54, 37, 69, 0.75), rgba(54, 37, 69, 0.75));
+        }
+        .vellum-glass {
+            backdrop-filter: blur(12px);
+            background-color: rgba(255, 247, 254, 0.85);
+        }
+        .timeline-line {
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, #6a577a 15%, #6a577a 85%, transparent);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md selection:bg-primary-fixed">
+<!-- Top Navigation Bar -->
+<nav class="bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-secondary/20 shadow-sm dark:shadow-none docked full-width top-0 sticky z-50 h-20">
+<div class="flex justify-between items-center px-margin-desktop w-full max-w-container-max mx-auto h-full">
+<div class="font-display text-headline-md text-primary">Kharisbuilders</div>
+<div class="hidden md:flex items-center space-x-12">
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Home</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-primary font-bold border-b-2 border-surface-tint pb-1 transition-colors duration-300" href="#">About</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Ministries</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Visit</a>
+</div>
+<button class="bg-primary text-on-primary font-label-sm px-6 py-2 uppercase tracking-widest hover:bg-primary-container transition-all duration-300 scale-95 active:scale-90 border-b-2 border-surface-tint">
+            New Here?
+        </button>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative h-[614px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img alt="Church Architecture" class="w-full h-full object-cover" data-alt="A grand cathedral interior with light streaming through high arched windows, casting soft atmospheric rays onto limestone walls. The architecture is a blend of classical stonework and modern glass elements, creating a sense of sacred space and architectural spirit. The lighting is warm and ethereal, with deep shadows and highlighted dust motes in the air, maintaining a sophisticated midnight blue and heritage gold color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEsQrZogAajnpd9Mo5n4Z7qKp2mjwBwbWswl-N_QtOULaVszlA8GA2pW_ibX5o6G_eFoqR-L3TVLS32GJCFm-Kg1Smt86NOL8pSi3faty17j27h7yamG9j7W8O257s1sWJAqogtq8G85DHwH5KpsS0ybY8vsXRNnuuFfOMO9TrDbCjPsHEb5T3HcWB3E8k3HDkJ2NUapgnIg5xvDQizFavuEcShZ31uSo87bVziZ2aqYcJkThqCoG41uHQTYPVs_EvDKptTqevCWTv"/>
+<div class="absolute inset-0 hero-gradient"></div>
+</div>
+<div class="relative z-10 text-center px-margin-mobile">
+<span class="font-label-sm text-label-sm uppercase tracking-[0.3em] text-on-primary-container mb-6 block">Our Identity</span>
+<h1 class="font-display text-headline-lg-mobile md:text-display text-on-primary max-w-4xl mx-auto">Architects of Faith, Builders of Destinies</h1>
+</div>
+</header>
+<!-- Vision & Mission -->
+<section class="py-32 px-margin-desktop max-w-container-max mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div class="space-y-12">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary mb-6">The Vision</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                    To see every life constructed on the unshakeable foundation of grace, transforming individuals into living monuments of God's presence within their spheres of influence.
+                </p>
+</div>
+<div class="pt-8 border-t border-surface-tint/20">
+<h2 class="font-headline-lg text-headline-lg text-primary mb-6">The Mission</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                    We are committed to building people through the precise teaching of the Word, the warmth of communal fellowship, and the strategic deployment of spiritual gifts for societal impact.
+                </p>
+</div>
+</div>
+<div class="relative aspect-square">
+<div class="absolute -inset-4 border border-surface-tint/30 translate-x-4 translate-y-4"></div>
+<img alt="Vision Statement" class="w-full h-full object-cover relative z-10 grayscale hover:grayscale-0 transition-all duration-700" data-alt="A high-contrast, professional photograph of architectural drafting tools laid out on a dark blue linen surface next to a Bible. Soft, warm directional light highlights the textures of the leather binding and the polished brass of a compass. The scene is elegant and minimalist, symbolizing the intersection of careful planning and divine inspiration in a modern, light-mode environment with deep blue and heritage gold accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwiEA4azvUN8Z8tNmG_8jYDwYfR31ZvepGci_lazxn5pMyYgZWjKgTcz6IswG7LVYpPSGrhNeNj3QZVq0JSQd0gZk7X6yakYEB3rQlknoyhBNf_0-3GSKHODi7pb2RjOdk6XUwczeu13z43kcPizCOK3dpap2_eyXh7NMPQXpjhb7loHpd4sigQ3a5yty5VeJFoO6iohH_6bjyUucYhQLIn9U6DjUiQm32JcQGl1sb_6J4ANw3GZCOM8btw-TtxC8CXmS22OyhK2Mm"/>
+</div>
+</div>
+</section>
+<!-- Leadership: The Builders -->
+<section class="bg-surface-container-low py-32">
+<div class="px-margin-desktop max-w-container-max mx-auto text-center mb-20">
+<span class="font-label-sm text-label-sm uppercase tracking-[0.3em] text-secondary mb-4 block">The Shepherds</span>
+<h2 class="font-display text-headline-lg md:text-display text-primary">The Builders</h2>
+</div>
+<div class="px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Leader 1 -->
+<div class="group">
+<div class="relative overflow-hidden mb-8 aspect-[4/5]">
+<img alt="Lead Pastor" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A professional headshot of a mature man in a tailored midnight blue suit, looking thoughtfully into the distance. The lighting is cinematic and soft, coming from the side to create subtle depth. The background is a blurred architect's studio with large windows. The overall aesthetic is clean, professional, and reflects an established yet evolving church leader in a modern setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuE9GJjYpATWO3AcxNIz6-_Jh9kQ6i6h8ymtWKRUlsQQ-q2R8Rh0AUKtsOYRwsDIumZGiDGgRGLlN8AOU_uyNi2l439Mbn_xD6qmYxXJExnFZEBwAjRxCkp1_WOAcyFT5yUBVv8T0MIcdCMpTRLFrwzsKguKSpMzr5pbW-Z-5EINgYEHGeTZvJAg52UffRKvrFZK5vHwM8tbCfmgc8hhADrO9dsLIi6tOKh_UcyqPUGqIGOdtjjuoFwKSQpmavsjTkYMXkrTt5XC6s"/>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-1">Dr. Samuel A. Kharis</h3>
+<p class="font-label-sm text-label-sm uppercase tracking-widest text-secondary">Founding Pastor</p>
+</div>
+<!-- Leader 2 -->
+<div class="group">
+<div class="relative overflow-hidden mb-8 aspect-[4/5]">
+<img alt="Executive Pastor" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A professional portrait of a woman with a confident and welcoming smile, dressed in a sophisticated cream-colored blazer. She stands in a bright, modern architectural space with clean lines and warm stone textures. The lighting is bright and high-key, creating an atmosphere of warmth and authority. The visual style is modern minimalist with tonal layering of champagne and gold." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDszZdanR2XmnYGyF5oO3KJBtuCU8-e8dsJfAD8tKYJTVZkdYtZIP1VJjwMp9l6iuIs7S2GEOKrG60WRX7kzsSAlB9lLcLu3oDAYxshJDpfEi_-qa7-j5iFQDu1hQHAefx5PAOxu4aGA1uDpLpI4lAoJE10vZgQf_M8sjpvVHrpvVW57pxsdO4l-oKDvoYK0YFNPI__Z4ComxXKHeS1wY8i7W7cRvXoQ12u4SMXEHYo9hJbOtOwMTb5QuAi5ZaOL5b_AF3Rc6MZ3uJ3"/>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-1">Pastor Elena Kharis</h3>
+<p class="font-label-sm text-label-sm uppercase tracking-widest text-secondary">Executive Pastor</p>
+</div>
+<!-- Leader 3 -->
+<div class="group">
+<div class="relative overflow-hidden mb-8 aspect-[4/5]">
+<img alt="Worship Pastor" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A professional headshot of a younger man with a friendly, intelligent expression, wearing a dark navy knit sweater. The background is a library with blurred wooden bookshelves, creating a scholarly yet accessible mood. The lighting is natural and soft, emphasizing a modern and established pastoral look within the Kharisbuilders visual ecosystem." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBixvGpTc2CXVOW3KgG8JAhWgGuLGWspsXqrKy-2FfCYJ2jDRq_VwgfilSINWMnxP4I3K4eKXEN0_y3iGRBRclCXD9XVtqr1c0Qkv9tNbamOO-7cPIJ7vQCRns-dtsXEr6v-3Fm45IlKR6HLYE7F_WGrCNS6PC8UIo21rXpN191JalOmYceAgbXzNJNbk9ttRcrO_ccNKsSDPI1A42BUdj6bp8YiM1MsuNZEF7v5ZxQHb3CMmcKNqhVh1Dz-H-J8juaCb1nPVqiTN17"/>
+<div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-1">Min. David Chen</h3>
+<p class="font-label-sm text-label-sm uppercase tracking-widest text-secondary">Worship &amp; Arts</p>
+</div>
+</div>
+</section>
+<!-- Our Journey Timeline -->
+<section class="py-32 px-margin-desktop max-w-container-max mx-auto">
+<div class="max-w-3xl mx-auto relative">
+<div class="text-center mb-24">
+<span class="font-label-sm text-label-sm uppercase tracking-[0.3em] text-secondary mb-4 block">The Blueprint</span>
+<h2 class="font-headline-lg text-headline-lg text-primary">Our Journey</h2>
+</div>
+<!-- Timeline -->
+<div class="absolute left-0 md:left-1/2 top-[200px] bottom-0 timeline-line -translate-x-1/2 hidden md:block"></div>
+<div class="space-y-32">
+<!-- Point 1 -->
+<div class="relative flex flex-col md:flex-row items-center justify-between md:odd:flex-row-reverse">
+<div class="w-full md:w-[45%] text-left md:odd:text-right">
+<span class="font-display text-headline-lg text-primary/20 block mb-4">2012</span>
+<h4 class="font-headline-md text-headline-md text-primary mb-4">The First Cornerstone</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Kharisbuilders began as a small gathering of twelve in a downtown studio, united by a vision for architectural spiritual growth.</p>
+</div>
+<div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-secondary border-4 border-surface hidden md:block"></div>
+<div class="w-full md:w-[45%] mt-8 md:mt-0">
+<img alt="Founding Year" class="w-full aspect-video object-cover" data-alt="A vintage-toned photograph of a small group of people gathered in a minimalist, sun-drenched urban studio space. The lighting is warm and nostalgic, capturing a moment of intense connection and humble beginnings. The composition emphasizes the light-filled architectural space and the shared focus of the group, consistent with the church's foundation narrative." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7RajFZozZLpuZXb_TMs1T3tCANqiEzRW76EgYRHhVaz_WuL5_EZkwvtJukbo1WZQdl-IqQRuHY7kcEGirlAi3IXqajc3UFvq39fO0RKD512cEXe3xDQDqs2w9n-BBRuOYsUDxPqFpGkEXTAP3kQXogUmz1QtnGI-Dxepe5NT6PuCoQaITN-goZ-E78y1Hy3bWzeiv-ImxFIeqbFYTNOT6kjEjyZNfbjF05K6rY_Zv7JYzuZb8BA6GvW6CFvfqyQeHBrxehY0sxgR4"/>
+</div>
+</div>
+<!-- Point 2 -->
+<div class="relative flex flex-col md:flex-row items-center justify-between md:odd:flex-row-reverse">
+<div class="w-full md:w-[45%] text-left md:odd:text-right">
+<span class="font-display text-headline-lg text-primary/20 block mb-4">2017</span>
+<h4 class="font-headline-md text-headline-md text-primary mb-4">Expanding the Walls</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Our community grew to five hundred, leading us to our current sanctuary—a space designed to facilitate spiritual encounter and professional excellence.</p>
+</div>
+<div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-secondary border-4 border-surface hidden md:block"></div>
+<div class="w-full md:w-[45%] mt-8 md:mt-0">
+<img alt="Sanctuary Opening" class="w-full aspect-video object-cover" data-alt="A wide-angle interior shot of a modern church sanctuary during a sunset. Large glass windows allow the warm evening light to flood the space, highlighting the clean wooden pews and the minimalist limestone altar. The atmosphere is one of serene growth and architectural beauty, using a tonal palette of warm sand and midnight blue." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNOpHC0sbsVBZcQG0_ysJnVjG-52Y1Sd28K981LN_k0meTOdKQkIaN7b3ezihJBJi29bJxsZjipKUqpn_zsIqUz5kp5yfG4bNWUCoavnr5wGkCQGR90_msZ4lH9w03jI5Oi9H_nwseTUkGSKuzQPahp5reb2joni4Er8kwP6yepEpbe9pSBDFI40J6qqTC3D4Y7bBKc_hRUpejwAKbxBzCsBB-SaOSxBJoc7wEF9is5As_p1VUFgvt-2gwENbel2iGwfyH5b9TC7Ag"/>
+</div>
+</div>
+<!-- Point 3 -->
+<div class="relative flex flex-col md:flex-row items-center justify-between md:odd:flex-row-reverse">
+<div class="w-full md:w-[45%] text-left md:odd:text-right">
+<span class="font-display text-headline-lg text-primary/20 block mb-4">2024</span>
+<h4 class="font-headline-md text-headline-md text-primary mb-4">Shaping the Future</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">Launching our digital global campus and the 'Builders Academy,' training leaders for the next generation of societal transformation.</p>
+</div>
+<div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-secondary border-4 border-surface hidden md:block"></div>
+<div class="w-full md:w-[45%] mt-8 md:mt-0">
+<img alt="Future Vision" class="w-full aspect-video object-cover" data-alt="A modern, high-tech control room or studio setup with soft blue ambient lighting. High-resolution screens display graphics for a global broadcast. The setting is sleek and futuristic, yet grounded by warm heritage gold accents in the furniture and decor. It represents the church's forward-looking digital expansion and commitment to professional excellence in a modern minimalist style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBw1eiKpRTT3SlXXI5T6OiKFCOGs31wS7fT7ZJc3PaJ1qT0WkUSZoAYvFseEOYsIw9rHSdVP8CwBsxn876g25tM8xwg0r__3mo5udS1nvUkc0G1Dr-SvXSJz9MrVY3rXBdIrfxjsIY9_0tnVv8AKP-xfPDbtKePTc06TVxBQtquXQIDfHVrcMQYlEyrZkllbrT_nQLkrFO-b3hSwfl8UOJUs8_mobQMMNn8Z3CzKORNWpvdVcc5KDe2t4zZv7rfB7X6zd4MUPZcL7rM"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-primary full-width py-16 border-t border-secondary/20">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto text-on-primary">
+<div class="col-span-1 md:col-span-2">
+<div class="font-display text-headline-md text-secondary-fixed mb-6">Kharisbuilders</div>
+<p class="font-body-md text-on-primary/70 max-w-sm mb-8">
+                © 2024 Kharisbuilders. Building Lives, Shaping Destinies.
+            </p>
+<div class="flex space-x-6">
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary-fixed transition-colors">public</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary-fixed transition-colors">church</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-secondary-fixed transition-colors">volunteer_activism</span>
+</div>
+</div>
+<div class="flex flex-col space-y-4">
+<h5 class="font-label-sm text-label-sm uppercase tracking-widest text-secondary-fixed">Engage</h5>
+<a class="font-body-md text-on-primary/70 hover:text-secondary-fixed transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-md text-on-primary/70 hover:text-secondary-fixed transition-colors" href="#">Terms of Service</a>
+</div>
+<div class="flex flex-col space-y-4">
+<h5 class="font-label-sm text-label-sm uppercase tracking-widest text-secondary-fixed">Support</h5>
+<a class="font-body-md text-on-primary/70 hover:text-secondary-fixed transition-colors" href="#">Give</a>
+<a class="font-body-md text-on-primary/70 hover:text-secondary-fixed transition-colors" href="#">Careers</a>
+</div>
+</div>
+</footer>
+<script>
+    // Micro-interactions for scrolling
+    window.addEventListener('scroll', () => {
+        const nav = document.querySelector('nav');
+        if (window.scrollY > 50) {
+            nav.classList.add('vellum-glass');
+        } else {
+            nav.classList.remove('vellum-glass');
+        }
+    });
+
+    // Intersection Observer for animation reveals
+    const observerOptions = {
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('opacity-100', 'translate-y-0');
+                entry.target.classList.remove('opacity-0', 'translate-y-10');
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.group, .space-y-32 > div').forEach(el => {
+        el.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+        observer.observe(el);
+    });
+</script>
+</body></html>
