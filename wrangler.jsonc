@@ -1,6 +1,6 @@
 {
 	"compatibility_date": "2026-06-02",
-	"compatibility_flags": ["global_fetch_strictly_public"],
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
 	"name": "kharisbuilders",
 	"main": "@astrojs/cloudflare/entrypoints/server",
 	"assets": {
@@ -9,5 +9,21 @@
 	},
 	"observability": {
 		"enabled": true
-	}
+	},
+	// All structured content (sermons, events, ministries, visitors, donations, settings).
+	// database_id is filled in after `wrangler d1 create kharisbuilders`.
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "kharisbuilders",
+			"database_id": "REPLACE_AFTER_D1_CREATE"
+		}
+	],
+	// Uploaded media (event/ministry images, sermon thumbnails, portraits).
+	"r2_buckets": [
+		{
+			"binding": "MEDIA",
+			"bucket_name": "kharisbuilders-media"
+		}
+	]
 }
