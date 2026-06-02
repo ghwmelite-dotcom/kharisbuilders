@@ -28,6 +28,9 @@
   --kb-surface: #fff7fe;
   --kb-on-surface: #1e1a21;
   --kb-on-surface-variant: #4a454d;
+  /* Deliberate: purple DESIGN.md prose + button spec specify Deep Royal #4D3B5C as
+     primary (better white-text contrast); the frontmatter's #362545 is used as accent-deep.
+     Do not "fix" primary back to #362545. */
   --kb-primary: #4d3b5c;
   --kb-on-primary: #ffffff;
   --kb-primary-container: #6c5581;
