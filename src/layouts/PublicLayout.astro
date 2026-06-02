@@ -1,0 +1,27 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { resolveTheme } from '../lib/theme';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'Kharisbuilders — Building Lives, Shaping Destinies.' } = Astro.props;
+const theme = resolveTheme(Astro.cookies.get('theme')?.value);
+---
+<!doctype html>
+<html lang="en" data-theme={theme}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body>
+    <Nav />
+    <main><slot /></main>
+    <Footer />
+  </body>
+</html>

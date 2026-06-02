@@ -1,0 +1,42 @@
+/* Theme tokens — values sourced from the two DESIGN.md files
+   (sacred_structure_1 = sacred/midnight-gold, sacred_structure_2 = purple).
+   Runtime theme vars use a --kb-* prefix so they never collide with
+   Tailwind's own --color-* theme namespace (mapped in global.css). */
+:root {
+  --container-max: 1280px;
+  --space-unit: 8px;
+  /* Fonts are theme-independent; referenced raw via font-[var(--font-display)]. */
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Manrope', sans-serif;
+}
+
+[data-theme='sacred'] {
+  --kb-surface: #fbf9f4;
+  --kb-on-surface: #1b1c19;
+  --kb-on-surface-variant: #44474d;
+  --kb-primary: #04162c;
+  --kb-on-primary: #ffffff;
+  --kb-primary-container: #1a2b42;
+  --kb-accent: #8c734b; /* heritage gold */
+  --kb-accent-deep: #4a0e0e; /* sacred burgundy */
+  --kb-muted: #4d4d4d; /* stone gray */
+  --kb-champagne: #e5dcc5;
+  --kb-shadow-ambient: 0 12px 32px -4px rgba(26, 43, 66, 0.08);
+}
+
+[data-theme='purple'] {
+  --kb-surface: #fff7fe;
+  --kb-on-surface: #1e1a21;
+  --kb-on-surface-variant: #4a454d;
+  /* Deliberate: purple DESIGN.md prose + button spec specify Deep Royal #4D3B5C as
+     primary (better white-text contrast); the frontmatter's #362545 is used as accent-deep.
+     Do not "fix" primary back to #362545. */
+  --kb-primary: #4d3b5c;
+  --kb-on-primary: #ffffff;
+  --kb-primary-container: #6c5581;
+  --kb-accent: #9d84b3; /* muted lavender */
+  --kb-accent-deep: #362545;
+  --kb-muted: #4a454d;
+  --kb-champagne: #f4f0f7;
+  --kb-shadow-ambient: 0 12px 32px -4px rgba(77, 59, 92, 0.08);
+}

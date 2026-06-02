@@ -1,0 +1,10 @@
+# Copy to .dev.vars (gitignored) for local development.
+# Production values are set via `wrangler secret put <NAME>` or the Cloudflare dashboard.
+
+# Paystack (Phase 5 — Giving)
+PAYSTACK_SECRET_KEY=
+PAYSTACK_PUBLIC_KEY=
+PAYSTACK_WEBHOOK_SECRET=
+
+# Cloudflare Turnstile (Phase 2 — public form spam protection)
+TURNSTILE_SECRET_KEY=

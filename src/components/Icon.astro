@@ -1,0 +1,24 @@
+---
+interface Props {
+  name: 'menu' | 'play' | 'arrow-right';
+  class?: string;
+}
+const { name, class: cls = 'w-6 h-6' } = Astro.props;
+const paths: Record<Props['name'], string> = {
+  menu: 'M3 6h18M3 12h18M3 18h18',
+  play: 'M8 5v14l11-7z',
+  'arrow-right': 'M5 12h14M13 6l6 6-6 6',
+};
+---
+<svg
+  class={cls}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  <path d={paths[name]} />
+</svg>

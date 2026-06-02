@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kharisbuilders Admin Portal</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&amp;family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed": "#241433",
+                    "on-tertiary-fixed-variant": "#47464c",
+                    "on-surface": "#1e1a21",
+                    "primary-fixed-dim": "#d6bee6",
+                    "inverse-primary": "#d6bee6",
+                    "primary-fixed": "#f1daff",
+                    "secondary-fixed-dim": "#d8bcee",
+                    "primary": "#362545",
+                    "on-surface-variant": "#4a454d",
+                    "tertiary-fixed-dim": "#c8c5cc",
+                    "tertiary-container": "#434247",
+                    "error-container": "#ffdad6",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "secondary-container": "#e6cafd",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-low": "#faf1fb",
+                    "tertiary-fixed": "#e5e1e8",
+                    "on-secondary-fixed": "#261239",
+                    "surface-container": "#f4ebf5",
+                    "surface": "#fff7fe",
+                    "outline-variant": "#ccc4cd",
+                    "background": "#fff7fe",
+                    "inverse-on-surface": "#f7eef8",
+                    "surface-tint": "#6a577a",
+                    "on-tertiary-fixed": "#1c1b20",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#e0d7e1",
+                    "on-background": "#1e1a21",
+                    "on-tertiary-container": "#b1aeb5",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#523f61",
+                    "error": "#ba1a1a",
+                    "tertiary": "#2d2c31",
+                    "surface-container-highest": "#e9e0ea",
+                    "secondary": "#6c5581",
+                    "surface-bright": "#fff7fe",
+                    "secondary-fixed": "#f0dbff",
+                    "inverse-surface": "#332f36",
+                    "on-secondary-fixed-variant": "#533e68",
+                    "on-primary-container": "#bda6ce",
+                    "surface-variant": "#e9e0ea",
+                    "on-error-container": "#93000a",
+                    "outline": "#7b757d",
+                    "on-secondary-container": "#69527e",
+                    "surface-container-high": "#efe5f0",
+                    "primary-container": "#4d3b5c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "margin-mobile": "20px",
+                    "unit": "8px",
+                    "margin-desktop": "64px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "display": ["Playfair Display"],
+                    "headline-md": ["Playfair Display"],
+                    "body-md": ["Manrope"],
+                    "body-lg": ["Manrope"],
+                    "label-sm": ["Manrope"],
+                    "headline-lg-mobile": ["Playfair Display"],
+                    "headline-lg": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "display": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "600"}],
+                    "headline-lg": ["48px", {"lineHeight": "56px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sacred-gradient {
+            background: linear-gradient(135deg, rgba(77, 59, 92, 0.05) 0%, rgba(157, 132, 179, 0.05) 100%);
+        }
+        .bento-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bento-card:hover {
+            box-shadow: 0px 12px 32px -4px rgba(77, 59, 92, 0.08);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen selection:bg-primary/20">
+<!-- Top Navigation Bar -->
+<nav class="bg-surface/80 backdrop-blur-xl border-b border-secondary/20 docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center px-margin-desktop w-full max-w-container-max mx-auto h-20">
+<div class="font-display-lg text-headline-md text-primary">Kharisbuilders</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="font-body-md text-body-md uppercase tracking-wider text-primary font-bold border-b-2 border-heritage-gold pb-1 transition-colors duration-300" href="#">Home</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">About</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Ministries</a>
+<a class="font-body-md text-body-md uppercase tracking-wider text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Visit</a>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-sm uppercase tracking-widest scale-95 active:scale-90 transition-transform">New Here?</button>
+</div>
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12">
+<!-- Dashboard Header -->
+<header class="mb-12">
+<h1 class="font-display text-headline-lg text-primary mb-2">Admin Sanctuary</h1>
+<p class="text-on-surface-variant font-body-lg">Welcome back. Here is the spiritual and operational pulse of the ministry.</p>
+</header>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Key Statistics - Bento Style -->
+<section class="md:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+<!-- Total Members -->
+<div class="bento-card bg-surface-container-lowest border border-primary/10 p-8 rounded-xl flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-primary/5 rounded-lg">
+<span class="material-symbols-outlined text-primary">groups</span>
+</div>
+<span class="text-label-sm text-secondary">+12% vs last month</span>
+</div>
+<div>
+<h3 class="font-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Total Members</h3>
+<p class="font-display text-headline-md text-primary">2,482</p>
+</div>
+</div>
+<!-- Recent Visitors -->
+<div class="bento-card bg-surface-container-lowest border border-primary/10 p-8 rounded-xl flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-primary/5 rounded-lg">
+<span class="material-symbols-outlined text-primary">person_add</span>
+</div>
+<span class="text-label-sm text-secondary">Active Forms</span>
+</div>
+<div>
+<h3 class="font-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Recent Visitors</h3>
+<p class="font-display text-headline-md text-primary">48</p>
+</div>
+</div>
+<!-- Upcoming Events -->
+<div class="bento-card bg-primary text-on-primary p-8 rounded-xl flex flex-col justify-between sm:col-span-2 relative overflow-hidden">
+<div class="relative z-10">
+<div class="flex justify-between items-start mb-12">
+<div class="p-3 bg-white/10 rounded-lg backdrop-blur-sm">
+<span class="material-symbols-outlined text-on-primary">calendar_month</span>
+</div>
+<span class="text-label-sm text-primary-fixed">This Week</span>
+</div>
+<div>
+<h3 class="font-label-sm text-on-primary/70 uppercase tracking-widest mb-1">Scheduled Gatherings</h3>
+<p class="font-display text-headline-md">14 Upcoming Events</p>
+</div>
+</div>
+<!-- Aesthetic decorative shape -->
+<div class="absolute -bottom-8 -right-8 w-48 h-48 bg-white/5 rounded-full blur-3xl"></div>
+</div>
+</section>
+<!-- Quick Actions -->
+<section class="md:col-span-4 flex flex-col gap-6">
+<div class="bg-surface-container-high p-8 rounded-xl border border-primary/5">
+<h2 class="font-display text-headline-md text-primary mb-6">Quick Actions</h2>
+<div class="space-y-4">
+<button class="w-full flex items-center justify-between p-4 bg-white border border-primary/10 rounded-lg group hover:border-primary transition-all">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">video_call</span>
+<span class="font-body-md font-semibold text-primary">Add New Sermon</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-4 bg-white border border-primary/10 rounded-lg group hover:border-primary transition-all">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">event_available</span>
+<span class="font-body-md font-semibold text-primary">Create Event</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Latest Sermon Views -->
+<div class="bg-white p-8 rounded-xl border border-primary/10 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-label-sm text-on-surface-variant uppercase tracking-widest">Sermon Impact</h3>
+<span class="material-symbols-outlined text-secondary">trending_up</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-end justify-between">
+<p class="text-display font-display text-primary leading-none">12.4K</p>
+<p class="font-label-sm text-secondary pb-1">VIEWS</p>
+</div>
+<div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 75%"></div>
+</div>
+<p class="text-label-sm text-on-surface-variant italic">"The Architecture of Faith" — Last Sunday</p>
+</div>
+</div>
+</section>
+<!-- Visitor Log Table - Full Width -->
+<section class="md:col-span-12 mt-8">
+<div class="bg-surface-container-lowest border border-primary/10 rounded-xl overflow-hidden">
+<div class="p-8 border-b border-primary/5 flex justify-between items-center">
+<h2 class="font-display text-headline-md text-primary">Visitor Inquiries</h2>
+<button class="text-label-sm text-primary font-bold uppercase tracking-widest hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low">
+<tr>
+<th class="px-8 py-4 font-label-sm text-on-surface-variant uppercase tracking-widest">Name</th>
+<th class="px-8 py-4 font-label-sm text-on-surface-variant uppercase tracking-widest">Inquiry Type</th>
+<th class="px-8 py-4 font-label-sm text-on-surface-variant uppercase tracking-widest">Date</th>
+<th class="px-8 py-4 font-label-sm text-on-surface-variant uppercase tracking-widest">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/5">
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-8 py-6 font-body-md text-primary font-semibold">Julianna Vance</td>
+<td class="px-8 py-6 text-on-surface-variant">Membership Request</td>
+<td class="px-8 py-6 text-on-surface-variant">Oct 24, 2023</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-secondary/10 text-secondary text-label-sm rounded-full">New</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-8 py-6 font-body-md text-primary font-semibold">Marcus Thorne</td>
+<td class="px-8 py-6 text-on-surface-variant">Pastoral Meeting</td>
+<td class="px-8 py-6 text-on-surface-variant">Oct 23, 2023</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-primary/10 text-primary text-label-sm rounded-full">Contacted</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="px-8 py-6 font-body-md text-primary font-semibold">Elara Smith</td>
+<td class="px-8 py-6 text-on-surface-variant">Visit Inquiry</td>
+<td class="px-8 py-6 text-on-surface-variant">Oct 22, 2023</td>
+<td class="px-8 py-6">
+<span class="px-3 py-1 bg-primary/10 text-primary text-label-sm rounded-full">Contacted</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-primary text-on-primary full-width py-16 mt-24 border-t border-heritage-gold/20">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1">
+<div class="font-display-lg text-headline-md text-heritage-gold mb-4">Kharisbuilders</div>
+<p class="font-body-md text-body-md text-on-primary/70">Building Lives, Shaping Destinies.</p>
+</div>
+<div>
+<h4 class="font-label-sm uppercase tracking-widest text-heritage-gold mb-6">Resources</h4>
+<ul class="space-y-4 font-body-md">
+<li><a class="text-on-primary/70 hover:text-heritage-gold transition-colors" href="#">Give</a></li>
+<li><a class="text-on-primary/70 hover:text-heritage-gold transition-colors" href="#">Careers</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-sm uppercase tracking-widest text-heritage-gold mb-6">Legal</h4>
+<ul class="space-y-4 font-body-md">
+<li><a class="text-on-primary/70 hover:text-heritage-gold transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="text-on-primary/70 hover:text-heritage-gold transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div class="flex flex-col items-start md:items-end">
+<p class="font-body-md text-body-md text-on-primary/50 text-right">© 2024 Kharisbuilders.<br/>All rights reserved.</p>
+</div>
+</div>
+</footer>
+<script>
+        // Simple micro-interaction for active state simulation
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                document.querySelectorAll('nav a').forEach(l => {
+                    l.classList.remove('font-bold', 'border-b-2', 'border-heritage-gold', 'text-primary');
+                    l.classList.add('text-on-surface-variant');
+                });
+                e.currentTarget.classList.add('font-bold', 'border-b-2', 'border-heritage-gold', 'text-primary');
+                e.currentTarget.classList.remove('text-on-surface-variant');
+            });
+        });
+    </script>
+</body></html>
