@@ -23,7 +23,8 @@
     "astro": "^6.4.3",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "wrangler": "^4.97.0"
+    "wrangler": "^4.97.0",
+    "zod": "^4.4.3"
   },
   "overrides": {
     "vite": "^7"
