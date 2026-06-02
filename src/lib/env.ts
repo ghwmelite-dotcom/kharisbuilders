@@ -4,7 +4,7 @@
  * outside a request, or before the adapter middleware ran).
  */
 export function getBindings(locals: App.Locals): CloudflareBindings {
-  if (!locals?.runtime?.env) {
+  if (locals?.runtime?.env == null) {
     throw new Error('Cloudflare runtime bindings are not available on locals.');
   }
   return locals.runtime.env;
