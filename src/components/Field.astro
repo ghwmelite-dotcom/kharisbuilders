@@ -5,8 +5,10 @@ interface Props {
   type?: string;
   required?: boolean;
   options?: string[];
+  min?: number;
+  max?: number;
 }
-const { label, name, type = 'text', required = false, options } = Astro.props;
+const { label, name, type = 'text', required = false, options, min, max } = Astro.props;
 const id = `f-${name}`;
 const base =
   'bg-transparent border-0 border-b border-on-surface-variant/30 focus:border-primary focus:ring-0 py-2 min-h-[44px]';
@@ -21,7 +23,7 @@ const base =
         ))}
       </select>
     ) : (
-      <input id={id} name={name} type={type} required={required} class={base} />
+      <input id={id} name={name} type={type} required={required} min={min} max={max} class={base} />
     )
   }
 </div>
