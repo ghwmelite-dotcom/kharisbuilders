@@ -34,3 +34,20 @@ export async function getEventBySlug(db: D1Database, slug: string): Promise<Even
     .first<EventRow>();
   return row ?? null;
 }
+
+export interface EventForRegistration {
+  id: number;
+  slug: string;
+  published: number;
+  registration_enabled: number;
+  capacity: number | null;
+}
+
+/** Minimal event fields the registration handler needs to validate a submission. */
+export async function getEventForRegistration(db: D1Database, id: number): Promise<EventForRegistration | null> {
+  const row = await db
+    .prepare('SELECT id, slug, published, registration_enabled, capacity FROM events WHERE id = ?')
+    .bind(id)
+    .first<EventForRegistration>();
+  return row ?? null;
+}

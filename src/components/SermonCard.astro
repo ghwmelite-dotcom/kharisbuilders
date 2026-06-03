@@ -1,0 +1,25 @@
+---
+import type { Sermon } from '../lib/db/sermons';
+interface Props {
+  sermon: Sermon;
+}
+const { sermon } = Astro.props;
+---
+<a
+  href={`/sermons/${sermon.slug}`}
+  class="group bg-surface border border-champagne rounded-lg overflow-hidden flex flex-col"
+>
+  <div class="aspect-video bg-primary-container flex items-center justify-center">
+    <span class="text-on-primary/70 text-sm uppercase tracking-widest">Watch</span>
+  </div>
+  <div class="p-6 flex flex-col gap-2 grow">
+    {sermon.series && <span class="text-xs uppercase tracking-widest text-accent">{sermon.series}</span>}
+    <h2 class="font-[var(--font-display)] text-xl text-primary group-hover:text-accent transition-colors">
+      {sermon.title}
+    </h2>
+    <p class="text-on-surface-variant text-sm grow">{sermon.description}</p>
+    <p class="text-on-surface-variant text-xs">
+      {sermon.speaker}{sermon.speaker && sermon.sermon_date ? ' · ' : ''}{sermon.sermon_date}
+    </p>
+  </div>
+</a>
