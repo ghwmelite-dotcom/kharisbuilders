@@ -19,7 +19,7 @@ const saved = Astro.url.searchParams.get('saved') === '1';
     <Field label="Phone" name="phone" value={s.phone ?? ''} />
     <Field label="Service times (JSON)" name="service_times" textarea value={s.service_times ?? ''} />
     <Field label="Socials (JSON)" name="socials" textarea value={s.socials ?? ''} />
-    <Field label="Default theme" name="default_theme" options={['sacred', 'purple']} value={s.default_theme ?? 'sacred'} />
+    <Field label="Default theme" name="default_theme" options={['purple', 'sacred']} value={s.default_theme ?? 'purple'} />
     <Field label="Turnstile site key" name="turnstile_site_key" value={s.turnstile_site_key ?? ''} />
     <Button type="submit" variant="primary">Save settings</Button>
   </form>

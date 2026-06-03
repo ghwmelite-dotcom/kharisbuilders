@@ -1,5 +1,6 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
+import Adinkra from '../components/Adinkra.astro';
 import { env } from '../lib/runtime';
 import { listPublishedSermons } from '../lib/db/sermons';
 import { listUpcomingEvents } from '../lib/db/events';
@@ -21,8 +22,8 @@ const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
   <section class="relative min-h-dvh flex items-center justify-center overflow-hidden bg-primary">
     <img src="/images/home-1.jpg" alt="The Kharisbuilders sanctuary" class="kenburns absolute inset-0 w-full h-full object-cover opacity-40" />
     <!-- legibility veil + vertical depth (darkens the bright windows behind the text) -->
-    <div class="absolute inset-0 bg-[#04162c]/55"></div>
-    <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(4,22,44,0.6) 0%, rgba(4,22,44,0.22) 42%, rgba(4,22,44,0.8) 100%);"></div>
+    <div class="absolute inset-0 bg-[#2c1745]/60"></div>
+    <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(44,23,69,0.66) 0%, rgba(44,23,69,0.24) 42%, rgba(44,23,69,0.82) 100%);"></div>
     <!-- brand-color glows sit over the darkened scene (screen blend) -->
     <div class="hero-glows absolute inset-0 pointer-events-none">
       <span class="glow glow-orange"></span>
@@ -31,11 +32,15 @@ const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
       <span class="glow glow-red"></span>
     </div>
     <!-- focused scrim directly behind the headline -->
-    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(48% 38% at 50% 46%, rgba(4,22,44,0.6), transparent 75%);"></div>
+    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(48% 38% at 50% 46%, rgba(44,23,69,0.62), transparent 75%);"></div>
 
     <div class="relative z-10 text-center px-6 max-w-4xl mx-auto pt-20">
       <img src="/images/kharis-logo.png" alt="" class="hero-swirl hero-fade w-20 h-20 md:w-24 md:h-24 mx-auto mb-7" style="--line-delay:0ms" />
-      <span class="hero-line font-label-sm uppercase tracking-[0.45em] text-heritage-gold mb-6 block" style="--line-delay:140ms; text-shadow:0 1px 10px rgba(0,0,0,0.6);">Welcome Home</span>
+      <span class="hero-line inline-flex items-center gap-3 font-label-sm uppercase tracking-[0.45em] text-heritage-gold mb-6" style="--line-delay:140ms; text-shadow:0 1px 10px rgba(0,0,0,0.6);">
+        <Adinkra symbol="adinkrahene" class="w-3.5 h-3.5 opacity-80" />
+        Welcome Home
+        <Adinkra symbol="adinkrahene" class="w-3.5 h-3.5 opacity-80" />
+      </span>
       <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-10" style="text-shadow:0 2px 24px rgba(0,0,0,0.55);">
         <span class="hero-line block" style="--line-delay:240ms">Building Lives,</span>
         <span class="hero-line block text-gold-gradient" style="--line-delay:360ms; filter: drop-shadow(0 2px 14px rgba(0,0,0,0.6));">Shaping Destinies.</span>
