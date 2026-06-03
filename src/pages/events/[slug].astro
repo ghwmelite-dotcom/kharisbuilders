@@ -32,9 +32,9 @@ const heroImg = '/images/home-4.jpg';
 <PublicLayout title={`${event.title} | Events`} description={event.description ?? 'Event'}>
   <!-- Cinematic hero banner -->
   <header class="relative h-[400px] md:h-[520px] flex items-end overflow-hidden">
-    <img src={heroImg} alt="" class="absolute inset-0 w-full h-full object-cover" />
+    <img src={heroImg} alt="" class="kenburns absolute inset-0 w-full h-full object-cover" />
     <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(4,22,44,0.92), rgba(4,22,44,0.15));"></div>
-    <div class="relative z-10 max-w-[var(--container-max)] w-full mx-auto px-margin-mobile md:px-margin-desktop pb-12">
+    <div class="relative z-10 max-w-[var(--container-max)] w-full mx-auto px-margin-mobile md:px-margin-desktop pb-12" data-reveal>
       {event.category && <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">{event.category}</span>}
       <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-3">{event.title}</h1>
       <p class="font-body text-body-lg text-white/80">{date}{event.location ? ` · ${event.location}` : ''}</p>

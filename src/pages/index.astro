@@ -14,45 +14,44 @@ try {
   /* fall back to static content */
 }
 const eventImages = ['/images/home-4.jpg', '/images/home-5.jpg', '/images/home-6.jpg'];
-const fmtDate = (s: string) => {
-  const d = s?.slice(0, 10);
-  return d ?? '';
-};
+const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
 ---
 <PublicLayout title="Kharisbuilders | Building Lives, Shaping Destinies">
   <!-- Hero -->
-  <section class="relative h-[640px] md:h-[820px] flex items-center justify-center overflow-hidden">
-    <img
-      src="/images/home-1.jpg"
-      alt="The Kharisbuilders sanctuary"
-      class="absolute inset-0 w-full h-full object-cover"
-    />
-    <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(4,22,44,0.45), rgba(4,22,44,0.82));"></div>
+  <section class="relative h-[640px] md:h-[840px] flex items-center justify-center overflow-hidden">
+    <img src="/images/home-1.jpg" alt="The Kharisbuilders sanctuary" class="kenburns absolute inset-0 w-full h-full object-cover" />
+    <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(4,22,44,0.5), rgba(4,22,44,0.85));"></div>
     <div class="relative z-10 text-center px-margin-mobile md:px-0">
-      <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-8 max-w-4xl mx-auto" style="text-shadow:0 2px 12px rgba(0,0,0,0.35);">
-        Building Lives, Shaping Destinies.
+      <span class="font-label-sm uppercase tracking-[0.4em] text-heritage-gold mb-7 block" data-reveal>Welcome Home</span>
+      <h1
+        class="font-display text-display-mobile md:text-display-lg text-white mb-10 max-w-4xl mx-auto"
+        data-reveal
+        style="--reveal-delay:90ms; text-shadow:0 2px 18px rgba(0,0,0,0.4);"
+      >
+        Building Lives,<br />Shaping Destinies.
       </h1>
-      <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
-        <a href="/visit" class="bg-midnight-blue text-white font-label-md uppercase tracking-widest px-10 py-5 border-b-2 border-heritage-gold hover:bg-primary transition-all duration-300">
-          Join Us This Sunday
-        </a>
-        <a href="/sermons" class="border border-heritage-gold text-heritage-gold font-label-md uppercase tracking-widest px-10 py-5 bg-transparent hover:bg-heritage-gold hover:text-white transition-all duration-300">
-          Watch Online
-        </a>
+      <div class="flex flex-col md:flex-row gap-5 justify-center items-center" data-reveal style="--reveal-delay:200ms">
+        <a href="/visit" class="btn-fill bg-midnight-blue text-white font-label-md uppercase tracking-[0.14em] px-10 py-5">Join Us This Sunday</a>
+        <a href="/sermons" class="btn-fill border border-heritage-gold text-heritage-gold hover:text-white font-label-md uppercase tracking-[0.14em] px-10 py-5">Watch Online</a>
       </div>
+    </div>
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2 text-white/50">
+      <span class="font-label-sm uppercase tracking-[0.3em]">Scroll</span>
+      <span class="w-px h-10 bg-gradient-to-b from-heritage-gold to-transparent"></span>
     </div>
   </section>
 
   <!-- Pastor's welcome -->
   <section class="py-24 md:py-40 bg-surface">
     <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
-      <div class="md:col-span-5 relative">
-        <div class="aspect-[3/4] overflow-hidden border border-heritage-gold/20 shadow-xl">
+      <div class="md:col-span-5 relative" data-reveal>
+        <div class="aspect-[3/4] overflow-hidden border border-heritage-gold/20 shadow-ambient">
           <img src="/images/home-2.jpg" alt="Our Lead Pastor" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
         </div>
         <div class="absolute -bottom-8 -right-8 w-48 h-48 bg-heritage-gold/10 -z-10 hidden md:block"></div>
       </div>
-      <div class="md:col-span-7 md:pl-16 mt-16 md:mt-0">
+      <div class="md:col-span-7 md:pl-16 mt-16 md:mt-0" data-reveal style="--reveal-delay:120ms">
+        <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-5 block">A Word of Welcome</span>
         <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-8">A Message from Our Pastor</h2>
         <p class="font-body text-body-lg text-stone-gray mb-6 leading-relaxed">
           Welcome to Kharisbuilders. We believe that every individual has a divine blueprint — a destiny waiting to be
@@ -73,18 +72,23 @@ const fmtDate = (s: string) => {
   <!-- Latest sermon -->
   <section class="bg-primary-container py-24 md:py-32">
     <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop">
-      <div class="flex justify-between items-end mb-16">
+      <div class="flex justify-between items-end mb-16" data-reveal>
         <div>
-          <span class="text-heritage-gold font-label-sm uppercase tracking-widest mb-4 block">
+          <span class="text-heritage-gold font-label-sm uppercase tracking-[0.3em] mb-4 block">
             {latestSermon?.series ?? 'Current Series'}
           </span>
           <h2 class="font-display text-display-mobile md:text-headline-lg text-white">Latest Sermon</h2>
         </div>
-        <a href="/sermons" class="hidden md:inline-flex items-center gap-2 text-heritage-gold font-label-md uppercase tracking-widest border-b border-heritage-gold/40 hover:border-heritage-gold transition-all">
+        <a href="/sermons" class="hidden md:inline-flex items-center gap-2 text-heritage-gold font-label-md uppercase tracking-[0.14em] link-underline">
           View Archive
         </a>
       </div>
-      <a href={latestSermon ? `/sermons/${latestSermon.slug}` : '/sermons'} class="relative aspect-video group block overflow-hidden border border-white/10">
+      <a
+        href={latestSermon ? `/sermons/${latestSermon.slug}` : '/sermons'}
+        class="relative aspect-video group block overflow-hidden border border-white/10"
+        data-reveal
+        style="--reveal-delay:120ms"
+      >
         <img src="/images/home-3.jpg" alt="Latest sermon" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" />
         <div class="absolute inset-0 flex items-center justify-center">
           <div class="w-20 h-20 md:w-24 md:h-24 rounded-full border border-heritage-gold/50 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:scale-110 transition-transform duration-500">
@@ -104,34 +108,42 @@ const fmtDate = (s: string) => {
   <!-- Upcoming gatherings -->
   <section class="py-24 md:py-40 bg-surface">
     <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop">
-      <div class="text-center mb-20">
-        <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-4">Upcoming Gatherings</h2>
-        <div class="h-1 w-20 bg-heritage-gold mx-auto"></div>
+      <div class="text-center mb-20" data-reveal>
+        <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">Mark Your Calendar</span>
+        <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-5">Upcoming Gatherings</h2>
+        <div class="h-px w-24 hairline-gold mx-auto"></div>
       </div>
-      {events.length === 0 ? (
-        <p class="text-center text-stone-gray font-body">New gatherings are being planned — check back soon.</p>
-      ) : (
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {events.map((e, i) => (
-            <a href={`/events/${e.slug}`} class="group border border-champagne-light/40 hover:border-heritage-gold/40 transition-colors duration-500 bg-surface-container-lowest block">
-              <div class="aspect-[4/3] overflow-hidden">
-                <img src={eventImages[i % eventImages.length]} alt={e.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-              </div>
-              <div class="p-8">
-                <div class="flex justify-between items-start mb-4">
-                  <span class="text-heritage-gold font-label-sm font-bold uppercase tracking-widest">{e.category ?? 'Event'}</span>
-                  <span class="text-stone-gray font-label-sm uppercase">{fmtDate(e.start_at)}</span>
+      {
+        events.length === 0 ? (
+          <p class="text-center text-stone-gray font-body">New gatherings are being planned — check back soon.</p>
+        ) : (
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+            {events.map((e, i) => (
+              <a
+                href={`/events/${e.slug}`}
+                class="group border border-champagne-light/40 hover:border-heritage-gold/40 transition-all duration-500 bg-surface-container-lowest block hover:-translate-y-1.5 hover:shadow-ambient"
+                data-reveal
+                style={`--reveal-delay:${i * 110}ms`}
+              >
+                <div class="aspect-[4/3] overflow-hidden">
+                  <img src={eventImages[i % eventImages.length]} alt={e.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                 </div>
-                <h3 class="font-display text-headline-md text-primary mb-4">{e.title}</h3>
-                <p class="text-stone-gray font-body text-body-md mb-8 line-clamp-3">{e.description}</p>
-                <span class="text-primary font-label-md uppercase tracking-widest border-b border-primary/20 group-hover:border-heritage-gold transition-colors inline-block">
-                  Learn More
-                </span>
-              </div>
-            </a>
-          ))}
-        </div>
-      )}
+                <div class="p-8">
+                  <div class="flex justify-between items-start mb-4">
+                    <span class="text-heritage-gold font-label-sm font-bold uppercase tracking-widest">{e.category ?? 'Event'}</span>
+                    <span class="text-stone-gray font-label-sm uppercase">{fmtDate(e.start_at)}</span>
+                  </div>
+                  <h3 class="font-display text-headline-md text-primary mb-4 group-hover:text-heritage-gold transition-colors">{e.title}</h3>
+                  <p class="text-stone-gray font-body text-body-md mb-8 line-clamp-3">{e.description}</p>
+                  <span class="text-primary font-label-md uppercase tracking-[0.14em] border-b border-primary/20 group-hover:border-heritage-gold transition-colors inline-block">
+                    Learn More
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        )
+      }
     </div>
   </section>
 
@@ -139,15 +151,16 @@ const fmtDate = (s: string) => {
   <section class="relative py-32 overflow-hidden bg-primary">
     <img src="/images/home-7.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-luminosity" />
     <div class="relative z-10 max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop text-center">
-      <div class="max-w-2xl mx-auto">
+      <div class="max-w-2xl mx-auto" data-reveal>
+        <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-5 block">Generosity</span>
         <h2 class="font-display text-display-mobile md:text-headline-lg text-white mb-6">Invest in Destinies</h2>
         <p class="text-white/80 font-body text-body-lg mb-12">
           Your generosity fuels our mission to build lives and shape destinies. Together, we can make an eternal impact
           on our community and beyond.
         </p>
-        <div class="flex flex-col md:flex-row gap-6 justify-center">
-          <a href="/give" class="bg-heritage-gold text-white font-label-md uppercase tracking-widest px-12 py-5 hover:bg-secondary transition-all">Give Online</a>
-          <a href="/visit" class="border border-white/30 text-white font-label-md uppercase tracking-widest px-12 py-5 hover:bg-white hover:text-primary transition-all">Plan a Visit</a>
+        <div class="flex flex-col md:flex-row gap-5 justify-center">
+          <a href="/give" class="bg-heritage-gold text-primary hover:bg-secondary hover:text-white font-label-md uppercase tracking-[0.14em] px-12 py-5 transition-colors duration-300">Give Online</a>
+          <a href="/visit" class="btn-fill border border-white/30 text-white font-label-md uppercase tracking-[0.14em] px-12 py-5">Plan a Visit</a>
         </div>
       </div>
     </div>
