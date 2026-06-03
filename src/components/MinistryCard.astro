@@ -1,0 +1,22 @@
+---
+import type { Ministry } from '../lib/db/ministries';
+interface Props {
+  ministry: Ministry;
+}
+const { ministry } = Astro.props;
+---
+<article class="bg-surface border border-champagne rounded-lg overflow-hidden flex flex-col">
+  <div class="aspect-[16/9] bg-primary-container"></div>
+  <div class="p-8 flex flex-col gap-3 grow">
+    <h2 class="font-[var(--font-display)] text-2xl text-primary">{ministry.name}</h2>
+    {ministry.meeting_time && <p class="text-xs uppercase tracking-widest text-accent">{ministry.meeting_time}</p>}
+    <p class="text-on-surface-variant text-sm grow">{ministry.description}</p>
+    {
+      ministry.leader && (
+        <p class="text-on-surface-variant text-sm">
+          Led by <span class="text-primary">{ministry.leader}</span>
+        </p>
+      )
+    }
+  </div>
+</article>
