@@ -2,9 +2,14 @@
 import PublicLayout from '../layouts/PublicLayout.astro';
 import MinistryCard from '../components/MinistryCard.astro';
 import { env } from '../lib/runtime';
-import { listPublishedMinistries } from '../lib/db/ministries';
+import { listPublishedMinistries, type Ministry } from '../lib/db/ministries';
 
-const ministries = await listPublishedMinistries(env.DB);
+let ministries: Ministry[] = [];
+try {
+  ministries = await listPublishedMinistries(env.DB);
+} catch {
+  ministries = [];
+}
 ---
 <PublicLayout
   title="Ministries | Kharisbuilders"
