@@ -1,0 +1,25 @@
+---
+import Field from '../Field.astro';
+import Button from '../Button.astro';
+import type { EventFull } from '../../lib/db/events';
+interface Props {
+  event?: EventFull | null;
+}
+const { event } = Astro.props;
+const isEdit = !!event;
+---
+<form method="POST" action="/api/admin/events" class="flex flex-col gap-6 max-w-xl">
+  <input type="hidden" name="_action" value={isEdit ? 'update' : 'create'} />
+  {isEdit && <input type="hidden" name="id" value={String(event!.id)} />}
+  <Field label="Title" name="title" required value={event?.title ?? ''} />
+  <Field label="Slug (optional)" name="slug" value={event?.slug ?? ''} />
+  <Field label="Category" name="category" value={event?.category ?? ''} />
+  <Field label="Starts (YYYY-MM-DD HH:MM:SS)" name="start_at" required value={event?.start_at ?? ''} />
+  <Field label="Ends (optional)" name="end_at" value={event?.end_at ?? ''} />
+  <Field label="Location" name="location" value={event?.location ?? ''} />
+  <Field label="Capacity (blank = unlimited)" name="capacity" type="number" min={1} value={event?.capacity != null ? String(event.capacity) : ''} />
+  <Field label="Description" name="description" textarea value={event?.description ?? ''} />
+  <Field label="Registration enabled" name="registration_enabled" type="checkbox" checked={!!event?.registration_enabled} />
+  <Field label="Published" name="published" type="checkbox" checked={!!event?.published} />
+  <Button type="submit" variant="primary">{isEdit ? 'Save' : 'Create'}</Button>
+</form>

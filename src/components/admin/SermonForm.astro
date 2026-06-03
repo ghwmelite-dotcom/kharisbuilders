@@ -1,0 +1,30 @@
+---
+import Field from '../Field.astro';
+import Button from '../Button.astro';
+import type { SermonFull } from '../../lib/db/sermons';
+interface Props {
+  sermon?: SermonFull | null;
+}
+const { sermon } = Astro.props;
+const isEdit = !!sermon;
+---
+<form method="POST" action="/api/admin/sermons" class="flex flex-col gap-6 max-w-xl">
+  <input type="hidden" name="_action" value={isEdit ? 'update' : 'create'} />
+  {isEdit && <input type="hidden" name="id" value={String(sermon!.id)} />}
+  <Field label="Title" name="title" required value={sermon?.title ?? ''} />
+  <Field label="Slug (optional)" name="slug" value={sermon?.slug ?? ''} />
+  <Field label="Speaker" name="speaker" value={sermon?.speaker ?? ''} />
+  <Field label="Series" name="series" value={sermon?.series ?? ''} />
+  <Field label="Scripture" name="scripture_ref" value={sermon?.scripture_ref ?? ''} />
+  <Field label="Video URL" name="video_url" type="url" required value={sermon?.video_url ?? ''} />
+  <Field
+    label="Video provider"
+    name="video_provider"
+    options={['youtube', 'vimeo']}
+    value={sermon?.video_provider ?? 'youtube'}
+  />
+  <Field label="Date (YYYY-MM-DD)" name="sermon_date" value={sermon?.sermon_date ?? ''} />
+  <Field label="Description" name="description" textarea value={sermon?.description ?? ''} />
+  <Field label="Published" name="published" type="checkbox" checked={!!sermon?.published} />
+  <Button type="submit" variant="primary">{isEdit ? 'Save' : 'Create'}</Button>
+</form>

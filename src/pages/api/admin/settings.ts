@@ -24,5 +24,5 @@ export const POST: APIRoute = async ({ request }) => {
     if (v != null) entries[key] = String(v);
   }
   await setSettings(env.DB, entries);
-  return new Response(null, { status: 303, headers: { Location: '/admin/settings' } });
+  return new Response(null, { status: 303, headers: { Location: '/admin/settings?saved=1' } });
 };

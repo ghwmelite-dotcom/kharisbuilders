@@ -1,0 +1,16 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import SermonForm from '../../../components/admin/SermonForm.astro';
+import { env } from '../../../lib/runtime';
+import { getAdminEmail } from '../../../lib/admin-auth';
+import { getSermonById } from '../../../lib/db/sermons';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const sermon = await getSermonById(env.DB, Number(Astro.params.id)).catch(() => null);
+if (!sermon) return Astro.redirect('/admin/sermons');
+---
+<AdminLayout title="Edit Sermon" email={email} active="sermons">
+  <SermonForm sermon={sermon} />
+  <a href="/admin/sermons" class="inline-block mt-8 text-accent text-sm uppercase tracking-widest">← Back</a>
+</AdminLayout>
