@@ -1,5 +1,10 @@
 import { getDonationByReference, markDonationSuccess, createRecurringDonation } from '../db/donations';
-import { activateSubscription, getActiveSubscriptionForCharge, setSubscriptionStatus } from '../db/subscriptions';
+import {
+  activateSubscription,
+  getActiveSubscriptionForCharge,
+  getSoleActiveSubscriptionForEmail,
+  setSubscriptionStatus,
+} from '../db/subscriptions';
 
 export interface PaystackEvent {
   event: string;
@@ -38,7 +43,11 @@ async function handleChargeSuccess(db: D1Database, data: EventData): Promise<voi
   const email = data.customer?.email;
   const planCode = data.plan?.plan_code;
   if (!email) return; // cannot attribute without an email — drop (not a giving charge we initiated)
-  const sub = planCode ? await getActiveSubscriptionForCharge(db, { customerEmail: email, planCode }) : null;
+  // Correlate by (email, plan_code); if the event omits plan_code, fall back to the giver's
+  // sole active subscription so the cycle charge stays attributed to its fund.
+  const sub =
+    (planCode ? await getActiveSubscriptionForCharge(db, { customerEmail: email, planCode }) : null) ??
+    (await getSoleActiveSubscriptionForEmail(db, email));
   await createRecurringDonation(db, {
     reference: data.reference,
     email,

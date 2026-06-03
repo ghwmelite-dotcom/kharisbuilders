@@ -115,6 +115,21 @@ export async function getActiveSubscriptionForCharge(
   return row ?? null;
 }
 
+/**
+ * Fallback correlation when a charge event omits the plan_code: return the giver's active
+ * subscription only when there is exactly one (ambiguous multi-sub cases return null).
+ */
+export async function getSoleActiveSubscriptionForEmail(
+  db: D1Database,
+  email: string,
+): Promise<SubscriptionRow | null> {
+  const { results } = await db
+    .prepare(`SELECT ${COLS} FROM subscriptions WHERE customer_email=? AND status='active'`)
+    .bind(email)
+    .all<SubscriptionRow>();
+  return results.length === 1 ? results[0] : null;
+}
+
 export async function setSubscriptionStatus(db: D1Database, code: string, status: string): Promise<void> {
   await db
     .prepare("UPDATE subscriptions SET status=?, updated_at=datetime('now') WHERE subscription_code=?")
