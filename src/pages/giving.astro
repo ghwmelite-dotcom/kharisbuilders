@@ -24,6 +24,7 @@ const errors: Record<string, string> = {
   amount: 'Please enter an amount between GHS 1 and GHS 100,000.',
   turnstile: 'Please complete the verification and try again.',
   init: "We couldn't start your payment. Please try again.",
+  interval: 'Please choose how often you would like to give.',
 };
 const errorKey = Astro.url.searchParams.get('error');
 const errorMsg = errorKey ? (errors[errorKey] ?? 'Something went wrong. Please try again.') : null;
@@ -52,6 +53,28 @@ const errorMsg = errorKey ? (errors[errorKey] ?? 'Something went wrong. Please t
           data-reveal
         >
           {errorMsg && <p class="bg-accent-deep/10 text-accent-deep font-body text-body-md px-4 py-3">{errorMsg}</p>}
+
+          <div>
+            <span class="font-label-sm uppercase tracking-widest text-heritage-gold block mb-3">Gift type</span>
+            <div class="grid grid-cols-2 gap-3">
+              <label class="give-type flex items-center justify-center gap-2 border border-champagne py-3 font-body text-body-md text-primary cursor-pointer has-[:checked]:border-heritage-gold has-[:checked]:bg-surface-container-high">
+                <input type="radio" name="type" value="one_time" checked class="sr-only" /> One-time
+              </label>
+              <label class="give-type flex items-center justify-center gap-2 border border-champagne py-3 font-body text-body-md text-primary cursor-pointer has-[:checked]:border-heritage-gold has-[:checked]:bg-surface-container-high">
+                <input type="radio" name="type" value="recurring" class="sr-only" /> Recurring
+              </label>
+            </div>
+          </div>
+
+          <div id="interval-row" class="hidden">
+            <label for="g-interval" class="font-label-sm uppercase tracking-widest text-heritage-gold block mb-3">How often</label>
+            <select id="g-interval" name="interval" class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary">
+              <option value="monthly">Monthly</option>
+              <option value="weekly">Weekly</option>
+              <option value="annually">Annually</option>
+            </select>
+            <p class="font-body text-body-sm text-stone-gray mt-2">You'll be charged automatically each period until you cancel. Paystack emails you a link to manage or stop it anytime.</p>
+          </div>
 
           <div>
             <label class="font-label-sm uppercase tracking-widest text-heritage-gold block mb-3">Choose a fund</label>
@@ -121,6 +144,13 @@ const errorMsg = errorKey ? (errors[errorKey] ?? 'Something went wrong. Please t
         if (input) input.value = btn.getAttribute('data-amount') || '';
         document.querySelectorAll('.amount-preset').forEach((b) => b.classList.remove('border-heritage-gold'));
         btn.classList.add('border-heritage-gold');
+      });
+    });
+    const intervalRow = document.getElementById('interval-row');
+    document.querySelectorAll('input[name="type"]').forEach((r) => {
+      r.addEventListener('change', () => {
+        const recurring = document.querySelector('input[name="type"]:checked')?.value === 'recurring';
+        if (intervalRow) intervalRow.classList.toggle('hidden', !recurring);
       });
     });
   </script>
