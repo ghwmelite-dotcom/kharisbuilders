@@ -237,58 +237,148 @@ html {
   }
 }
 
-/* Adaptive glass nav: transparent + light over hero, frosted + dark on scroll */
+/* Dark glass nav: solid frosted-midnight bar, deepens on scroll */
 [data-nav] {
   transition:
-    background-color 0.45s ease,
-    backdrop-filter 0.45s ease,
-    box-shadow 0.45s ease,
-    border-color 0.45s ease;
-  background-color: transparent;
-  border-bottom: 1px solid transparent;
+    background-color 0.4s ease,
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+  background-color: color-mix(in srgb, var(--kb-primary) 76%, transparent);
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  border-bottom: 1px solid color-mix(in srgb, var(--kb-accent) 18%, transparent);
 }
 [data-nav] .nav-logo,
 [data-nav] .nav-link {
-  color: rgba(255, 255, 255, 0.92);
-  transition: color 0.45s ease;
+  color: rgba(255, 255, 255, 0.82);
+  transition: color 0.35s ease;
+}
+[data-nav] .nav-logo {
+  color: #fff;
 }
 [data-nav] .nav-link:hover {
   color: #fff;
 }
 [data-nav] .nav-cta {
-  background: rgba(255, 255, 255, 0.1);
   color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid color-mix(in srgb, var(--kb-accent) 55%, transparent);
   transition:
-    background-color 0.4s,
-    color 0.4s,
-    border-color 0.4s;
+    background-color 0.35s,
+    color 0.35s,
+    border-color 0.35s;
 }
 [data-nav] .nav-cta:hover {
   background: var(--kb-accent);
   border-color: var(--kb-accent);
+  color: var(--kb-primary);
 }
 [data-nav].nav-scrolled {
-  background-color: color-mix(in srgb, var(--kb-surface) 82%, transparent);
-  backdrop-filter: blur(16px) saturate(1.4);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  box-shadow: 0 8px 30px -12px rgba(26, 43, 66, 0.18);
-  border-bottom-color: color-mix(in srgb, var(--kb-accent) 22%, transparent);
+  background-color: color-mix(in srgb, var(--kb-primary) 94%, transparent);
+  box-shadow: 0 12px 34px -14px rgba(0, 0, 0, 0.55);
+  border-bottom-color: color-mix(in srgb, var(--kb-accent) 28%, transparent);
 }
-[data-nav].nav-scrolled .nav-logo {
-  color: var(--kb-primary);
+
+/* ====== Cinematic hero ====== */
+.glass-card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
-[data-nav].nav-scrolled .nav-link {
-  color: var(--kb-on-surface-variant);
+.hero-glows .glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.4;
+  mix-blend-mode: screen;
 }
-[data-nav].nav-scrolled .nav-link:hover {
-  color: var(--kb-primary);
+.glow-orange {
+  width: 42vw;
+  height: 42vw;
+  background: #e0922f;
+  top: -8%;
+  left: -6%;
 }
-[data-nav].nav-scrolled .nav-cta {
-  background: var(--kb-primary);
-  color: #fff;
-  border-color: transparent;
+.glow-blue {
+  width: 46vw;
+  height: 46vw;
+  background: #3b6fb6;
+  bottom: -14%;
+  right: -8%;
 }
-[data-nav].nav-scrolled .nav-cta:hover {
-  background: var(--kb-accent);
+.glow-purple {
+  width: 34vw;
+  height: 34vw;
+  background: #6b4c7a;
+  top: 16%;
+  right: 8%;
+}
+.glow-red {
+  width: 30vw;
+  height: 30vw;
+  background: #c0392b;
+  bottom: 6%;
+  left: 12%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .glow-orange {
+    animation: drift1 17s ease-in-out infinite alternate;
+  }
+  .glow-blue {
+    animation: drift2 21s ease-in-out infinite alternate;
+  }
+  .glow-purple {
+    animation: drift3 24s ease-in-out infinite alternate;
+  }
+  .glow-red {
+    animation: drift1 19s ease-in-out infinite alternate;
+  }
+  @keyframes drift1 {
+    to {
+      transform: translate(8%, 10%) scale(1.12);
+    }
+  }
+  @keyframes drift2 {
+    to {
+      transform: translate(-10%, -7%) scale(1.16);
+    }
+  }
+  @keyframes drift3 {
+    to {
+      transform: translate(7%, -10%) scale(1.06);
+    }
+  }
+  .hero-swirl {
+    animation: spin-slow 44s linear infinite;
+  }
+  @keyframes spin-slow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .hero-line {
+    opacity: 0;
+    transform: translateY(42px);
+    animation: hero-rise 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--line-delay, 0ms);
+  }
+  @keyframes hero-rise {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .hero-fade {
+    opacity: 0;
+    animation: hero-fade-in 1.1s ease forwards;
+    animation-delay: var(--line-delay, 0ms);
+  }
+  @keyframes hero-fade-in {
+    to {
+      opacity: 1;
+    }
+  }
+}
+.hero-swirl {
+  filter: drop-shadow(0 0 26px rgba(224, 146, 47, 0.4));
 }
