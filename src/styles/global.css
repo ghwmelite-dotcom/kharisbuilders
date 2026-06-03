@@ -147,6 +147,32 @@ html {
 .hairline-gold {
   background: linear-gradient(to right, transparent, var(--kb-accent), transparent);
 }
+/* Kente-weave divider — a subtle Ghanaian nod. Short gold band ticked with
+   royal-purple, kente-green and garnet. Pair with a width utility (e.g. w-16). */
+.kente-rule {
+  height: 3px;
+  border-radius: 999px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--kb-accent) 0 6px,
+    var(--kb-primary) 6px 9px,
+    #1c7a4f 9px 12px,
+    var(--kb-accent) 12px 18px,
+    #b3322c 18px 21px
+  );
+  background-size: 21px 100%;
+}
+.kente-rule.is-light {
+  /* on dark/primary backgrounds, lift the gold so the weave stays visible */
+  background-image: repeating-linear-gradient(
+    90deg,
+    #e7c87a 0 6px,
+    #cdb6e6 6px 9px,
+    #4fbb86 9px 12px,
+    #e7c87a 12px 18px,
+    #e08a80 18px 21px
+  );
+}
 .shadow-ambient {
   box-shadow: var(--kb-shadow-ambient);
 }
@@ -292,31 +318,33 @@ html {
   opacity: 0.4;
   mix-blend-mode: screen;
 }
+/* Kente-regal glow palette over the aubergine veil: gold + royal purple led,
+   with green and garnet accents (the colours of kente cloth). */
 .glow-orange {
   width: 42vw;
   height: 42vw;
-  background: #e0922f;
+  background: #d99a2b; /* kente gold */
   top: -8%;
   left: -6%;
 }
 .glow-blue {
   width: 46vw;
   height: 46vw;
-  background: #3b6fb6;
+  background: #6b3fa0; /* royal purple */
   bottom: -14%;
   right: -8%;
 }
 .glow-purple {
   width: 34vw;
   height: 34vw;
-  background: #6b4c7a;
+  background: #1f7a52; /* kente green */
   top: 16%;
   right: 8%;
 }
 .glow-red {
   width: 30vw;
   height: 30vw;
-  background: #c0392b;
+  background: #b83227; /* kente garnet */
   bottom: 6%;
   left: 12%;
 }

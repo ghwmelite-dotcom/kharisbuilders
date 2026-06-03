@@ -23,14 +23,15 @@ const {
   noindex = false,
   jsonLd = [],
 } = Astro.props;
-const theme = resolveTheme(Astro.cookies.get('theme')?.value);
-
 let settings: SettingsMap = {};
 try {
   settings = await getAllSettings(env.DB);
 } catch {
   settings = {};
 }
+// A visitor's explicit cookie wins; otherwise fall back to the admin-set default theme,
+// then the code default (purple).
+const theme = resolveTheme(Astro.cookies.get('theme')?.value ?? settings.default_theme);
 
 const origin = (Astro.site ?? new URL(SITE.url)).origin;
 const canonical = new URL(Astro.url.pathname, origin).href;

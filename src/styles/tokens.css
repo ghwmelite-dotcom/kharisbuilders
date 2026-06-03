@@ -35,28 +35,29 @@
 }
 
 [data-theme='purple'] {
-  --kb-surface: #fff7fe;
-  --kb-surface-dim: #e0d7e1;
+  /* Royal-purple + kente-gold identity. Surfaces are a clean violet-tinted white;
+     primary is a deep royal purple (white text 11.4:1, AAA); dark sections use a
+     rich aubergine; the accent is an antique/kente gold (regal purple+gold pairing,
+     AA-large ≥3:1 on light, purple, and aubergine alike). */
+  --kb-surface: #faf6fe;
+  --kb-surface-dim: #ddd2e6;
   --kb-surface-container-lowest: #ffffff;
-  --kb-surface-container-low: #faf1fb;
-  --kb-surface-container: #f4ebf5;
-  --kb-surface-container-high: #efe5f0;
-  --kb-surface-container-highest: #e9e0ea;
-  --kb-on-surface: #1e1a21;
-  --kb-on-surface-variant: #4a454d;
-  /* Deliberate: purple DESIGN.md prose + button spec specify Deep Royal #4D3B5C as
-     primary (better white-text contrast); the frontmatter's #362545 is used as accent-deep.
-     Do not "fix" primary back to #362545. */
-  --kb-primary: #4d3b5c;
+  --kb-surface-container-low: #f7f0fb;
+  --kb-surface-container: #f2e9f7;
+  --kb-surface-container-high: #ebe0f2;
+  --kb-surface-container-highest: #e4d7ee;
+  --kb-on-surface: #1d1426;
+  --kb-on-surface-variant: #4b4255;
+  --kb-primary: #4a2a6b; /* deep royal purple */
   --kb-on-primary: #ffffff;
-  --kb-primary-container: #6c5581;
-  --kb-on-primary-container: #bda6ce;
-  --kb-secondary: #6c5581;
-  --kb-secondary-container: #e6cafd;
-  --kb-on-secondary-container: #69527e;
-  --kb-accent: #9d84b3; /* muted lavender */
-  --kb-accent-deep: #362545;
-  --kb-muted: #4a454d;
-  --kb-champagne: #f4f0f7; /* soft mist */
-  --kb-shadow-ambient: 0 12px 32px -4px rgba(77, 59, 92, 0.08);
+  --kb-primary-container: #2c1745; /* deep aubergine (dark/hero sections) */
+  --kb-on-primary-container: #cdb6e6;
+  --kb-secondary: #8a6a34; /* bronze-gold — gold buttons darken to this on hover */
+  --kb-secondary-container: #ead7fb;
+  --kb-on-secondary-container: #5a4076;
+  --kb-accent: #a87f2e; /* antique / kente gold */
+  --kb-accent-deep: #5b2a4a; /* deep plum-wine (danger / delete) */
+  --kb-muted: #4b4255;
+  --kb-champagne: #efe6d4; /* warm champagne (kente-gold tint) */
+  --kb-shadow-ambient: 0 12px 32px -4px rgba(46, 23, 69, 0.1);
 }
