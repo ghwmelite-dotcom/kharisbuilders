@@ -1,0 +1,33 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { env } from '../../lib/runtime';
+import { getAdminEmail } from '../../lib/admin-auth';
+import { listAllEvents } from '../../lib/db/admin';
+
+const email = getAdminEmail(Astro.request, env);
+if (!email) return Astro.redirect('/admin/denied');
+const events = await listAllEvents(env.DB).catch(() => []);
+---
+<AdminLayout title="Events" email={email} active="events">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">Title</th><th>Category</th><th>Starts</th><th>Registration</th><th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        events.map((e) => (
+          <tr class="border-b border-champagne/50">
+            <td class="py-3 text-primary">{e.title}</td>
+            <td>{e.category}</td>
+            <td>{e.start_at?.slice(0, 16).replace('T', ' ')}</td>
+            <td>{e.registration_enabled ? 'Open' : '—'}</td>
+            <td>{e.published ? 'Published' : 'Draft'}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {events.length === 0 && <p class="text-on-surface-variant mt-4">No events yet.</p>}
+</AdminLayout>

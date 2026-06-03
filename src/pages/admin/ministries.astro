@@ -1,0 +1,31 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { env } from '../../lib/runtime';
+import { getAdminEmail } from '../../lib/admin-auth';
+import { listAllMinistries } from '../../lib/db/admin';
+
+const email = getAdminEmail(Astro.request, env);
+if (!email) return Astro.redirect('/admin/denied');
+const ministries = await listAllMinistries(env.DB).catch(() => []);
+---
+<AdminLayout title="Ministries" email={email} active="ministries">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">Name</th><th>Order</th><th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        ministries.map((m) => (
+          <tr class="border-b border-champagne/50">
+            <td class="py-3 text-primary">{m.name}</td>
+            <td>{m.sort_order}</td>
+            <td>{m.published ? 'Published' : 'Draft'}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {ministries.length === 0 && <p class="text-on-surface-variant mt-4">No ministries yet.</p>}
+</AdminLayout>
