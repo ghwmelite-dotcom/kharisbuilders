@@ -1,0 +1,98 @@
+---
+import PublicLayout from '../layouts/PublicLayout.astro';
+import Button from '../components/Button.astro';
+import Card from '../components/Card.astro';
+
+const beliefs = [
+  {
+    title: 'Grace First',
+    body: 'We believe every life is built on the unearned grace of God — the foundation for transformation and hope.',
+  },
+  {
+    title: 'Built to Last',
+    body: 'Discipleship is architecture, not decoration. We invest in deep roots, sound teaching, and lasting character.',
+  },
+  {
+    title: 'Community Over Crowds',
+    body: 'Real life happens in circles, not rows. We gather in worship and grow in smaller groups that know your name.',
+  },
+];
+---
+<PublicLayout
+  title="About Us | Kharisbuilders"
+  description="Our story, mission, and the people building lives and shaping destinies at Kharisbuilders."
+>
+  <!-- Intro -->
+  <section class="bg-primary text-on-primary">
+    <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-28 text-center">
+      <span class="text-xs uppercase tracking-[0.3em] text-accent">Who We Are</span>
+      <h1 class="font-[var(--font-display)] text-4xl md:text-6xl mt-3 mb-6">Building Lives, Shaping Destinies</h1>
+      <p class="text-on-primary/80 max-w-2xl mx-auto">
+        Kharisbuilders is a community where the weight of tradition meets the momentum of modern life — a sanctuary
+        for everyone seeking a deeper connection with God and one another.
+      </p>
+    </div>
+  </section>
+
+  <!-- Mission -->
+  <section class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-24 grid md:grid-cols-2 gap-16 items-center">
+    <div class="aspect-[4/3] bg-champagne rounded-lg"></div>
+    <div>
+      <span class="text-xs uppercase tracking-[0.3em] text-accent">Our Mission</span>
+      <h2 class="font-[var(--font-display)] text-3xl md:text-4xl text-primary mt-3 mb-6">A blueprint for every life</h2>
+      <p class="text-on-surface-variant mb-4">
+        We believe every individual has a divine blueprint — a destiny waiting to be realized. Our mission is to
+        provide the spiritual foundation and community support needed to build that life.
+      </p>
+      <p class="text-on-surface-variant">
+        Whether you are exploring faith for the first time or seeking to go deeper, there is a place for you here.
+        We are more than a congregation; we are architects of hope.
+      </p>
+    </div>
+  </section>
+
+  <!-- What we believe -->
+  <section class="bg-champagne/40">
+    <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-24">
+      <div class="text-center mb-16">
+        <h2 class="font-[var(--font-display)] text-3xl md:text-4xl text-primary">What We Believe</h2>
+        <div class="h-px w-20 bg-accent mx-auto mt-4"></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {
+          beliefs.map((b) => (
+            <Card class="p-8">
+              <h3 class="font-[var(--font-display)] text-xl text-primary mb-3">{b.title}</h3>
+              <p class="text-on-surface-variant text-sm">{b.body}</p>
+            </Card>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Pastor's word -->
+  <section class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-24 grid md:grid-cols-12 gap-12 items-center">
+    <div class="md:col-span-5 aspect-[3/4] bg-champagne rounded-lg"></div>
+    <div class="md:col-span-7">
+      <h2 class="font-[var(--font-display)] text-3xl md:text-4xl text-primary mb-6">A word from our Pastor</h2>
+      <p class="text-on-surface-variant mb-4">
+        “Welcome to Kharisbuilders. Whatever season you find yourself in, you are not here by accident. Our prayer is
+        that you would find a family, a foundation, and a future here.”
+      </p>
+      <div class="flex items-center gap-4 mt-8">
+        <div class="h-px w-12 bg-accent"></div>
+        <span class="font-[var(--font-display)] text-primary italic">Lead Pastor</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-primary text-on-primary">
+    <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-20 text-center">
+      <h2 class="font-[var(--font-display)] text-3xl mb-4">Come as you are</h2>
+      <p class="text-on-primary/80 mb-8 max-w-xl mx-auto">We'd love to meet you this Sunday.</p>
+      <Button variant="secondary" href="/visit">Plan Your Visit</Button>
+    </div>
+  </section>
+</PublicLayout>
