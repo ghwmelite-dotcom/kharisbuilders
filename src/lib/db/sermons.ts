@@ -13,6 +13,7 @@ export interface Sermon {
   video_provider: VideoProvider;
   thumbnail_key: string | null;
   description: string | null;
+  transcript: string | null;
   sermon_date: string | null;
 }
 
@@ -22,7 +23,7 @@ export interface SermonFull extends Sermon {
 }
 
 const COLS =
-  'id, title, slug, speaker, series, scripture_ref, video_url, video_provider, thumbnail_key, description, sermon_date';
+  'id, title, slug, speaker, series, scripture_ref, video_url, video_provider, thumbnail_key, description, transcript, sermon_date';
 
 export async function listPublishedSermons(db: D1Database, limit = 50): Promise<Sermon[]> {
   const { results } = await db
@@ -61,8 +62,8 @@ export async function createSermon(db: D1Database, input: SermonInput, email: st
   const slug = await resolveSlug(db, input.slug ?? '', input.title);
   const r = await db
     .prepare(
-      `INSERT INTO sermons (title, slug, speaker, series, scripture_ref, video_url, video_provider, description, sermon_date, published, updated_by)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO sermons (title, slug, speaker, series, scripture_ref, video_url, video_provider, description, transcript, sermon_date, published, updated_by)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     )
     .bind(
       input.title,
@@ -73,6 +74,7 @@ export async function createSermon(db: D1Database, input: SermonInput, email: st
       input.video_url,
       input.video_provider,
       input.description || null,
+      input.transcript || null,
       input.sermon_date || null,
       input.published ? 1 : 0,
       email,
@@ -86,7 +88,7 @@ export async function updateSermon(db: D1Database, id: number, input: SermonInpu
   await db
     .prepare(
       `UPDATE sermons SET title=?, slug=?, speaker=?, series=?, scripture_ref=?, video_url=?, video_provider=?,
-        description=?, sermon_date=?, published=?, updated_by=?, updated_at=datetime('now') WHERE id=?`,
+        description=?, transcript=?, sermon_date=?, published=?, updated_by=?, updated_at=datetime('now') WHERE id=?`,
     )
     .bind(
       input.title,
@@ -97,12 +99,42 @@ export async function updateSermon(db: D1Database, id: number, input: SermonInpu
       input.video_url,
       input.video_provider,
       input.description || null,
+      input.transcript || null,
       input.sermon_date || null,
       input.published ? 1 : 0,
       email,
       id,
     )
     .run();
+}
+
+export async function getPublishedSermonsByIds(db: D1Database, ids: number[]): Promise<Sermon[]> {
+  if (ids.length === 0) return [];
+  const placeholders = ids.map(() => '?').join(',');
+  const { results } = await db
+    .prepare(`SELECT ${COLS} FROM sermons WHERE published = 1 AND id IN (${placeholders})`)
+    .bind(...ids)
+    .all<Sermon>();
+  // preserve the incoming (ranked) order
+  const byId = new Map(results.map((s) => [s.id, s]));
+  return ids.map((id) => byId.get(id)).filter((s): s is Sermon => s != null);
+}
+
+export async function searchSermonsKeyword(db: D1Database, q: string, limit = 24): Promise<Sermon[]> {
+  const like = `%${q}%`;
+  const { results } = await db
+    .prepare(
+      `SELECT ${COLS} FROM sermons WHERE published = 1 AND (title LIKE ? OR description LIKE ? OR scripture_ref LIKE ? OR series LIKE ?)
+       ORDER BY sermon_date DESC, id DESC LIMIT ?`,
+    )
+    .bind(like, like, like, like, limit)
+    .all<Sermon>();
+  return results;
+}
+
+export async function listAllSermonIds(db: D1Database): Promise<number[]> {
+  const { results } = await db.prepare('SELECT id FROM sermons').all<{ id: number }>();
+  return results.map((r) => r.id);
 }
 
 export async function setSermonPublished(db: D1Database, id: number, published: boolean): Promise<void> {

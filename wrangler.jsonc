@@ -33,5 +33,10 @@
 			"binding": "SESSION",
 			"id": "e1406f2f0b334423a197928f55fd90f8"
 		}
+	],
+	// Workers AI (embeddings + study-guide generation) and Vectorize (sermon search index).
+	"ai": { "binding": "AI" },
+	"vectorize": [
+		{ "binding": "SERMONS", "index_name": "kharis-sermons" }
 	]
 }

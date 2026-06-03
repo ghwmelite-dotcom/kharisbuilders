@@ -4,28 +4,65 @@ import PageHero from '../../components/PageHero.astro';
 import SermonCard from '../../components/SermonCard.astro';
 import { env } from '../../lib/runtime';
 import { mediaUrl } from '../../lib/media';
-import { listPublishedSermons, type Sermon } from '../../lib/db/sermons';
+import { listPublishedSermons, getPublishedSermonsByIds, searchSermonsKeyword, type Sermon } from '../../lib/db/sermons';
+import { workersAi, vectorize } from '../../lib/ai/clients';
+import { searchSermonIds } from '../../lib/ai/search';
 
+const q = (Astro.url.searchParams.get('q') ?? '').trim();
 let sermons: Sermon[] = [];
 try {
-  sermons = await listPublishedSermons(env.DB);
+  if (q) {
+    try {
+      const ids = await searchSermonIds({ ai: workersAi(env.AI), store: vectorize(env.SERMONS) }, q, 12);
+      sermons = await getPublishedSermonsByIds(env.DB, ids);
+      if (sermons.length === 0) sermons = await searchSermonsKeyword(env.DB, q);
+    } catch {
+      sermons = await searchSermonsKeyword(env.DB, q);
+    }
+  } else {
+    sermons = await listPublishedSermons(env.DB);
+  }
 } catch {
   sermons = [];
 }
 const imgs = ['/images/home-3.jpg', '/images/ministries-2.jpg', '/images/home-5.jpg'];
 ---
-<PublicLayout title="Sermons | Kharisbuilders" description="Watch the latest messages from Kharisbuilders.">
+<PublicLayout title="Sermons | Kharisbuilders" description="Watch and search the latest messages from Kharisbuilders.">
   <PageHero image="/images/home-3.jpg" height="h-[360px] md:h-[460px]">
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Messages</span>
     <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Sermons</h1>
     <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">
-      Ancient truth, modern application — catch up on recent messages.
+      Ancient truth, modern application — search by topic or browse recent messages.
     </p>
   </PageHero>
-  <section class="py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+  <section class="py-16 md:py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+    <form method="get" class="flex gap-3 max-w-xl mx-auto mb-12">
+      <input
+        type="search"
+        name="q"
+        value={q}
+        placeholder="Search sermons by topic, e.g. 'anxiety' or 'forgiveness'"
+        class="flex-1 border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary"
+      />
+      <button type="submit" class="bg-heritage-gold text-primary font-label-md uppercase tracking-widest px-6 hover:bg-secondary transition-all">
+        Search
+      </button>
+    </form>
+    {
+      q && (
+        <p class="text-center font-body text-body-md text-stone-gray mb-10">
+          {sermons.length} result{sermons.length === 1 ? '' : 's'} for <span class="text-primary">“{q}”</span> ·{' '}
+          <a href="/sermons" class="text-heritage-gold border-b border-heritage-gold/40">
+            clear
+          </a>
+        </p>
+      )
+    }
     {
       sermons.length === 0 ? (
-        <p class="text-center text-stone-gray font-body">No sermons published yet — check back soon.</p>
+        <p class="text-center text-stone-gray font-body">
+          {q ? 'No sermons matched — try a different word.' : 'No sermons published yet — check back soon.'}
+        </p>
       ) : (
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" data-reveal>
           {sermons.map((s, i) => (
