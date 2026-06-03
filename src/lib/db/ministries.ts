@@ -99,3 +99,7 @@ export async function setMinistryPublished(db: D1Database, id: number, published
 export async function deleteMinistry(db: D1Database, id: number): Promise<void> {
   await db.prepare('DELETE FROM ministries WHERE id = ?').bind(id).run();
 }
+
+export async function setMinistryImage(db: D1Database, id: number, key: string): Promise<void> {
+  await db.prepare("UPDATE ministries SET image_key=?, updated_at=datetime('now') WHERE id=?").bind(key, id).run();
+}
