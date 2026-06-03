@@ -17,19 +17,20 @@
   --color-champagne: var(--kb-champagne);
 }
 
+/* Variable fonts: one woff2 per family covers the full weight range. */
 @font-face {
   font-family: 'Playfair Display';
   font-style: normal;
-  font-weight: 600 700;
+  font-weight: 400 700;
   font-display: swap;
-  src: local('Playfair Display');
+  src: local('Playfair Display'), url('/fonts/playfair-display.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Manrope';
   font-style: normal;
   font-weight: 400 700;
   font-display: swap;
-  src: local('Manrope');
+  src: local('Manrope'), url('/fonts/manrope.woff2') format('woff2');
 }
 
 body {
