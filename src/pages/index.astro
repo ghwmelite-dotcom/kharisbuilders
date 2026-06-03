@@ -1,69 +1,155 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
-import Button from '../components/Button.astro';
 import { env } from '../lib/runtime';
-import { getAllSettings } from '../lib/db/settings';
+import { listPublishedSermons } from '../lib/db/sermons';
+import { listUpcomingEvents } from '../lib/db/events';
 
-let serviceTimes: Array<{ name: string; time: string; note?: string }> = [];
+let latestSermon: Awaited<ReturnType<typeof listPublishedSermons>>[number] | null = null;
+let events: Awaited<ReturnType<typeof listUpcomingEvents>> = [];
 try {
-  const settings = await getAllSettings(env.DB);
-  serviceTimes = settings.service_times ? JSON.parse(settings.service_times) : [];
+  const [s, e] = await Promise.all([listPublishedSermons(env.DB, 1), listUpcomingEvents(env.DB, 3)]);
+  latestSermon = s[0] ?? null;
+  events = e;
 } catch {
-  serviceTimes = [];
+  /* fall back to static content */
 }
+const eventImages = ['/images/home-4.jpg', '/images/home-5.jpg', '/images/home-6.jpg'];
+const fmtDate = (s: string) => {
+  const d = s?.slice(0, 10);
+  return d ?? '';
+};
 ---
 <PublicLayout title="Kharisbuilders | Building Lives, Shaping Destinies">
   <!-- Hero -->
-  <section class="bg-primary text-on-primary">
-    <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-32 text-center">
-      <span class="text-xs uppercase tracking-[0.3em] text-accent">Welcome Home</span>
-      <h1 class="font-[var(--font-display)] text-4xl md:text-6xl mt-4 mb-8">Building Lives, Shaping Destinies.</h1>
-      <div class="flex flex-col md:flex-row gap-4 justify-center">
-        <Button variant="primary" href="/visit">Join Us This Sunday</Button>
-        <Button variant="secondary" href="/give">Give Online</Button>
+  <section class="relative h-[640px] md:h-[820px] flex items-center justify-center overflow-hidden">
+    <img
+      src="/images/home-1.jpg"
+      alt="The Kharisbuilders sanctuary"
+      class="absolute inset-0 w-full h-full object-cover"
+    />
+    <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(4,22,44,0.45), rgba(4,22,44,0.82));"></div>
+    <div class="relative z-10 text-center px-margin-mobile md:px-0">
+      <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-8 max-w-4xl mx-auto" style="text-shadow:0 2px 12px rgba(0,0,0,0.35);">
+        Building Lives, Shaping Destinies.
+      </h1>
+      <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
+        <a href="/visit" class="bg-midnight-blue text-white font-label-md uppercase tracking-widest px-10 py-5 border-b-2 border-heritage-gold hover:bg-primary transition-all duration-300">
+          Join Us This Sunday
+        </a>
+        <a href="/sermons" class="border border-heritage-gold text-heritage-gold font-label-md uppercase tracking-widest px-10 py-5 bg-transparent hover:bg-heritage-gold hover:text-white transition-all duration-300">
+          Watch Online
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- Welcome message -->
-  <section class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-24 text-center max-w-3xl">
-    <h2 class="font-[var(--font-display)] text-3xl md:text-4xl text-primary mb-6">A place for you</h2>
-    <p class="text-on-surface-variant">
-      Every individual has a divine blueprint — a destiny waiting to be realized. Whether you are exploring faith for
-      the first time or seeking to go deeper, there is a place for you in our sanctuary.
-    </p>
+  <!-- Pastor's welcome -->
+  <section class="py-24 md:py-40 bg-surface">
+    <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+      <div class="md:col-span-5 relative">
+        <div class="aspect-[3/4] overflow-hidden border border-heritage-gold/20 shadow-xl">
+          <img src="/images/home-2.jpg" alt="Our Lead Pastor" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+        </div>
+        <div class="absolute -bottom-8 -right-8 w-48 h-48 bg-heritage-gold/10 -z-10 hidden md:block"></div>
+      </div>
+      <div class="md:col-span-7 md:pl-16 mt-16 md:mt-0">
+        <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-8">A Message from Our Pastor</h2>
+        <p class="font-body text-body-lg text-stone-gray mb-6 leading-relaxed">
+          Welcome to Kharisbuilders. We believe that every individual has a divine blueprint — a destiny waiting to be
+          realized. Our mission is to provide the spiritual foundation and community support needed to build that life.
+        </p>
+        <p class="font-body text-body-lg text-stone-gray mb-10 leading-relaxed">
+          Whether you are exploring faith for the first time or seeking a deeper connection with your Creator, there is
+          a place for you in our sanctuary. We are more than a congregation; we are architects of hope.
+        </p>
+        <div class="flex items-center gap-4">
+          <div class="h-px w-12 bg-heritage-gold"></div>
+          <span class="font-display text-headline-md text-primary italic">Lead Pastor David Anderson</span>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <!-- Service times (from settings) -->
-  {
-    serviceTimes.length > 0 && (
-      <section class="bg-champagne/40">
-        <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-20">
-          <h2 class="font-[var(--font-display)] text-3xl text-primary mb-8">Service Times</h2>
-          <div class="divide-y divide-accent/20">
-            {serviceTimes.map((s) => (
-              <div class="flex justify-between items-center py-5">
-                <div>
-                  <p class="text-primary font-[var(--font-display)] text-xl">{s.name}</p>
-                  {s.note && <p class="text-on-surface-variant text-sm">{s.note}</p>}
-                </div>
-                <span class="text-accent font-[var(--font-display)] text-xl">{s.time}</span>
-              </div>
-            ))}
+  <!-- Latest sermon -->
+  <section class="bg-primary-container py-24 md:py-32">
+    <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="flex justify-between items-end mb-16">
+        <div>
+          <span class="text-heritage-gold font-label-sm uppercase tracking-widest mb-4 block">
+            {latestSermon?.series ?? 'Current Series'}
+          </span>
+          <h2 class="font-display text-display-mobile md:text-headline-lg text-white">Latest Sermon</h2>
+        </div>
+        <a href="/sermons" class="hidden md:inline-flex items-center gap-2 text-heritage-gold font-label-md uppercase tracking-widest border-b border-heritage-gold/40 hover:border-heritage-gold transition-all">
+          View Archive
+        </a>
+      </div>
+      <a href={latestSermon ? `/sermons/${latestSermon.slug}` : '/sermons'} class="relative aspect-video group block overflow-hidden border border-white/10">
+        <img src="/images/home-3.jpg" alt="Latest sermon" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" />
+        <div class="absolute inset-0 flex items-center justify-center">
+          <div class="w-20 h-20 md:w-24 md:h-24 rounded-full border border-heritage-gold/50 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:scale-110 transition-transform duration-500">
+            <svg class="w-10 h-10 text-white translate-x-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
           </div>
         </div>
-      </section>
-    )
-  }
+        <div class="absolute bottom-0 left-0 p-8 md:p-12 bg-gradient-to-t from-black/80 to-transparent w-full">
+          <h3 class="text-white font-display text-headline-md mb-2">{latestSermon?.title ?? 'Watch our latest message'}</h3>
+          <p class="text-white/70 font-body text-body-md">
+            {latestSermon?.speaker ?? 'Kharisbuilders'}{latestSermon?.sermon_date ? ` · ${fmtDate(latestSermon.sermon_date)}` : ''}
+          </p>
+        </div>
+      </a>
+    </div>
+  </section>
 
-  <!-- Giving CTA -->
-  <section class="bg-primary text-on-primary">
-    <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-20 text-center">
-      <h2 class="font-[var(--font-display)] text-3xl mb-4">Invest in Destinies</h2>
-      <p class="text-on-primary/80 mb-8 max-w-xl mx-auto">
-        Your generosity fuels our mission to build lives and shape destinies.
-      </p>
-      <Button variant="secondary" href="/give">Give Online</Button>
+  <!-- Upcoming gatherings -->
+  <section class="py-24 md:py-40 bg-surface">
+    <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="text-center mb-20">
+        <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-4">Upcoming Gatherings</h2>
+        <div class="h-1 w-20 bg-heritage-gold mx-auto"></div>
+      </div>
+      {events.length === 0 ? (
+        <p class="text-center text-stone-gray font-body">New gatherings are being planned — check back soon.</p>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          {events.map((e, i) => (
+            <a href={`/events/${e.slug}`} class="group border border-champagne-light/40 hover:border-heritage-gold/40 transition-colors duration-500 bg-surface-container-lowest block">
+              <div class="aspect-[4/3] overflow-hidden">
+                <img src={eventImages[i % eventImages.length]} alt={e.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+              </div>
+              <div class="p-8">
+                <div class="flex justify-between items-start mb-4">
+                  <span class="text-heritage-gold font-label-sm font-bold uppercase tracking-widest">{e.category ?? 'Event'}</span>
+                  <span class="text-stone-gray font-label-sm uppercase">{fmtDate(e.start_at)}</span>
+                </div>
+                <h3 class="font-display text-headline-md text-primary mb-4">{e.title}</h3>
+                <p class="text-stone-gray font-body text-body-md mb-8 line-clamp-3">{e.description}</p>
+                <span class="text-primary font-label-md uppercase tracking-widest border-b border-primary/20 group-hover:border-heritage-gold transition-colors inline-block">
+                  Learn More
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- Giving -->
+  <section class="relative py-32 overflow-hidden bg-primary">
+    <img src="/images/home-7.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-luminosity" />
+    <div class="relative z-10 max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop text-center">
+      <div class="max-w-2xl mx-auto">
+        <h2 class="font-display text-display-mobile md:text-headline-lg text-white mb-6">Invest in Destinies</h2>
+        <p class="text-white/80 font-body text-body-lg mb-12">
+          Your generosity fuels our mission to build lives and shape destinies. Together, we can make an eternal impact
+          on our community and beyond.
+        </p>
+        <div class="flex flex-col md:flex-row gap-6 justify-center">
+          <a href="/give" class="bg-heritage-gold text-white font-label-md uppercase tracking-widest px-12 py-5 hover:bg-secondary transition-all">Give Online</a>
+          <a href="/visit" class="border border-white/30 text-white font-label-md uppercase tracking-widest px-12 py-5 hover:bg-white hover:text-primary transition-all">Plan a Visit</a>
+        </div>
+      </div>
     </div>
   </section>
 </PublicLayout>

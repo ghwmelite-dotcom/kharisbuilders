@@ -3,18 +3,77 @@
 
 /* Map Tailwind's color namespace to the runtime --kb-* vars so utilities
    like `bg-primary` / `text-on-surface` follow [data-theme] live.
-   `inline` makes the generated utilities reference the var (not freeze its value). */
+   Brand-name aliases (heritage-gold, midnight-blue, ...) mirror the Stitch
+   mockups so their markup can be ported faithfully. */
 @theme inline {
   --color-surface: var(--kb-surface);
+  --color-surface-dim: var(--kb-surface-dim);
+  --color-surface-container-lowest: var(--kb-surface-container-lowest);
+  --color-surface-container-low: var(--kb-surface-container-low);
+  --color-surface-container: var(--kb-surface-container);
+  --color-surface-container-high: var(--kb-surface-container-high);
+  --color-surface-container-highest: var(--kb-surface-container-highest);
   --color-on-surface: var(--kb-on-surface);
   --color-on-surface-variant: var(--kb-on-surface-variant);
   --color-primary: var(--kb-primary);
   --color-on-primary: var(--kb-on-primary);
   --color-primary-container: var(--kb-primary-container);
+  --color-on-primary-container: var(--kb-on-primary-container);
+  --color-secondary: var(--kb-secondary);
+  --color-secondary-container: var(--kb-secondary-container);
+  --color-on-secondary-container: var(--kb-on-secondary-container);
   --color-accent: var(--kb-accent);
   --color-accent-deep: var(--kb-accent-deep);
   --color-muted: var(--kb-muted);
   --color-champagne: var(--kb-champagne);
+  /* brand-name aliases for verbatim mockup porting */
+  --color-heritage-gold: var(--kb-accent);
+  --color-midnight-blue: var(--kb-primary-container);
+  --color-sacred-burgundy: var(--kb-accent-deep);
+  --color-stone-gray: var(--kb-muted);
+  --color-champagne-light: var(--kb-champagne);
+}
+
+/* Exact type scale + font families + spacing from the DESIGN.md / mockup config. */
+@theme {
+  --font-display: 'Playfair Display', serif;
+  --font-body: 'Manrope', sans-serif;
+
+  --text-display-lg: 64px;
+  --text-display-lg--line-height: 72px;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 700;
+
+  --text-display-mobile: 40px;
+  --text-display-mobile--line-height: 48px;
+  --text-display-mobile--letter-spacing: -0.01em;
+  --text-display-mobile--font-weight: 700;
+
+  --text-headline-lg: 40px;
+  --text-headline-lg--line-height: 48px;
+  --text-headline-lg--font-weight: 600;
+
+  --text-headline-md: 32px;
+  --text-headline-md--line-height: 40px;
+  --text-headline-md--font-weight: 600;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+
+  --text-label-md: 14px;
+  --text-label-md--line-height: 20px;
+  --text-label-md--letter-spacing: 0.05em;
+
+  --text-label-sm: 12px;
+  --text-label-sm--line-height: 16px;
+  --text-label-sm--letter-spacing: 0.03em;
+
+  --spacing-gutter: 24px;
+  --spacing-margin-mobile: 20px;
+  --spacing-margin-desktop: 64px;
 }
 
 /* Variable fonts: one woff2 per family covers the full weight range. */
