@@ -1,0 +1,32 @@
+---
+import PublicLayout from '../../layouts/PublicLayout.astro';
+import SermonCard from '../../components/SermonCard.astro';
+import { env } from '../../lib/runtime';
+import { listPublishedSermons, type Sermon } from '../../lib/db/sermons';
+
+let sermons: Sermon[] = [];
+try {
+  sermons = await listPublishedSermons(env.DB);
+} catch {
+  sermons = [];
+}
+---
+<PublicLayout title="Sermons | Kharisbuilders" description="Watch the latest messages from Kharisbuilders.">
+  <section class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-20">
+    <div class="text-center mb-16">
+      <span class="text-xs uppercase tracking-[0.3em] text-accent">Messages</span>
+      <h1 class="font-[var(--font-display)] text-4xl md:text-5xl text-primary mt-3">Sermons</h1>
+    </div>
+    {
+      sermons.length === 0 ? (
+        <p class="text-center text-on-surface-variant">No sermons published yet — check back soon.</p>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {sermons.map((s) => (
+            <SermonCard sermon={s} />
+          ))}
+        </div>
+      )
+    }
+  </section>
+</PublicLayout>
