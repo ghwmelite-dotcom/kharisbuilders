@@ -53,7 +53,7 @@ export async function initializeTransaction(params: InitializeParams, cfg: Payst
 }
 
 export type VerifyResult =
-  | { ok: true; status: string; channel: string | null; reference: string; paidAt?: string }
+  | { ok: true; status: string; channel: string | null; reference: string; amount: number | null; currency: string | null; paidAt?: string }
   | { ok: false; error: string };
 
 export async function verifyTransaction(reference: string, cfg: PaystackConfig): Promise<VerifyResult> {
@@ -65,7 +65,7 @@ export async function verifyTransaction(reference: string, cfg: PaystackConfig):
     });
     const json = (await res.json()) as {
       status?: boolean;
-      data?: { status?: string; channel?: string; reference?: string; paid_at?: string };
+      data?: { status?: string; channel?: string; reference?: string; amount?: number; currency?: string; paid_at?: string };
       message?: string;
     };
     if (!res.ok || !json.status || !json.data?.status) {
@@ -76,6 +76,8 @@ export async function verifyTransaction(reference: string, cfg: PaystackConfig):
       status: json.data.status,
       channel: json.data.channel ?? null,
       reference: json.data.reference ?? reference,
+      amount: typeof json.data.amount === 'number' ? json.data.amount : null,
+      currency: json.data.currency ?? null,
       paidAt: json.data.paid_at,
     };
   } catch (e) {

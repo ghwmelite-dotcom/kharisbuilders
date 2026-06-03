@@ -70,7 +70,7 @@ describe('verifyTransaction', () => {
       expect(url).toBe('https://api.paystack.co/transaction/verify/kb_ref1');
       return jsonResponse({
         status: true,
-        data: { status: 'success', channel: 'mobile_money', reference: 'kb_ref1', paid_at: '2026-06-03T10:00:00Z' },
+        data: { status: 'success', channel: 'mobile_money', reference: 'kb_ref1', amount: 10000, currency: 'GHS', paid_at: '2026-06-03T10:00:00Z' },
       });
     }) as unknown as typeof fetch;
     const res = await verifyTransaction('kb_ref1', { secret: 'sk', fetchFn });
@@ -79,6 +79,8 @@ describe('verifyTransaction', () => {
       status: 'success',
       channel: 'mobile_money',
       reference: 'kb_ref1',
+      amount: 10000,
+      currency: 'GHS',
       paidAt: '2026-06-03T10:00:00Z',
     });
   });
@@ -86,6 +88,6 @@ describe('verifyTransaction', () => {
     const fetchFn = (async () =>
       jsonResponse({ status: true, data: { status: 'failed', channel: 'card', reference: 'r' } })) as unknown as typeof fetch;
     const res = await verifyTransaction('r', { secret: 'sk', fetchFn });
-    expect(res).toEqual({ ok: true, status: 'failed', channel: 'card', reference: 'r', paidAt: undefined });
+    expect(res).toEqual({ ok: true, status: 'failed', channel: 'card', reference: 'r', amount: null, currency: null, paidAt: undefined });
   });
 });

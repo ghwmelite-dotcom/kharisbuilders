@@ -5,7 +5,9 @@ import { listDonations } from '../../lib/db/donations';
 import { fromMinorUnits } from '../../lib/giving/money';
 
 function csvCell(v: string | number | null): string {
-  const s = v == null ? '' : String(v);
+  let s = v == null ? '' : String(v);
+  // Neutralize spreadsheet formula injection (=, +, -, @, tab/CR triggers) by prefixing a quote.
+  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
