@@ -18,3 +18,17 @@ export const RegistrationInputSchema = z.object({
 });
 
 export type RegistrationInput = z.infer<typeof RegistrationInputSchema>;
+
+export const SermonInputSchema = z.object({
+  title: z.string().trim().min(1).max(200),
+  slug: z.string().trim().max(200).optional().or(z.literal('')),
+  speaker: z.string().trim().max(120).optional().or(z.literal('')),
+  series: z.string().trim().max(120).optional().or(z.literal('')),
+  scripture_ref: z.string().trim().max(120).optional().or(z.literal('')),
+  video_url: z.string().trim().url().max(500),
+  video_provider: z.enum(['youtube', 'vimeo']).default('youtube'),
+  description: z.string().trim().max(4000).optional().or(z.literal('')),
+  sermon_date: z.string().trim().max(20).optional().or(z.literal('')),
+  published: z.coerce.boolean().default(false),
+});
+export type SermonInput = z.infer<typeof SermonInputSchema>;
