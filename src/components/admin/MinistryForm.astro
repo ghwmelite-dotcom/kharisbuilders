@@ -8,7 +8,7 @@ interface Props {
 const { ministry } = Astro.props;
 const isEdit = !!ministry;
 ---
-<form method="POST" action="/api/admin/ministries" class="flex flex-col gap-6 max-w-xl">
+<form method="POST" action="/api/admin/ministries" enctype="multipart/form-data" class="flex flex-col gap-6 max-w-xl">
   <input type="hidden" name="_action" value={isEdit ? 'update' : 'create'} />
   {isEdit && <input type="hidden" name="id" value={String(ministry!.id)} />}
   <Field label="Name" name="name" required value={ministry?.name ?? ''} />
@@ -17,6 +17,11 @@ const isEdit = !!ministry;
   <Field label="Meeting time" name="meeting_time" value={ministry?.meeting_time ?? ''} />
   <Field label="Sort order" name="sort_order" type="number" min={0} value={ministry?.sort_order != null ? String(ministry.sort_order) : '0'} />
   <Field label="Description" name="description" textarea value={ministry?.description ?? ''} />
+  <div class="flex flex-col gap-1">
+    <label for="f-image" class="text-xs uppercase tracking-wider text-on-surface-variant">Ministry image (optional, max 6 MB)</label>
+    <input id="f-image" name="image" type="file" accept="image/*" class="text-sm text-on-surface-variant" />
+    {ministry?.image_key && <p class="text-xs text-on-surface-variant">Current: {ministry.image_key}</p>}
+  </div>
   <Field label="Published" name="published" type="checkbox" checked={!!ministry?.published} />
   <Button type="submit" variant="primary">{isEdit ? 'Save' : 'Create'}</Button>
 </form>
