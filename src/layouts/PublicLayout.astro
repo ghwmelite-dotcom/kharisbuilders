@@ -5,12 +5,24 @@ import Footer from '../components/Footer.astro';
 import { resolveTheme } from '../lib/theme';
 import { env } from '../lib/runtime';
 import { getAllSettings, type SettingsMap } from '../lib/db/settings';
+import { SITE, absUrl, organizationJsonLd, websiteJsonLd } from '../lib/seo';
 
 interface Props {
   title: string;
   description?: string;
+  image?: string; // path or absolute; defaults to SITE.ogImage
+  type?: string; // og:type, default 'website'
+  noindex?: boolean;
+  jsonLd?: Array<Record<string, unknown>>; // page-specific nodes
 }
-const { title, description = 'Kharisbuilders — Building Lives, Shaping Destinies.' } = Astro.props;
+const {
+  title,
+  description = SITE.description,
+  image,
+  type = 'website',
+  noindex = false,
+  jsonLd = [],
+} = Astro.props;
 const theme = resolveTheme(Astro.cookies.get('theme')?.value);
 
 let settings: SettingsMap = {};
@@ -19,6 +31,11 @@ try {
 } catch {
   settings = {};
 }
+
+const origin = (Astro.site ?? new URL(SITE.url)).origin;
+const canonical = new URL(Astro.url.pathname, origin).href;
+const ogImage = absUrl(image ?? SITE.ogImage, origin);
+const seoNodes = [organizationJsonLd(origin, settings), websiteJsonLd(origin), ...jsonLd];
 ---
 <!doctype html>
 <html lang="en" data-theme={theme}>
@@ -27,6 +44,19 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    {seoNodes.map((node) => <script type="application/ld+json" set:html={JSON.stringify(node)} />)}
     <link rel="preload" href="/fonts/playfair-display.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/manrope.woff2" as="font" type="font/woff2" crossorigin />
   </head>
