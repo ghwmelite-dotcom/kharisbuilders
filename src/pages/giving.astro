@@ -1,0 +1,128 @@
+---
+import PublicLayout from '../layouts/PublicLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { env } from '../lib/runtime';
+import { getAllSettings } from '../lib/db/settings';
+import { listActiveFunds, type Fund } from '../lib/db/funds';
+
+let funds: Fund[] = [];
+let givingEnabled = false;
+let siteKey = '1x00000000000000000000AA';
+let currency = 'GHS';
+try {
+  const settings = await getAllSettings(env.DB);
+  givingEnabled = settings.giving_enabled === 'true';
+  siteKey = settings.turnstile_site_key ?? siteKey;
+  currency = settings.currency ?? 'GHS';
+  funds = await listActiveFunds(env.DB);
+} catch {
+  /* defaults; page degrades gracefully */
+}
+const presets = [50, 100, 200, 500];
+const errors: Record<string, string> = {
+  invalid: 'Please check your details and try again.',
+  amount: 'Please enter an amount between GHS 1 and GHS 100,000.',
+  turnstile: 'Please complete the verification and try again.',
+  init: "We couldn't start your payment. Please try again.",
+};
+const errorKey = Astro.url.searchParams.get('error');
+const errorMsg = errorKey ? (errors[errorKey] ?? 'Something went wrong. Please try again.') : null;
+---
+<PublicLayout title="Give | Kharisbuilders" description="Give to support the mission and ministries of Kharisbuilders.">
+  <PageHero image="/images/home-2.jpg" height="h-[360px] md:h-[460px]">
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Generosity</span>
+    <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Give</h1>
+    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">
+      Your generosity builds lives and shapes destinies. Give securely with mobile money or card.
+    </p>
+  </PageHero>
+
+  <section class="py-20 md:py-28 px-margin-mobile md:px-margin-desktop max-w-2xl mx-auto">
+    {
+      !givingEnabled ? (
+        <div class="text-center bg-surface-container p-12">
+          <h2 class="font-display text-headline-md text-primary mb-3">Online giving is coming soon</h2>
+          <p class="font-body text-body-md text-stone-gray">We're setting things up. Please check back shortly.</p>
+        </div>
+      ) : (
+        <form
+          method="POST"
+          action="/api/giving/initialize"
+          class="bg-surface-container p-8 md:p-12 shadow-[0_10px_30px_-10px_rgba(26,43,66,0.12)] space-y-8"
+          data-reveal
+        >
+          {errorMsg && <p class="bg-accent-deep/10 text-accent-deep font-body text-body-md px-4 py-3">{errorMsg}</p>}
+
+          <div>
+            <label class="font-label-sm uppercase tracking-widest text-heritage-gold block mb-3">Choose a fund</label>
+            <select name="fund_id" class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary">
+              {funds.map((f) => (
+                <option value={String(f.id)}>{f.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label class="font-label-sm uppercase tracking-widest text-heritage-gold block mb-3">Amount ({currency})</label>
+            <div class="grid grid-cols-4 gap-3 mb-3">
+              {presets.map((p) => (
+                <button
+                  type="button"
+                  class="amount-preset border border-champagne py-3 font-body text-body-md text-primary hover:border-heritage-gold transition-all"
+                  data-amount={String(p)}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+            <input
+              id="amount-input"
+              name="amount"
+              type="text"
+              inputmode="decimal"
+              required
+              placeholder="Custom amount"
+              class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 gap-6">
+            <div>
+              <label for="g-name" class="font-label-sm uppercase tracking-widest text-heritage-gold block mb-2">
+                Name (optional)
+              </label>
+              <input id="g-name" name="name" type="text" class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
+            </div>
+            <div>
+              <label for="g-email" class="font-label-sm uppercase tracking-widest text-heritage-gold block mb-2">
+                Email (for your receipt)
+              </label>
+              <input id="g-email" name="email" type="email" required class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
+            </div>
+          </div>
+
+          <div class="cf-turnstile" data-sitekey={siteKey}></div>
+
+          <button type="submit" class="w-full bg-heritage-gold text-primary font-label-md uppercase tracking-widest py-4 hover:bg-secondary transition-all">
+            Give {currency}
+          </button>
+          <p class="font-body text-body-sm text-stone-gray text-center">
+            Secured by Paystack. You'll be redirected to complete your gift.
+          </p>
+        </form>
+      )
+    }
+  </section>
+
+  <script is:inline>
+    document.querySelectorAll('.amount-preset').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const input = document.getElementById('amount-input');
+        if (input) input.value = btn.getAttribute('data-amount') || '';
+        document.querySelectorAll('.amount-preset').forEach((b) => b.classList.remove('border-heritage-gold'));
+        btn.classList.add('border-heritage-gold');
+      });
+    });
+  </script>
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</PublicLayout>
