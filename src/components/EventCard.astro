@@ -1,0 +1,25 @@
+---
+import type { EventRow } from '../lib/db/events';
+interface Props {
+  event: EventRow;
+}
+const { event } = Astro.props;
+const date = event.start_at?.slice(0, 10) ?? '';
+---
+<a
+  href={`/events/${event.slug}`}
+  class="group bg-surface border border-champagne rounded-lg overflow-hidden flex flex-col"
+>
+  <div class="aspect-[4/3] bg-primary-container"></div>
+  <div class="p-6 flex flex-col gap-2 grow">
+    <div class="flex justify-between items-start">
+      {event.category && <span class="text-xs uppercase tracking-widest text-accent">{event.category}</span>}
+      <span class="text-on-surface-variant text-xs">{date}</span>
+    </div>
+    <h2 class="font-[var(--font-display)] text-xl text-primary group-hover:text-accent transition-colors">
+      {event.title}
+    </h2>
+    <p class="text-on-surface-variant text-sm grow">{event.description}</p>
+    {event.location && <p class="text-on-surface-variant text-xs">{event.location}</p>}
+  </div>
+</a>
