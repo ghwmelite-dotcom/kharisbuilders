@@ -49,4 +49,15 @@ describe('event mutations', () => {
     await deleteEvent(ctx.db, id);
     expect(await getEventById(ctx.db, id)).toBeNull();
   });
+
+  it('cascade-deletes child registrations (D1 enforces the FK)', async () => {
+    const id = await createEvent(ctx.db, { ...base, title: 'WithRegs', slug: 'withregs' }, 'a@x');
+    await ctx.db
+      .prepare("INSERT INTO event_registrations (event_id, name, email, guests) VALUES (?, 'R', 'r@x', 0)")
+      .bind(id)
+      .run();
+    await deleteEvent(ctx.db, id); // must not throw despite the child registration
+    const reg = await ctx.db.prepare('SELECT id FROM event_registrations WHERE event_id = ?').bind(id).first();
+    expect(reg).toBeNull();
+  });
 });

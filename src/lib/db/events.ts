@@ -133,5 +133,10 @@ export async function setEventPublished(db: D1Database, id: number, published: b
 }
 
 export async function deleteEvent(db: D1Database, id: number): Promise<void> {
-  await db.prepare('DELETE FROM events WHERE id = ?').bind(id).run();
+  // Remove child registrations first — D1 enforces the FK, so deleting the parent
+  // while registrations exist would fail.
+  await db.batch([
+    db.prepare('DELETE FROM event_registrations WHERE event_id = ?').bind(id),
+    db.prepare('DELETE FROM events WHERE id = ?').bind(id),
+  ]);
 }
