@@ -1,0 +1,47 @@
+---
+import '../styles/global.css';
+interface Props {
+  title: string;
+  email: string;
+  active?: string;
+}
+const { title, email, active = '' } = Astro.props;
+const nav = [
+  { label: 'Dashboard', href: '/admin', key: 'dashboard' },
+  { label: 'Sermons', href: '/admin/sermons', key: 'sermons' },
+  { label: 'Events', href: '/admin/events', key: 'events' },
+  { label: 'Ministries', href: '/admin/ministries', key: 'ministries' },
+  { label: 'People', href: '/admin/people', key: 'people' },
+];
+---
+<!doctype html>
+<html lang="en" data-theme="sacred">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>{title} · Admin</title>
+  </head>
+  <body class="min-h-screen md:grid md:grid-cols-[240px_1fr]">
+    <aside class="bg-primary text-on-primary p-6 md:min-h-screen">
+      <div class="font-[var(--font-display)] text-xl text-accent mb-8">Kharisbuilders</div>
+      <nav class="flex flex-col gap-1">
+        {
+          nav.map((n) => (
+            <a
+              href={n.href}
+              class={`px-3 py-2 rounded text-sm uppercase tracking-wider ${active === n.key ? 'bg-on-primary/10 text-on-primary' : 'text-on-primary/70 hover:text-on-primary'}`}
+            >
+              {n.label}
+            </a>
+          ))
+        }
+      </nav>
+      <p class="text-on-primary/50 text-xs mt-8 break-words">{email}</p>
+    </aside>
+    <main class="p-6 md:p-12 bg-surface text-on-surface">
+      <h1 class="font-[var(--font-display)] text-3xl text-primary mb-8">{title}</h1>
+      <slot />
+    </main>
+  </body>
+</html>

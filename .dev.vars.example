@@ -8,3 +8,6 @@ PAYSTACK_WEBHOOK_SECRET=
 
 # Cloudflare Turnstile (Phase 2 — public form spam protection)
 TURNSTILE_SECRET_KEY=
+
+# Local admin identity (dev only — production uses Cloudflare Access)
+DEV_ADMIN_EMAIL=dev@kharisbuilders.local

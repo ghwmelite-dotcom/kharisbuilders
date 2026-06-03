@@ -1,0 +1,32 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { env } from '../../lib/runtime';
+import { getAdminEmail } from '../../lib/admin-auth';
+import { listAllSermons } from '../../lib/db/admin';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const sermons = await listAllSermons(env.DB).catch(() => []);
+---
+<AdminLayout title="Sermons" email={email} active="sermons">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">Title</th><th>Speaker</th><th>Date</th><th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        sermons.map((s) => (
+          <tr class="border-b border-champagne/50">
+            <td class="py-3 text-primary">{s.title}</td>
+            <td>{s.speaker}</td>
+            <td>{s.sermon_date}</td>
+            <td>{s.published ? 'Published' : 'Draft'}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {sermons.length === 0 && <p class="text-on-surface-variant mt-4">No sermons yet.</p>}
+</AdminLayout>
