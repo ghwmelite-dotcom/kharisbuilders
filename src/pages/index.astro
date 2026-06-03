@@ -17,29 +17,90 @@ const eventImages = ['/images/home-4.jpg', '/images/home-5.jpg', '/images/home-6
 const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
 ---
 <PublicLayout title="Kharisbuilders | Building Lives, Shaping Destinies">
-  <!-- Hero -->
-  <section class="relative h-[640px] md:h-[840px] flex items-center justify-center overflow-hidden">
-    <img src="/images/home-1.jpg" alt="The Kharisbuilders sanctuary" class="kenburns absolute inset-0 w-full h-full object-cover" />
-    <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(4,22,44,0.5), rgba(4,22,44,0.85));"></div>
-    <div class="relative z-10 text-center px-margin-mobile md:px-0">
-      <span class="font-label-sm uppercase tracking-[0.4em] text-heritage-gold mb-7 block" data-reveal>Welcome Home</span>
-      <h1
-        class="font-display text-display-mobile md:text-display-lg text-white mb-10 max-w-4xl mx-auto"
-        data-reveal
-        style="--reveal-delay:90ms; text-shadow:0 2px 18px rgba(0,0,0,0.4);"
-      >
-        Building Lives,<br />Shaping Destinies.
+  <!-- Cinematic hero -->
+  <section class="relative min-h-dvh flex items-center justify-center overflow-hidden bg-primary">
+    <img src="/images/home-1.jpg" alt="The Kharisbuilders sanctuary" class="kenburns absolute inset-0 w-full h-full object-cover opacity-35" />
+    <div class="hero-glows absolute inset-0 pointer-events-none">
+      <span class="glow glow-orange"></span>
+      <span class="glow glow-blue"></span>
+      <span class="glow glow-purple"></span>
+      <span class="glow glow-red"></span>
+    </div>
+    <div class="absolute inset-0" style="background: radial-gradient(130% 90% at 50% 28%, transparent 28%, rgba(4,22,44,0.78) 100%);"></div>
+
+    <div class="relative z-10 text-center px-6 max-w-4xl mx-auto pt-20">
+      <img src="/images/kharis-logo.png" alt="" class="hero-swirl hero-fade w-20 h-20 md:w-24 md:h-24 mx-auto mb-7" style="--line-delay:0ms" />
+      <span class="hero-line font-label-sm uppercase tracking-[0.45em] text-heritage-gold mb-6 block" style="--line-delay:140ms">Welcome Home</span>
+      <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-10" style="text-shadow:0 2px 24px rgba(0,0,0,0.5);">
+        <span class="hero-line block" style="--line-delay:240ms">Building Lives,</span>
+        <span class="hero-line block text-gold-gradient" style="--line-delay:360ms">Shaping Destinies.</span>
       </h1>
-      <div class="flex flex-col md:flex-row gap-5 justify-center items-center" data-reveal style="--reveal-delay:200ms">
-        <a href="/visit" class="btn-fill bg-midnight-blue text-white font-label-md uppercase tracking-[0.14em] px-10 py-5">Join Us This Sunday</a>
-        <a href="/sermons" class="btn-fill border border-heritage-gold text-heritage-gold hover:text-white font-label-md uppercase tracking-[0.14em] px-10 py-5">Watch Online</a>
+
+      <!-- Live next-gathering countdown -->
+      <div class="hero-fade inline-flex flex-wrap justify-center items-center gap-x-5 gap-y-2 glass-card rounded-full px-7 py-3.5 mb-9" style="--line-delay:560ms">
+        <span class="font-label-sm uppercase tracking-[0.25em] text-heritage-gold">Next Gathering</span>
+        <span class="w-px h-6 bg-white/20 hidden sm:block"></span>
+        <span id="hero-countdown" class="font-display text-white text-xl tabular-nums tracking-wide">—</span>
+        <span class="w-px h-6 bg-white/20 hidden sm:block"></span>
+        <span id="hero-next" class="font-body text-body-md text-white/70 hidden sm:block">Sunday · 9:00 AM</span>
+      </div>
+
+      <div class="hero-fade flex flex-col sm:flex-row gap-4 justify-center items-center" style="--line-delay:680ms">
+        <a href="/visit" class="bg-heritage-gold text-primary hover:bg-secondary hover:text-white font-label-md uppercase tracking-[0.14em] px-10 py-5 transition-colors duration-300">Join Us This Sunday</a>
+        <a href="/sermons" class="btn-fill border border-white/40 text-white font-label-md uppercase tracking-[0.14em] px-10 py-5">Watch Online</a>
       </div>
     </div>
-    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2 text-white/50">
+
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2 text-white/45">
       <span class="font-label-sm uppercase tracking-[0.3em]">Scroll</span>
       <span class="w-px h-10 bg-gradient-to-b from-heritage-gold to-transparent"></span>
     </div>
   </section>
+  <script>
+    (function () {
+      const out = document.getElementById('hero-countdown');
+      const nextEl = document.getElementById('hero-next');
+      if (!out) return;
+      const sched = [
+        [0, 9, 0, 'Sunday · 9:00 AM'],
+        [0, 17, 30, 'Sunday · 5:30 PM'],
+        [3, 19, 0, 'Wednesday · 7:00 PM'],
+      ];
+      function nextOccurrence(day, h, m) {
+        const now = new Date();
+        const d = new Date(now);
+        d.setHours(h, m, 0, 0);
+        let add = (day - d.getDay() + 7) % 7;
+        if (add === 0 && d <= now) add = 7;
+        d.setDate(d.getDate() + add);
+        return d;
+      }
+      function tick() {
+        const now = new Date();
+        let best = null;
+        let bestLabel = '';
+        for (const [day, h, m, label] of sched) {
+          const t = nextOccurrence(day, h, m);
+          if (!best || t < best) {
+            best = t;
+            bestLabel = label;
+          }
+        }
+        let s = Math.max(0, Math.floor((best.getTime() - now.getTime()) / 1000));
+        const dd = Math.floor(s / 86400);
+        s %= 86400;
+        const hh = Math.floor(s / 3600);
+        s %= 3600;
+        const mm = Math.floor(s / 60);
+        const ss = s % 60;
+        const pad = (n) => String(n).padStart(2, '0');
+        out.textContent = `${dd}d ${pad(hh)}h ${pad(mm)}m ${pad(ss)}s`;
+        if (nextEl) nextEl.textContent = bestLabel;
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
 
   <!-- Pastor's welcome -->
   <section class="py-24 md:py-40 bg-surface">
