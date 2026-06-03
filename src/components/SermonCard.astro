@@ -2,23 +2,27 @@
 import type { Sermon } from '../lib/db/sermons';
 interface Props {
   sermon: Sermon;
+  image: string;
 }
-const { sermon } = Astro.props;
+const { sermon, image } = Astro.props;
 ---
 <a
   href={`/sermons/${sermon.slug}`}
-  class="group bg-surface border border-champagne rounded-lg overflow-hidden flex flex-col"
+  class="group block bg-surface-container-lowest border border-champagne-light/40 hover:border-heritage-gold/40 transition-colors duration-500 overflow-hidden"
 >
-  <div class="aspect-video bg-primary-container flex items-center justify-center">
-    <span class="text-on-primary/70 text-sm uppercase tracking-widest">Watch</span>
+  <div class="relative aspect-video overflow-hidden">
+    <img src={image} alt={sermon.title} class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" />
+    <div class="absolute inset-0 bg-midnight-blue/30"></div>
+    <div class="absolute inset-0 flex items-center justify-center">
+      <div class="w-14 h-14 rounded-full border border-heritage-gold/60 flex items-center justify-center bg-white/10 backdrop-blur-sm group-hover:scale-110 transition-transform duration-500">
+        <svg class="w-6 h-6 text-white translate-x-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+      </div>
+    </div>
   </div>
-  <div class="p-6 flex flex-col gap-2 grow">
-    {sermon.series && <span class="text-xs uppercase tracking-widest text-accent">{sermon.series}</span>}
-    <h2 class="font-[var(--font-display)] text-xl text-primary group-hover:text-accent transition-colors">
-      {sermon.title}
-    </h2>
-    <p class="text-on-surface-variant text-sm grow">{sermon.description}</p>
-    <p class="text-on-surface-variant text-xs">
+  <div class="p-8">
+    {sermon.series && <span class="font-label-sm uppercase tracking-widest text-heritage-gold mb-2 block">{sermon.series}</span>}
+    <h3 class="font-display text-headline-md text-primary mb-3 group-hover:text-heritage-gold transition-colors">{sermon.title}</h3>
+    <p class="font-body text-body-md text-stone-gray">
       {sermon.speaker}{sermon.speaker && sermon.sermon_date ? ' · ' : ''}{sermon.sermon_date}
     </p>
   </div>
