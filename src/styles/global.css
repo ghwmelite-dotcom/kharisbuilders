@@ -382,3 +382,9 @@ html {
 .hero-swirl {
   filter: drop-shadow(0 0 26px rgba(224, 146, 47, 0.4));
 }
+.hero-shadow {
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+}
+.gold-shadow {
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.55));
+}

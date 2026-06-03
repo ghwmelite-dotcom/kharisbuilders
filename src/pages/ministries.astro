@@ -1,5 +1,6 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
+import PageHero from '../components/PageHero.astro';
 import { env } from '../lib/runtime';
 import { listPublishedMinistries, type Ministry } from '../lib/db/ministries';
 
@@ -24,17 +25,14 @@ const cfg = (i: number) => bento[i] ?? { span: 'md:col-span-4', img: '/images/mi
   description="Find your place in the body of Christ at Kharisbuilders."
 >
   <!-- Hero -->
-  <header class="relative h-[460px] md:h-[560px] flex items-center justify-center overflow-hidden">
-    <img src="/images/ministries-1.jpg" alt="" class="kenburns absolute inset-0 w-full h-full object-cover" style="filter:grayscale(20%) brightness(45%);" />
-    <div class="relative z-10 text-center px-4 max-w-4xl" data-reveal>
-      <span class="font-label-sm text-heritage-gold uppercase tracking-[0.3em] mb-4 block">Our Community</span>
-      <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-6">Ministries</h1>
-      <p class="font-body text-body-lg text-white/80 max-w-2xl mx-auto">
-        Finding your place in the body of Christ. We believe every individual has a unique calling and a part to play in
-        building the Kingdom.
-      </p>
-    </div>
-  </header>
+  <PageHero image="/images/ministries-1.jpg">
+    <span class="font-label-sm text-heritage-gold uppercase tracking-[0.3em] mb-4 block hero-shadow">Our Community</span>
+    <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-6 hero-shadow">Ministries</h1>
+    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto hero-shadow">
+      Finding your place in the body of Christ. We believe every individual has a unique calling and a part to play in
+      building the Kingdom.
+    </p>
+  </PageHero>
 
   <!-- Bento grid -->
   <main class="py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
