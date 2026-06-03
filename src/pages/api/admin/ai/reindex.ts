@@ -21,7 +21,8 @@ export const POST: APIRoute = async ({ request }) => {
       /* skip a failing sermon, continue */
     }
   }
-  return new Response(JSON.stringify({ indexed, total: ids.length }), {
-    headers: { 'content-type': 'application/json' },
+  return new Response(null, {
+    status: 303,
+    headers: { Location: `/admin/sermons?reindexed=${indexed}` },
   });
 };
