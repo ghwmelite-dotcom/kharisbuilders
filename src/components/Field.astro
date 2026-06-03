@@ -1,0 +1,27 @@
+---
+interface Props {
+  label: string;
+  name: string;
+  type?: string;
+  required?: boolean;
+  options?: string[];
+}
+const { label, name, type = 'text', required = false, options } = Astro.props;
+const id = `f-${name}`;
+const base =
+  'bg-transparent border-0 border-b border-on-surface-variant/30 focus:border-primary focus:ring-0 py-2 min-h-[44px]';
+---
+<div class="flex flex-col gap-1">
+  <label for={id} class="text-xs uppercase tracking-wider text-on-surface-variant">{label}</label>
+  {
+    options ? (
+      <select id={id} name={name} required={required} class={base}>
+        {options.map((o) => (
+          <option value={o}>{o}</option>
+        ))}
+      </select>
+    ) : (
+      <input id={id} name={name} type={type} required={required} class={base} />
+    )
+  }
+</div>
