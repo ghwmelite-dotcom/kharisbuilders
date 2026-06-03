@@ -12,6 +12,7 @@ export interface DonationRow {
   paystack_status: string | null;
   paid_at: string | null;
   metadata: string | null;
+  subscription_id: number | null;
   created_at: string;
 }
 
@@ -24,18 +25,62 @@ export interface CreatePendingInput {
   fund_id?: number;
   type: string;
   metadata: string;
+  subscription_id?: number | null;
 }
 
 const COLS =
-  'id, reference, email, name, amount, currency, fund_id, type, status, channel, paystack_status, paid_at, metadata, created_at';
+  'id, reference, email, name, amount, currency, fund_id, type, status, channel, paystack_status, paid_at, metadata, subscription_id, created_at';
 
 export async function createPendingDonation(db: D1Database, d: CreatePendingInput): Promise<void> {
   await db
     .prepare(
-      `INSERT INTO donations (reference, email, name, amount, currency, fund_id, type, status, metadata)
-       VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)`,
+      `INSERT INTO donations (reference, email, name, amount, currency, fund_id, type, status, metadata, subscription_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)`,
     )
-    .bind(d.reference, d.email, d.name || null, d.amount, d.currency, d.fund_id ?? null, d.type, d.metadata)
+    .bind(
+      d.reference,
+      d.email,
+      d.name || null,
+      d.amount,
+      d.currency,
+      d.fund_id ?? null,
+      d.type,
+      d.metadata,
+      d.subscription_id ?? null,
+    )
+    .run();
+}
+
+export interface RecurringDonationInput {
+  reference: string;
+  email: string;
+  name: string | null;
+  amount: number;
+  currency: string;
+  fund_id: number | null;
+  subscription_id: number | null;
+  channel?: string;
+  paidAt?: string;
+}
+
+/** Idempotent (INSERT OR IGNORE on the unique reference) success row for an automatic cycle charge. */
+export async function createRecurringDonation(db: D1Database, d: RecurringDonationInput): Promise<void> {
+  await db
+    .prepare(
+      `INSERT OR IGNORE INTO donations (reference, email, name, amount, currency, fund_id, type, status, channel, paystack_status, paid_at, subscription_id)
+       VALUES (?, ?, ?, ?, ?, ?, 'recurring', 'success', ?, 'success', ?, ?)`,
+    )
+    .bind(
+      d.reference,
+      d.email,
+      d.name || null,
+      d.amount,
+      d.currency,
+      d.fund_id ?? null,
+      d.channel ?? null,
+      d.paidAt ?? null,
+      d.subscription_id ?? null,
+    )
     .run();
 }
 
