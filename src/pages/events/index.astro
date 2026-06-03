@@ -3,6 +3,7 @@ import PublicLayout from '../../layouts/PublicLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import EventCard from '../../components/EventCard.astro';
 import { env } from '../../lib/runtime';
+import { mediaUrl } from '../../lib/media';
 import { listUpcomingEvents, type EventRow } from '../../lib/db/events';
 
 let events: EventRow[] = [];
@@ -28,7 +29,7 @@ const imgs = ['/images/home-4.jpg', '/images/home-5.jpg', '/images/home-6.jpg'];
       ) : (
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10" data-reveal>
           {events.map((e, i) => (
-            <EventCard event={e} image={imgs[i % imgs.length]} />
+            <EventCard event={e} image={mediaUrl(e.image_key) ?? imgs[i % imgs.length]} />
           ))}
         </div>
       )
