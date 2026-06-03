@@ -1,0 +1,69 @@
+---
+import PublicLayout from '../layouts/PublicLayout.astro';
+import Button from '../components/Button.astro';
+import Field from '../components/Field.astro';
+import { env } from '../lib/runtime';
+import { getAllSettings } from '../lib/db/settings';
+
+let address = '';
+let siteKey = '1x00000000000000000000AA'; // Cloudflare always-pass TEST key (dev default)
+let serviceTimes: Array<{ name: string; time: string; note?: string }> = [];
+try {
+  const settings = await getAllSettings(env.DB);
+  address = settings.address ?? '';
+  siteKey = settings.turnstile_site_key ?? siteKey;
+  serviceTimes = settings.service_times ? JSON.parse(settings.service_times) : [];
+} catch {
+  /* fall back to defaults */
+}
+const submitted = Astro.url.searchParams.get('submitted') === '1';
+const serviceOptions = serviceTimes.map((s) => `${s.name} ${s.time}`);
+---
+<PublicLayout title="Visit Us | Kharisbuilders" description="Plan your visit to Kharisbuilders.">
+  <section class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-20 grid md:grid-cols-2 gap-16">
+    <div>
+      <h1 class="font-[var(--font-display)] text-4xl text-primary mb-6">Plan Your Visit</h1>
+      <p class="text-on-surface-variant mb-8">
+        Let us know you're coming so we can have a welcome pack ready and help you find your way.
+      </p>
+      {
+        address && (
+          <p class="text-on-surface-variant mb-6">
+            <span class="text-primary uppercase text-xs tracking-widest block mb-1">Our Address</span>
+            {address}
+          </p>
+        )
+      }
+      <div class="divide-y divide-accent/20 mt-8">
+        {
+          serviceTimes.map((s) => (
+            <div class="flex justify-between py-4">
+              <span class="text-primary">{s.name}</span>
+              <span class="text-accent">{s.time}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="bg-surface border border-champagne rounded-lg p-8">
+      {
+        submitted ? (
+          <p class="font-[var(--font-display)] text-2xl text-primary">Thank you — we'll see you soon!</p>
+        ) : (
+          <form method="POST" action="/api/forms/visit" class="flex flex-col gap-6">
+            <Field label="Full Name" name="name" required />
+            <Field label="Email Address" name="email" type="email" required />
+            <Field label="Phone (optional)" name="phone" type="tel" />
+            <Field label="I'm coming on..." name="visiting_service" options={serviceOptions} />
+            <div class="cf-turnstile" data-sitekey={siteKey} />
+            <Button type="submit" variant="primary">
+              Confirm Attendance
+            </Button>
+          </form>
+        )
+      }
+    </div>
+  </section>
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</PublicLayout>

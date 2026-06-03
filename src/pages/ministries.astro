@@ -1,0 +1,30 @@
+---
+import PublicLayout from '../layouts/PublicLayout.astro';
+import MinistryCard from '../components/MinistryCard.astro';
+import { env } from '../lib/runtime';
+import { listPublishedMinistries, type Ministry } from '../lib/db/ministries';
+
+let ministries: Ministry[] = [];
+try {
+  ministries = await listPublishedMinistries(env.DB);
+} catch {
+  ministries = [];
+}
+---
+<PublicLayout
+  title="Ministries | Kharisbuilders"
+  description="Find your place in the body of Christ at Kharisbuilders."
+>
+  <section class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-20">
+    <div class="text-center mb-16">
+      <span class="text-xs uppercase tracking-[0.3em] text-accent">Our Community</span>
+      <h1 class="font-[var(--font-display)] text-4xl md:text-5xl text-primary mt-3">Ministries</h1>
+      <p class="text-on-surface-variant max-w-2xl mx-auto mt-4">
+        Every individual has a unique calling and a part to play in building the Kingdom.
+      </p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {ministries.map((m) => <MinistryCard ministry={m} />)}
+    </div>
+  </section>
+</PublicLayout>
