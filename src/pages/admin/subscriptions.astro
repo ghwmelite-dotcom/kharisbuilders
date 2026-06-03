@@ -1,0 +1,44 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { env } from '../../lib/runtime';
+import { getAdminEmail } from '../../lib/admin-auth';
+import { listSubscriptions } from '../../lib/db/subscriptions';
+import { formatAmount } from '../../lib/giving/money';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const subs = await listSubscriptions(env.DB, {}).catch(() => []);
+const intervalLabel: Record<string, string> = { weekly: 'Weekly', monthly: 'Monthly', annually: 'Annual' };
+---
+<AdminLayout title="Recurring giving" email={email} active="subscriptions">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">Giver</th><th>Amount</th><th>Every</th><th>Status</th><th>Next</th><th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        subs.map((s) => (
+          <tr class="border-b border-champagne/50">
+            <td class="py-3">{s.customer_email}</td>
+            <td>{formatAmount(s.amount)}</td>
+            <td>{intervalLabel[s.interval] ?? s.interval}</td>
+            <td>{s.status}</td>
+            <td>{s.next_payment_at ?? '—'}</td>
+            <td class="text-right">
+              {s.status === 'active' && s.subscription_code && (
+                <form method="POST" action="/api/admin/subscriptions" class="inline" onsubmit="return confirm('Cancel this recurring gift on Paystack?')">
+                  <input type="hidden" name="_action" value="cancel" />
+                  <input type="hidden" name="code" value={s.subscription_code} />
+                  <button class="text-accent-deep text-xs uppercase tracking-wider">Cancel</button>
+                </form>
+              )}
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {subs.length === 0 && <p class="text-on-surface-variant mt-4">No recurring gifts yet.</p>}
+</AdminLayout>
