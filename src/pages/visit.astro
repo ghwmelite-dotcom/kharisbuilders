@@ -1,12 +1,11 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
-import Button from '../components/Button.astro';
 import Field from '../components/Field.astro';
 import { env } from '../lib/runtime';
 import { getAllSettings } from '../lib/db/settings';
 
 let address = '';
-let siteKey = '1x00000000000000000000AA'; // Cloudflare always-pass TEST key (dev default)
+let siteKey = '1x00000000000000000000AA';
 let serviceTimes: Array<{ name: string; time: string; note?: string }> = [];
 try {
   const settings = await getAllSettings(env.DB);
@@ -14,55 +13,155 @@ try {
   siteKey = settings.turnstile_site_key ?? siteKey;
   serviceTimes = settings.service_times ? JSON.parse(settings.service_times) : [];
 } catch {
-  /* fall back to defaults */
+  /* defaults */
 }
 const submitted = Astro.url.searchParams.get('submitted') === '1';
 const serviceOptions = serviceTimes.map((s) => `${s.name} ${s.time}`);
+const mapsHref = address
+  ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
+  : 'https://www.google.com/maps';
 ---
 <PublicLayout title="Visit Us | Kharisbuilders" description="Plan your visit to Kharisbuilders.">
-  <section class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-20 grid md:grid-cols-2 gap-16">
-    <div>
-      <h1 class="font-[var(--font-display)] text-4xl text-primary mb-6">Plan Your Visit</h1>
-      <p class="text-on-surface-variant mb-8">
-        Let us know you're coming so we can have a welcome pack ready and help you find your way.
+  <!-- Hero -->
+  <section class="relative h-[440px] md:h-[560px] flex items-center justify-center overflow-hidden">
+    <img src="/images/visit-1.jpg" alt="" class="absolute inset-0 w-full h-full object-cover" />
+    <div class="absolute inset-0 bg-midnight-blue/50"></div>
+    <div class="relative z-10 text-center text-white px-margin-mobile">
+      <h1 class="font-display text-display-mobile md:text-display-lg mb-4">A Place to Belong</h1>
+      <p class="font-body text-body-lg max-w-2xl mx-auto opacity-90">
+        Experience the intersection of tradition and transformation. We can't wait to welcome you home.
       </p>
-      {
-        address && (
-          <p class="text-on-surface-variant mb-6">
-            <span class="text-primary uppercase text-xs tracking-widest block mb-1">Our Address</span>
-            {address}
-          </p>
-        )
-      }
-      <div class="divide-y divide-accent/20 mt-8">
+    </div>
+  </section>
+
+  <!-- Service times + Plan Your Visit -->
+  <section class="py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+      <div class="lg:col-span-7">
+        <h2 class="font-display text-headline-lg text-primary mb-12 flex items-center gap-4">
+          <span class="w-12 h-px bg-heritage-gold"></span>
+          Service Times
+        </h2>
+        <div class="space-y-2">
+          {
+            serviceTimes.map((s, i) => (
+              <div class={`flex justify-between items-center py-6 ${i < serviceTimes.length - 1 ? 'border-b border-heritage-gold/20' : ''}`}>
+                <div>
+                  <h3 class="font-display text-headline-md text-midnight-blue">{s.name}</h3>
+                  {s.note && <p class="font-body text-body-md text-stone-gray">{s.note}</p>}
+                </div>
+                <span class="font-display text-headline-md text-heritage-gold block">{s.time}</span>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="lg:col-span-5 bg-surface-container p-8 md:p-12 shadow-[0_10px_30px_-10px_rgba(26,43,66,0.12)]">
         {
-          serviceTimes.map((s) => (
-            <div class="flex justify-between py-4">
-              <span class="text-primary">{s.name}</span>
-              <span class="text-accent">{s.time}</span>
+          submitted ? (
+            <p class="font-display text-headline-md text-primary">Thank you — we'll see you soon!</p>
+          ) : (
+            <div class="space-y-8">
+              <div>
+                <span class="font-label-sm uppercase tracking-widest text-heritage-gold block mb-2">First Time?</span>
+                <h2 class="font-display text-headline-lg text-primary mb-4">Plan Your Visit</h2>
+                <p class="font-body text-body-md text-stone-gray mb-8">
+                  Let us know you're coming so we can have a welcome pack ready and help you find your way.
+                </p>
+              </div>
+              <form method="POST" action="/api/forms/visit" class="space-y-6">
+                <Field label="Full Name" name="name" required />
+                <Field label="Email Address" name="email" type="email" required />
+                <Field label="I'm coming on..." name="visiting_service" options={serviceOptions} />
+                <div class="cf-turnstile" data-sitekey={siteKey} />
+                <button type="submit" class="w-full bg-midnight-blue text-white font-label-md uppercase tracking-widest py-4 border-b-2 border-transparent hover:border-heritage-gold transition-all">
+                  Confirm Attendance
+                </button>
+              </form>
             </div>
-          ))
+          )
         }
       </div>
     </div>
+  </section>
 
-    <div class="bg-surface border border-champagne rounded-lg p-8">
-      {
-        submitted ? (
-          <p class="font-[var(--font-display)] text-2xl text-primary">Thank you — we'll see you soon!</p>
-        ) : (
-          <form method="POST" action="/api/forms/visit" class="flex flex-col gap-6">
-            <Field label="Full Name" name="name" required />
-            <Field label="Email Address" name="email" type="email" required />
-            <Field label="Phone (optional)" name="phone" type="tel" />
-            <Field label="I'm coming on..." name="visiting_service" options={serviceOptions} />
-            <div class="cf-turnstile" data-sitekey={siteKey} />
-            <Button type="submit" variant="primary">
-              Confirm Attendance
-            </Button>
-          </form>
-        )
-      }
+  <!-- Find Us -->
+  <section class="py-24 bg-surface-container-low">
+    <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+        <div class="order-2 md:order-1">
+          <div class="h-[420px] md:h-[500px] bg-surface-dim relative overflow-hidden shadow-[0_10px_30px_-10px_rgba(26,43,66,0.1)]">
+            <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, #1A2B42 1px, transparent 0); background-size: 24px 24px;"></div>
+            <div class="absolute inset-0 flex items-center justify-center text-center">
+              <div>
+                <svg class="w-12 h-12 text-heritage-gold mx-auto mb-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" /></svg>
+                <p class="font-label-md uppercase tracking-widest text-stone-gray">Our sanctuary</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="order-1 md:order-2 space-y-8">
+          <h2 class="font-display text-headline-lg text-primary">Find Us</h2>
+          <div class="space-y-6">
+            <div>
+              <h4 class="font-label-md uppercase tracking-widest text-midnight-blue mb-1">Our Address</h4>
+              <p class="font-body text-body-md text-stone-gray">{address || '12 Cathedral Way, West End, London'}</p>
+            </div>
+            <div>
+              <h4 class="font-label-md uppercase tracking-widest text-midnight-blue mb-1">Parking</h4>
+              <p class="font-body text-body-md text-stone-gray">Free on-site parking is available, with assistance for elderly visitors.</p>
+            </div>
+            <div class="pt-4">
+              <a href={mapsHref} target="_blank" rel="noopener" class="inline-flex items-center gap-3 font-label-md uppercase tracking-widest text-midnight-blue border-b border-heritage-gold pb-1">
+                Get Directions via Google Maps →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What to Expect -->
+  <section class="py-28 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-4">What to Expect</h2>
+      <div class="w-24 h-px bg-heritage-gold mx-auto"></div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      <div class="md:col-span-2 bg-surface-container-lowest p-10 md:p-12 border-t-2 border-heritage-gold shadow-[0_10px_30px_-10px_rgba(26,43,66,0.08)]">
+        <h3 class="font-display text-headline-md text-primary mb-4">What should I wear?</h3>
+        <p class="font-body text-body-md text-stone-gray leading-relaxed">
+          We value your presence more than your attire. You'll find some people in suits and others in jeans — wear
+          whatever makes you feel comfortable and ready to connect with the community.
+        </p>
+      </div>
+      <div class="bg-midnight-blue p-10 md:p-12 text-white">
+        <h3 class="font-display text-headline-md mb-4">Kids?</h3>
+        <p class="font-body text-body-md opacity-80 leading-relaxed">
+          Our 'Kharis Kids' program offers a safe, fun, and spiritually enriching environment for ages 2–11 during the
+          morning service.
+        </p>
+      </div>
+      <div class="bg-surface-container-high p-10 md:p-12">
+        <h3 class="font-display text-headline-md text-primary mb-4">The Service?</h3>
+        <p class="font-body text-body-md text-stone-gray leading-relaxed">
+          Services typically last 75 minutes — soulful music, communal prayer, and a message both ancient in truth and
+          modern in application.
+        </p>
+      </div>
+      <div class="md:col-span-2 relative min-h-[300px] overflow-hidden group">
+        <img src="/images/visit-2.jpg" alt="" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+        <div class="absolute inset-0 bg-midnight-blue/60 flex items-end p-10 md:p-12">
+          <div class="text-white">
+            <h3 class="font-display text-headline-md mb-2">Afterward</h3>
+            <p class="font-body text-body-md opacity-90 max-w-md">
+              Join us in the Glass Atrium for artisanal coffee and a chance to meet our leadership team.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
   <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>

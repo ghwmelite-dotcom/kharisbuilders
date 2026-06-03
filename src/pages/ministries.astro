@@ -1,6 +1,5 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
-import MinistryCard from '../components/MinistryCard.astro';
 import { env } from '../lib/runtime';
 import { listPublishedMinistries, type Ministry } from '../lib/db/ministries';
 
@@ -10,21 +9,85 @@ try {
 } catch {
   ministries = [];
 }
+
+const bento = [
+  { span: 'md:col-span-8', img: '/images/ministries-2.jpg', dark: false, big: true },
+  { span: 'md:col-span-4', img: '/images/ministries-3.jpg', dark: false, big: false },
+  { span: 'md:col-span-4', img: '/images/ministries-4.jpg', dark: false, big: false },
+  { span: 'md:col-span-8', img: '/images/ministries-5.jpg', dark: true, big: true },
+  { span: 'md:col-span-12', img: '/images/ministries-6.jpg', dark: false, big: true },
+];
+const cfg = (i: number) => bento[i] ?? { span: 'md:col-span-4', img: '/images/ministries-3.jpg', dark: false, big: false };
 ---
 <PublicLayout
   title="Ministries | Kharisbuilders"
   description="Find your place in the body of Christ at Kharisbuilders."
 >
-  <section class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-20">
-    <div class="text-center mb-16">
-      <span class="text-xs uppercase tracking-[0.3em] text-accent">Our Community</span>
-      <h1 class="font-[var(--font-display)] text-4xl md:text-5xl text-primary mt-3">Ministries</h1>
-      <p class="text-on-surface-variant max-w-2xl mx-auto mt-4">
-        Every individual has a unique calling and a part to play in building the Kingdom.
+  <!-- Hero -->
+  <header class="relative h-[460px] md:h-[560px] flex items-center justify-center overflow-hidden">
+    <img src="/images/ministries-1.jpg" alt="" class="absolute inset-0 w-full h-full object-cover" style="filter:grayscale(20%) brightness(45%);" />
+    <div class="relative z-10 text-center px-4 max-w-4xl">
+      <span class="font-label-sm text-heritage-gold uppercase tracking-[0.3em] mb-4 block">Our Community</span>
+      <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-6">Ministries</h1>
+      <p class="font-body text-body-lg text-white/80 max-w-2xl mx-auto">
+        Finding your place in the body of Christ. We believe every individual has a unique calling and a part to play in
+        building the Kingdom.
       </p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {ministries.map((m) => <MinistryCard ministry={m} />)}
+  </header>
+
+  <!-- Bento grid -->
+  <main class="py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+    {
+      ministries.length === 0 ? (
+        <p class="text-center text-stone-gray font-body">Our ministries are being prepared — check back soon.</p>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+          {ministries.map((m, i) => {
+            const c = cfg(i);
+            return c.dark ? (
+              <div class={`group relative overflow-hidden bg-primary text-white min-h-[360px] ${c.span}`}>
+                <img src={c.img} alt={m.name} class="absolute inset-0 w-full h-full object-cover opacity-40 grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105" />
+                <div class="relative z-10 p-10 md:p-12 flex flex-col justify-end h-full min-h-[360px]">
+                  <h2 class="font-display text-headline-lg text-white mb-4">{m.name}</h2>
+                  <p class="font-body text-body-lg text-white/80 mb-2 max-w-lg">{m.description}</p>
+                  {m.meeting_time && <p class="font-label-sm uppercase tracking-widest text-heritage-gold">{m.meeting_time}</p>}
+                </div>
+              </div>
+            ) : (
+              <div class={`group relative overflow-hidden bg-surface-container border border-champagne-light ${c.span}`}>
+                <div class={`overflow-hidden ${c.big ? 'aspect-[16/9]' : 'aspect-square'}`}>
+                  <img src={c.img} alt={m.name} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                </div>
+                <div class="p-8 md:p-10">
+                  <h2 class={`font-display ${c.big ? 'text-headline-lg' : 'text-headline-md'} text-primary mb-4`}>{m.name}</h2>
+                  <p class="font-body text-body-md text-stone-gray mb-4 max-w-xl">{m.description}</p>
+                  {m.meeting_time && <p class="font-label-sm uppercase tracking-widest text-heritage-gold">{m.meeting_time}</p>}
+                  {m.leader && (
+                    <p class="font-body text-body-md text-stone-gray mt-2">
+                      Led by <span class="text-primary">{m.leader}</span>
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )
+    }
+  </main>
+
+  <!-- CTA -->
+  <section class="bg-surface-container-high py-24 text-center">
+    <div class="max-w-3xl mx-auto px-4">
+      <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-6">Can't find what you're looking for?</h2>
+      <p class="font-body text-body-lg text-stone-gray mb-10">
+        Our team is here to help you navigate your journey and find the ministry that best fits your gifts and season of
+        life.
+      </p>
+      <a href="/visit" class="inline-flex items-center gap-3 font-label-md text-primary uppercase tracking-[0.2em] border-b border-heritage-gold pb-1">
+        Contact Our Team
+      </a>
     </div>
   </section>
 </PublicLayout>
