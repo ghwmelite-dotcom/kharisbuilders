@@ -1,9 +1,13 @@
 import { DonationInputSchema } from '../db/schemas';
 import { validateAmount } from './money';
-import { makeReference } from './reference';
+import { makeReference, makeSubReference } from './reference';
 import { createPendingDonation } from '../db/donations';
+import { createPendingSubscription } from '../db/subscriptions';
+import { ensurePlan } from './ensure-plan';
 import { getSetting } from '../db/settings';
 import { initializeTransaction } from '../paystack/client';
+
+const INTERVALS = ['weekly', 'monthly', 'annually'];
 
 export interface InitializeEnv {
   DB: D1Database;
@@ -72,6 +76,53 @@ export async function handleInitialize(
   if (!turnstileOk) return back('turnstile');
 
   const currency = (await getSetting(env.DB, 'currency').catch(() => null)) ?? 'GHS';
+  const type = String(form.get('type') ?? 'one_time');
+
+  if (type === 'recurring') {
+    const interval = String(form.get('interval') ?? '');
+    if (!INTERVALS.includes(interval)) return back('interval');
+
+    const plan = await ensurePlan(
+      env.DB,
+      { amount: amount.minor, interval, currency },
+      { secret: env.PAYSTACK_SECRET_KEY ?? '', fetchFn: doFetch },
+    );
+    if (!plan.ok) return back('init');
+
+    const localRef = makeSubReference();
+    const subId = await createPendingSubscription(env.DB, {
+      local_ref: localRef,
+      customer_email: parsed.data.email,
+      plan_id: plan.planId,
+      plan_code: plan.planCode,
+      amount: amount.minor,
+      interval,
+      fund_id: parsed.data.fund_id,
+    });
+
+    const reference = makeReference();
+    const metadata = { fund_id: parsed.data.fund_id ?? null, donor_name: parsed.data.name || null, recurring: true };
+    await createPendingDonation(env.DB, {
+      reference,
+      email: parsed.data.email,
+      name: parsed.data.name ?? '',
+      amount: amount.minor,
+      currency,
+      fund_id: parsed.data.fund_id,
+      type: 'recurring',
+      metadata: JSON.stringify(metadata),
+      subscription_id: subId,
+    });
+
+    const init = await initializeTransaction(
+      { email: parsed.data.email, currency, reference, callbackUrl: `${deps.origin}/giving/callback`, metadata, plan: plan.planCode },
+      { secret: env.PAYSTACK_SECRET_KEY ?? '', fetchFn: doFetch },
+    );
+    if (!init.ok) return back('init');
+    return { status: 303, redirect: init.authorizationUrl };
+  }
+
+  // --- one-time ---
   const reference = makeReference();
   const metadata = { fund_id: parsed.data.fund_id ?? null, donor_name: parsed.data.name || null };
 
