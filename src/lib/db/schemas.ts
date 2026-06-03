@@ -32,3 +32,32 @@ export const SermonInputSchema = z.object({
   published: z.coerce.boolean().default(false),
 });
 export type SermonInput = z.infer<typeof SermonInputSchema>;
+
+export const EventInputSchema = z.object({
+  title: z.string().trim().min(1).max(200),
+  slug: z.string().trim().max(200).optional().or(z.literal('')),
+  category: z.string().trim().max(80).optional().or(z.literal('')),
+  description: z.string().trim().max(4000).optional().or(z.literal('')),
+  start_at: z.string().trim().min(1).max(30),
+  end_at: z.string().trim().max(30).optional().or(z.literal('')),
+  location: z.string().trim().max(200).optional().or(z.literal('')),
+  registration_enabled: z.coerce.boolean().default(false),
+  // Empty field => unlimited (undefined). Preprocess so '' doesn't coerce to 0 and fail positive().
+  capacity: z.preprocess(
+    (v) => (v === '' || v == null ? undefined : v),
+    z.coerce.number().int().positive().optional(),
+  ),
+  published: z.coerce.boolean().default(false),
+});
+export type EventInput = z.infer<typeof EventInputSchema>;
+
+export const MinistryInputSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  slug: z.string().trim().max(120).optional().or(z.literal('')),
+  description: z.string().trim().min(1).max(2000),
+  leader: z.string().trim().max(120).optional().or(z.literal('')),
+  meeting_time: z.string().trim().max(120).optional().or(z.literal('')),
+  sort_order: z.coerce.number().int().min(0).default(0),
+  published: z.coerce.boolean().default(false),
+});
+export type MinistryInput = z.infer<typeof MinistryInputSchema>;
