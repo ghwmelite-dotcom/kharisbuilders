@@ -9,21 +9,42 @@ if (!email) return Astro.redirect('/admin/denied');
 const events = await listAllEvents(env.DB).catch(() => []);
 ---
 <AdminLayout title="Events" email={email} active="events">
+  <a href="/admin/events/new" class="inline-block mb-6 bg-primary text-on-primary px-5 py-2 text-sm uppercase tracking-wider">
+    + New event
+  </a>
   <table class="w-full text-sm">
     <thead>
       <tr class="text-left text-on-surface-variant border-b border-champagne">
-        <th class="py-2">Title</th><th>Category</th><th>Starts</th><th>Registration</th><th>Status</th>
+        <th class="py-2">Title</th><th>Category</th><th>Starts</th><th>Reg.</th><th>Status</th><th class="text-right">Actions</th>
       </tr>
     </thead>
     <tbody>
       {
         events.map((e) => (
           <tr class="border-b border-champagne/50">
-            <td class="py-3 text-primary">{e.title}</td>
+            <td class="py-3">
+              <a href={`/admin/events/${e.id}`} class="text-primary hover:text-accent">
+                {e.title}
+              </a>
+            </td>
             <td>{e.category}</td>
             <td>{e.start_at?.slice(0, 16).replace('T', ' ')}</td>
             <td>{e.registration_enabled ? 'Open' : '—'}</td>
             <td>{e.published ? 'Published' : 'Draft'}</td>
+            <td class="text-right whitespace-nowrap">
+              <a href={`/admin/events/${e.id}/registrations`} class="text-accent text-xs uppercase tracking-wider">Regs</a>
+              <form method="POST" action="/api/admin/events" class="inline ml-3">
+                <input type="hidden" name="_action" value="toggle" />
+                <input type="hidden" name="id" value={String(e.id)} />
+                <input type="hidden" name="published" value={e.published ? 'false' : 'true'} />
+                <button class="text-accent text-xs uppercase tracking-wider">{e.published ? 'Unpublish' : 'Publish'}</button>
+              </form>
+              <form method="POST" action="/api/admin/events" class="inline ml-3" onsubmit="return confirm('Delete this event and its registrations?')">
+                <input type="hidden" name="_action" value="delete" />
+                <input type="hidden" name="id" value={String(e.id)} />
+                <button class="text-accent-deep text-xs uppercase tracking-wider">Delete</button>
+              </form>
+            </td>
           </tr>
         ))
       }

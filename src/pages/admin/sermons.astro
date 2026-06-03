@@ -9,20 +9,40 @@ if (!email) return Astro.redirect('/admin/denied');
 const sermons = await listAllSermons(env.DB).catch(() => []);
 ---
 <AdminLayout title="Sermons" email={email} active="sermons">
+  <a href="/admin/sermons/new" class="inline-block mb-6 bg-primary text-on-primary px-5 py-2 text-sm uppercase tracking-wider">
+    + New sermon
+  </a>
   <table class="w-full text-sm">
     <thead>
       <tr class="text-left text-on-surface-variant border-b border-champagne">
-        <th class="py-2">Title</th><th>Speaker</th><th>Date</th><th>Status</th>
+        <th class="py-2">Title</th><th>Speaker</th><th>Date</th><th>Status</th><th class="text-right">Actions</th>
       </tr>
     </thead>
     <tbody>
       {
         sermons.map((s) => (
           <tr class="border-b border-champagne/50">
-            <td class="py-3 text-primary">{s.title}</td>
+            <td class="py-3">
+              <a href={`/admin/sermons/${s.id}`} class="text-primary hover:text-accent">
+                {s.title}
+              </a>
+            </td>
             <td>{s.speaker}</td>
             <td>{s.sermon_date}</td>
             <td>{s.published ? 'Published' : 'Draft'}</td>
+            <td class="text-right whitespace-nowrap">
+              <form method="POST" action="/api/admin/sermons" class="inline">
+                <input type="hidden" name="_action" value="toggle" />
+                <input type="hidden" name="id" value={String(s.id)} />
+                <input type="hidden" name="published" value={s.published ? 'false' : 'true'} />
+                <button class="text-accent text-xs uppercase tracking-wider">{s.published ? 'Unpublish' : 'Publish'}</button>
+              </form>
+              <form method="POST" action="/api/admin/sermons" class="inline ml-3" onsubmit="return confirm('Delete this sermon?')">
+                <input type="hidden" name="_action" value="delete" />
+                <input type="hidden" name="id" value={String(s.id)} />
+                <button class="text-accent-deep text-xs uppercase tracking-wider">Delete</button>
+              </form>
+            </td>
           </tr>
         ))
       }
