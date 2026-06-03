@@ -2,7 +2,8 @@ import type { APIRoute } from 'astro';
 import { env } from '../../../lib/runtime';
 import { requireAdmin } from '../../../lib/admin-auth';
 import { SermonInputSchema } from '../../../lib/db/schemas';
-import { createSermon, updateSermon, deleteSermon, setSermonPublished } from '../../../lib/db/sermons';
+import { createSermon, updateSermon, deleteSermon, setSermonPublished, setSermonImage } from '../../../lib/db/sermons';
+import { uploadImage } from '../../../lib/media';
 
 export const POST: APIRoute = async ({ request }) => {
   const auth = requireAdmin(request, env, import.meta.env.DEV);
@@ -17,8 +18,13 @@ export const POST: APIRoute = async ({ request }) => {
       await setSermonPublished(env.DB, id, String(form.get('published')) === 'true');
     } else {
       const data = SermonInputSchema.parse(Object.fromEntries(form));
+      const targetId = action === 'update' ? id : await createSermon(env.DB, data, auth.email);
       if (action === 'update') await updateSermon(env.DB, id, data, auth.email);
-      else await createSermon(env.DB, data, auth.email);
+      const image = form.get('image');
+      if (image instanceof File && image.size > 0) {
+        const key = await uploadImage(env.MEDIA, image, 'sermons');
+        await setSermonImage(env.DB, targetId, key);
+      }
     }
   } catch {
     return new Response('Invalid submission', { status: 400 });
