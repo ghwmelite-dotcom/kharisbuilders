@@ -1,98 +1,116 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
-import Button from '../components/Button.astro';
-import Card from '../components/Card.astro';
 
-const beliefs = [
+const leaders = [
+  { img: '/images/about-3.jpg', name: 'Dr. Samuel A. Kharis', role: 'Founding Pastor' },
+  { img: '/images/about-4.jpg', name: 'Pastor Elena Kharis', role: 'Executive Pastor' },
+  { img: '/images/about-5.jpg', name: 'Min. David Chen', role: 'Worship & Arts' },
+];
+const journey = [
   {
-    title: 'Grace First',
-    body: 'We believe every life is built on the unearned grace of God — the foundation for transformation and hope.',
+    year: '2012',
+    img: '/images/about-6.jpg',
+    title: 'The First Cornerstone',
+    text: 'Kharisbuilders began as a small gathering of twelve in a downtown studio, united by a vision for architectural spiritual growth.',
   },
   {
-    title: 'Built to Last',
-    body: 'Discipleship is architecture, not decoration. We invest in deep roots, sound teaching, and lasting character.',
+    year: '2017',
+    img: '/images/about-7.jpg',
+    title: 'Expanding the Walls',
+    text: 'Our community grew to five hundred, leading us to our current sanctuary — a space designed to facilitate spiritual encounter and professional excellence.',
   },
   {
-    title: 'Community Over Crowds',
-    body: 'Real life happens in circles, not rows. We gather in worship and grow in smaller groups that know your name.',
+    year: '2024',
+    img: '/images/about-8.jpg',
+    title: 'Shaping the Future',
+    text: "Launching our digital global campus and the 'Builders Academy,' training leaders for the next generation of societal transformation.",
   },
 ];
 ---
-<PublicLayout
-  title="About Us | Kharisbuilders"
-  description="Our story, mission, and the people building lives and shaping destinies at Kharisbuilders."
->
-  <!-- Intro -->
-  <section class="bg-primary text-on-primary">
-    <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-28 text-center">
-      <span class="text-xs uppercase tracking-[0.3em] text-accent">Who We Are</span>
-      <h1 class="font-[var(--font-display)] text-4xl md:text-6xl mt-3 mb-6">Building Lives, Shaping Destinies</h1>
-      <p class="text-on-primary/80 max-w-2xl mx-auto">
-        Kharisbuilders is a community where the weight of tradition meets the momentum of modern life — a sanctuary
-        for everyone seeking a deeper connection with God and one another.
-      </p>
+<PublicLayout title="About Us | Kharisbuilders" description="Architects of Faith, Builders of Destinies.">
+  <!-- Hero -->
+  <header class="relative h-[460px] md:h-[614px] flex items-center justify-center overflow-hidden">
+    <img src="/images/about-1.jpg" alt="" class="absolute inset-0 w-full h-full object-cover" />
+    <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(4,22,44,0.45), rgba(4,22,44,0.82));"></div>
+    <div class="relative z-10 text-center px-margin-mobile">
+      <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-6 block">Our Identity</span>
+      <h1 class="font-display text-display-mobile md:text-display-lg text-white max-w-4xl mx-auto">
+        Architects of Faith, Builders of Destinies
+      </h1>
     </div>
-  </section>
+  </header>
 
-  <!-- Mission -->
-  <section class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-24 grid md:grid-cols-2 gap-16 items-center">
-    <div class="aspect-[4/3] bg-champagne rounded-lg"></div>
-    <div>
-      <span class="text-xs uppercase tracking-[0.3em] text-accent">Our Mission</span>
-      <h2 class="font-[var(--font-display)] text-3xl md:text-4xl text-primary mt-3 mb-6">A blueprint for every life</h2>
-      <p class="text-on-surface-variant mb-4">
-        We believe every individual has a divine blueprint — a destiny waiting to be realized. Our mission is to
-        provide the spiritual foundation and community support needed to build that life.
-      </p>
-      <p class="text-on-surface-variant">
-        Whether you are exploring faith for the first time or seeking to go deeper, there is a place for you here.
-        We are more than a congregation; we are architects of hope.
-      </p>
-    </div>
-  </section>
-
-  <!-- What we believe -->
-  <section class="bg-champagne/40">
-    <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-24">
-      <div class="text-center mb-16">
-        <h2 class="font-[var(--font-display)] text-3xl md:text-4xl text-primary">What We Believe</h2>
-        <div class="h-px w-20 bg-accent mx-auto mt-4"></div>
+  <!-- Vision & Mission -->
+  <section class="py-24 md:py-32 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+      <div class="space-y-12">
+        <div>
+          <h2 class="font-display text-headline-lg text-primary mb-6">The Vision</h2>
+          <p class="font-body text-body-lg text-stone-gray leading-relaxed">
+            To see every life constructed on the unshakeable foundation of grace, transforming individuals into living
+            monuments of God's presence within their spheres of influence.
+          </p>
+        </div>
+        <div class="pt-8 border-t border-heritage-gold/20">
+          <h2 class="font-display text-headline-lg text-primary mb-6">The Mission</h2>
+          <p class="font-body text-body-lg text-stone-gray leading-relaxed">
+            We are committed to building people through the precise teaching of the Word, the warmth of communal
+            fellowship, and the strategic deployment of spiritual gifts for societal impact.
+          </p>
+        </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="relative aspect-square">
+        <div class="absolute -inset-4 border border-heritage-gold/30 translate-x-4 translate-y-4"></div>
+        <img src="/images/about-2.jpg" alt="" class="w-full h-full object-cover relative z-10 grayscale hover:grayscale-0 transition-all duration-700" />
+      </div>
+    </div>
+  </section>
+
+  <!-- The Builders -->
+  <section class="bg-surface-container-low py-24 md:py-32">
+    <div class="px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto text-center mb-20">
+      <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">The Shepherds</span>
+      <h2 class="font-display text-display-mobile md:text-display-lg text-primary">The Builders</h2>
+    </div>
+    <div class="px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      {
+        leaders.map((l) => (
+          <div class="group">
+            <div class="relative overflow-hidden mb-8 aspect-[4/5]">
+              <img src={l.img} alt={l.name} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </div>
+            <h3 class="font-display text-headline-md text-primary mb-1">{l.name}</h3>
+            <p class="font-label-sm uppercase tracking-widest text-heritage-gold">{l.role}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Our Journey -->
+  <section class="py-24 md:py-32 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-20">
+        <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">The Blueprint</span>
+        <h2 class="font-display text-headline-lg text-primary">Our Journey</h2>
+      </div>
+      <div class="space-y-20 md:space-y-28">
         {
-          beliefs.map((b) => (
-            <Card class="p-8">
-              <h3 class="font-[var(--font-display)] text-xl text-primary mb-3">{b.title}</h3>
-              <p class="text-on-surface-variant text-sm">{b.body}</p>
-            </Card>
+          journey.map((p, i) => (
+            <div class={`flex flex-col md:flex-row items-center gap-8 md:gap-12 ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+              <div class={`w-full md:w-1/2 ${i % 2 === 0 ? 'md:text-right' : ''}`}>
+                <span class="font-display text-headline-lg text-heritage-gold/40 block mb-4">{p.year}</span>
+                <h4 class="font-display text-headline-md text-primary mb-4">{p.title}</h4>
+                <p class="font-body text-body-md text-stone-gray">{p.text}</p>
+              </div>
+              <div class="w-full md:w-1/2">
+                <img src={p.img} alt={p.title} class="w-full aspect-video object-cover" />
+              </div>
+            </div>
           ))
         }
       </div>
-    </div>
-  </section>
-
-  <!-- Pastor's word -->
-  <section class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-24 grid md:grid-cols-12 gap-12 items-center">
-    <div class="md:col-span-5 aspect-[3/4] bg-champagne rounded-lg"></div>
-    <div class="md:col-span-7">
-      <h2 class="font-[var(--font-display)] text-3xl md:text-4xl text-primary mb-6">A word from our Pastor</h2>
-      <p class="text-on-surface-variant mb-4">
-        “Welcome to Kharisbuilders. Whatever season you find yourself in, you are not here by accident. Our prayer is
-        that you would find a family, a foundation, and a future here.”
-      </p>
-      <div class="flex items-center gap-4 mt-8">
-        <div class="h-px w-12 bg-accent"></div>
-        <span class="font-[var(--font-display)] text-primary italic">Lead Pastor</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section class="bg-primary text-on-primary">
-    <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-20 text-center">
-      <h2 class="font-[var(--font-display)] text-3xl mb-4">Come as you are</h2>
-      <p class="text-on-primary/80 mb-8 max-w-xl mx-auto">We'd love to meet you this Sunday.</p>
-      <Button variant="secondary" href="/visit">Plan Your Visit</Button>
     </div>
   </section>
 </PublicLayout>
