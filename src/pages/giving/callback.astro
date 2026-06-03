@@ -1,0 +1,72 @@
+---
+import PublicLayout from '../../layouts/PublicLayout.astro';
+import { env } from '../../lib/runtime';
+import { verifyTransaction } from '../../lib/paystack/client';
+import { getDonationByReference, markDonationSuccess, markDonationFailed } from '../../lib/db/donations';
+import { formatAmount } from '../../lib/giving/money';
+
+const reference = Astro.url.searchParams.get('reference') ?? Astro.url.searchParams.get('trxref') ?? '';
+let state: 'success' | 'pending' | 'failed' = 'pending';
+let amountLabel = '';
+
+if (reference) {
+  const result = await verifyTransaction(reference, { secret: env.PAYSTACK_SECRET_KEY ?? '' }).catch(
+    () => ({ ok: false as const, error: 'verify' }),
+  );
+  if (result.ok && result.status === 'success') {
+    await markDonationSuccess(env.DB, reference, {
+      channel: result.channel ?? undefined,
+      paystackStatus: result.status,
+      paidAt: result.paidAt,
+    }).catch(() => {});
+    state = 'success';
+  } else if (result.ok && result.status === 'failed') {
+    await markDonationFailed(env.DB, reference, { paystackStatus: result.status }).catch(() => {});
+    state = 'failed';
+  }
+  const donation = await getDonationByReference(env.DB, reference).catch(() => null);
+  if (donation) amountLabel = formatAmount(donation.amount, donation.currency);
+}
+---
+<PublicLayout title="Thank you | Kharisbuilders" description="Thank you for your generosity." noindex={true}>
+  <section class="min-h-[60vh] flex items-center justify-center py-24 px-6">
+    <div class="text-center max-w-xl">
+      {
+        state === 'success' && (
+          <>
+            <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">Gift received</span>
+            <h1 class="font-display text-display-mobile md:text-headline-lg text-primary mb-4">
+              Thank you{amountLabel ? ` for your ${amountLabel} gift` : ''}!
+            </h1>
+            <p class="font-body text-body-lg text-stone-gray mb-8">
+              Your generosity helps build lives and shape destinies. A receipt has been sent to your email.
+            </p>
+          </>
+        )
+      }
+      {
+        state === 'pending' && (
+          <>
+            <h1 class="font-display text-display-mobile md:text-headline-lg text-primary mb-4">We're confirming your gift</h1>
+            <p class="font-body text-body-lg text-stone-gray mb-8">
+              If you completed payment, you'll receive a receipt shortly. This can take a moment for mobile money.
+            </p>
+          </>
+        )
+      }
+      {
+        state === 'failed' && (
+          <>
+            <h1 class="font-display text-display-mobile md:text-headline-lg text-primary mb-4">Payment not completed</h1>
+            <p class="font-body text-body-lg text-stone-gray mb-8">
+              Your gift wasn't completed. No charge was made — please try again.
+            </p>
+          </>
+        )
+      }
+      <a href="/giving" class="inline-flex items-center gap-3 font-label-md text-primary uppercase tracking-[0.2em] border-b border-heritage-gold pb-1">
+        Back to giving
+      </a>
+    </div>
+  </section>
+</PublicLayout>
