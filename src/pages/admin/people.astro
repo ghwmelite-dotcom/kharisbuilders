@@ -1,0 +1,33 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { env } from '../../lib/runtime';
+import { getAdminEmail } from '../../lib/admin-auth';
+import { listVisitors } from '../../lib/db/admin';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const people = await listVisitors(env.DB).catch(() => []);
+---
+<AdminLayout title="People" email={email} active="people">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">Name</th><th>Email</th><th>Service</th><th>Status</th><th>When</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        people.map((p) => (
+          <tr class="border-b border-champagne/50">
+            <td class="py-3 text-primary">{p.name}</td>
+            <td>{p.email}</td>
+            <td>{p.visiting_service}</td>
+            <td>{p.status}</td>
+            <td>{p.created_at?.slice(0, 10)}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {people.length === 0 && <p class="text-on-surface-variant mt-4">No visitors yet.</p>}
+</AdminLayout>
