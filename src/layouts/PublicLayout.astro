@@ -3,6 +3,8 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { resolveTheme } from '../lib/theme';
+import { env } from '../lib/runtime';
+import { getAllSettings, type SettingsMap } from '../lib/db/settings';
 
 interface Props {
   title: string;
@@ -10,6 +12,13 @@ interface Props {
 }
 const { title, description = 'Kharisbuilders — Building Lives, Shaping Destinies.' } = Astro.props;
 const theme = resolveTheme(Astro.cookies.get('theme')?.value);
+
+let settings: SettingsMap = {};
+try {
+  settings = await getAllSettings(env.DB);
+} catch {
+  settings = {};
+}
 ---
 <!doctype html>
 <html lang="en" data-theme={theme}>
@@ -24,6 +33,6 @@ const theme = resolveTheme(Astro.cookies.get('theme')?.value);
   <body>
     <Nav />
     <main><slot /></main>
-    <Footer />
+    <Footer settings={settings} />
   </body>
 </html>
