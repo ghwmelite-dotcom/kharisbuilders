@@ -1,0 +1,38 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { env } from '../../lib/runtime';
+import { getAdminEmail } from '../../lib/admin-auth';
+import { getCounts } from '../../lib/db/admin';
+
+const email = getAdminEmail(Astro.request, env);
+if (!email) return Astro.redirect('/admin/denied');
+const counts = await getCounts(env.DB).catch(() => ({
+  sermons: 0,
+  events: 0,
+  ministries: 0,
+  visitors: 0,
+  registrations: 0,
+}));
+const cards = [
+  { label: 'Sermons', value: counts.sermons, href: '/admin/sermons' },
+  { label: 'Events', value: counts.events, href: '/admin/events' },
+  { label: 'Ministries', value: counts.ministries, href: '/admin/ministries' },
+  { label: 'Visitors', value: counts.visitors, href: '/admin/people' },
+  { label: 'Registrations', value: counts.registrations, href: '/admin/events' },
+];
+---
+<AdminLayout title="Dashboard" email={email} active="dashboard">
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+    {
+      cards.map((c) => (
+        <a
+          href={c.href}
+          class="bg-surface border border-champagne rounded-lg p-6 hover:-translate-y-0.5 transition-transform"
+        >
+          <p class="text-on-surface-variant text-xs uppercase tracking-widest">{c.label}</p>
+          <p class="font-[var(--font-display)] text-4xl text-primary mt-2">{c.value}</p>
+        </a>
+      ))
+    }
+  </div>
+</AdminLayout>
