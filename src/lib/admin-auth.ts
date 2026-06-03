@@ -16,3 +16,14 @@ export function getAdminEmail(request: Request, env: AdminAuthEnv, devMode = fal
   if (devMode && env.DEV_ADMIN_EMAIL) return env.DEV_ADMIN_EMAIL;
   return null;
 }
+
+/** Returns the admin email, or a 403 Response when unauthenticated. Use in /api/admin routes. */
+export function requireAdmin(
+  request: Request,
+  env: AdminAuthEnv,
+  devMode = false,
+): { email: string } | { response: Response } {
+  const email = getAdminEmail(request, env, devMode);
+  if (!email) return { response: new Response('Forbidden', { status: 403 }) };
+  return { email };
+}
