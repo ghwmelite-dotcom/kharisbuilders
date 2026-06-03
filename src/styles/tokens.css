@@ -12,20 +12,36 @@
 
 [data-theme='sacred'] {
   --kb-surface: #fbf9f4;
+  --kb-surface-dim: #dbdad5;
+  --kb-surface-container-lowest: #ffffff;
+  --kb-surface-container-low: #f5f3ee;
+  --kb-surface-container: #f0eee9;
+  --kb-surface-container-high: #eae8e3;
+  --kb-surface-container-highest: #e4e2dd;
   --kb-on-surface: #1b1c19;
   --kb-on-surface-variant: #44474d;
   --kb-primary: #04162c;
   --kb-on-primary: #ffffff;
-  --kb-primary-container: #1a2b42;
+  --kb-primary-container: #1a2b42; /* midnight blue */
+  --kb-on-primary-container: #8292ae;
+  --kb-secondary: #725b35;
+  --kb-secondary-container: #fedeae;
+  --kb-on-secondary-container: #78613a;
   --kb-accent: #8c734b; /* heritage gold */
   --kb-accent-deep: #4a0e0e; /* sacred burgundy */
   --kb-muted: #4d4d4d; /* stone gray */
-  --kb-champagne: #e5dcc5;
+  --kb-champagne: #e5dcc5; /* champagne light */
   --kb-shadow-ambient: 0 12px 32px -4px rgba(26, 43, 66, 0.08);
 }
 
 [data-theme='purple'] {
   --kb-surface: #fff7fe;
+  --kb-surface-dim: #e0d7e1;
+  --kb-surface-container-lowest: #ffffff;
+  --kb-surface-container-low: #faf1fb;
+  --kb-surface-container: #f4ebf5;
+  --kb-surface-container-high: #efe5f0;
+  --kb-surface-container-highest: #e9e0ea;
   --kb-on-surface: #1e1a21;
   --kb-on-surface-variant: #4a454d;
   /* Deliberate: purple DESIGN.md prose + button spec specify Deep Royal #4D3B5C as
@@ -34,9 +50,13 @@
   --kb-primary: #4d3b5c;
   --kb-on-primary: #ffffff;
   --kb-primary-container: #6c5581;
+  --kb-on-primary-container: #bda6ce;
+  --kb-secondary: #6c5581;
+  --kb-secondary-container: #e6cafd;
+  --kb-on-secondary-container: #69527e;
   --kb-accent: #9d84b3; /* muted lavender */
   --kb-accent-deep: #362545;
   --kb-muted: #4a454d;
-  --kb-champagne: #f4f0f7;
+  --kb-champagne: #f4f0f7; /* soft mist */
   --kb-shadow-ambient: 0 12px 32px -4px rgba(77, 59, 92, 0.08);
 }
