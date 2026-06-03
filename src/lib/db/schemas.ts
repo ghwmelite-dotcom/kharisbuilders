@@ -51,6 +51,26 @@ export const EventInputSchema = z.object({
 });
 export type EventInput = z.infer<typeof EventInputSchema>;
 
+export const FundInputSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  slug: z.string().trim().max(120).optional().or(z.literal('')),
+  description: z.string().trim().max(2000).optional().or(z.literal('')),
+  sort_order: z.coerce.number().int().min(0).default(0),
+  // default(false): an unchecked checkbox is ABSENT from the form, so it must
+  // resolve to false. FundForm checks the box by default on NEW funds (so a new
+  // fund is active); unchecking on edit correctly deactivates.
+  active: z.coerce.boolean().default(false),
+});
+export type FundInput = z.infer<typeof FundInputSchema>;
+
+export const DonationInputSchema = z.object({
+  email: z.string().trim().email('Please enter a valid email').max(200),
+  name: z.string().trim().max(120).optional().or(z.literal('')),
+  amount: z.string().trim().min(1, 'Please enter an amount'),
+  fund_id: z.coerce.number().int().positive().optional(),
+});
+export type DonationInput = z.infer<typeof DonationInputSchema>;
+
 export const MinistryInputSchema = z.object({
   name: z.string().trim().min(1).max(120),
   slug: z.string().trim().max(120).optional().or(z.literal('')),
