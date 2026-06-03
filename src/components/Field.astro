@@ -39,9 +39,7 @@ const base =
         {label}
       </label>
       {textarea ? (
-        <textarea id={id} name={name} required={required} rows="4" class={base}>
-          {value}
-        </textarea>
+        <textarea id={id} name={name} required={required} rows="4" class={base} set:text={value} />
       ) : options ? (
         <select id={id} name={name} required={required} class={base}>
           {options.map((o) => (
