@@ -28,6 +28,7 @@ export const SermonInputSchema = z.object({
   video_url: z.string().trim().url().max(500),
   video_provider: z.enum(['youtube', 'vimeo']).default('youtube'),
   description: z.string().trim().max(4000).optional().or(z.literal('')),
+  transcript: z.string().trim().max(100000).optional().or(z.literal('')),
   sermon_date: z.string().trim().max(20).optional().or(z.literal('')),
   published: z.coerce.boolean().default(false),
 });
