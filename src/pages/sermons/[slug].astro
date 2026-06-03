@@ -3,13 +3,22 @@ import PublicLayout from '../../layouts/PublicLayout.astro';
 import { env } from '../../lib/runtime';
 import { getSermonBySlug } from '../../lib/db/sermons';
 import { toEmbedUrl } from '../../lib/video';
+import { SITE, videoJsonLd } from '../../lib/seo';
 
 const { slug } = Astro.params;
 const sermon = slug ? await getSermonBySlug(env.DB, slug).catch(() => null) : null;
 if (!sermon) return Astro.redirect('/sermons');
 const embed = toEmbedUrl(sermon.video_provider, sermon.video_url);
+const origin = (Astro.site ?? new URL(SITE.url)).origin;
+const sermonNode = videoJsonLd(origin, sermon);
 ---
-<PublicLayout title={`${sermon.title} | Sermons`} description={sermon.description ?? 'Sermon'}>
+<PublicLayout
+  title={`${sermon.title} | Sermons`}
+  description={sermon.description ?? sermon.title}
+  type="video.other"
+  image={sermon.thumbnail_key ? `/media/${sermon.thumbnail_key}` : undefined}
+  jsonLd={[sermonNode]}
+>
   <!-- Dark player section -->
   <section class="bg-primary-container py-20 md:py-28">
     <div class="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop">

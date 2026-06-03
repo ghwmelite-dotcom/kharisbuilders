@@ -4,6 +4,7 @@ import PageHero from '../../components/PageHero.astro';
 import Field from '../../components/Field.astro';
 import { env } from '../../lib/runtime';
 import { mediaUrl } from '../../lib/media';
+import { SITE, eventJsonLd } from '../../lib/seo';
 import { getEventBySlug } from '../../lib/db/events';
 import { countRegistrations } from '../../lib/db/registrations';
 import { getAllSettings } from '../../lib/db/settings';
@@ -30,8 +31,16 @@ const registered = Astro.url.searchParams.get('registered') === '1';
 const fullParam = Astro.url.searchParams.get('full') === '1';
 const date = event.start_at?.slice(0, 16).replace('T', ' ') ?? '';
 const heroImg = mediaUrl(event.image_key) ?? '/images/home-4.jpg';
+const origin = (Astro.site ?? new URL(SITE.url)).origin;
+const eventNode = eventJsonLd(origin, event);
 ---
-<PublicLayout title={`${event.title} | Events`} description={event.description ?? 'Event'}>
+<PublicLayout
+  title={`${event.title} | Events`}
+  description={event.description ?? 'Event'}
+  type="article"
+  image={event.image_key ? `/media/${event.image_key}` : heroImg}
+  jsonLd={[eventNode]}
+>
   <!-- Cinematic hero banner -->
   <PageHero image={heroImg} height="h-[420px] md:h-[540px]" align="bottom">
     {event.category && <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">{event.category}</span>}
