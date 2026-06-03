@@ -1,0 +1,16 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import FundForm from '../../../components/admin/FundForm.astro';
+import { env } from '../../../lib/runtime';
+import { getAdminEmail } from '../../../lib/admin-auth';
+import { getFundById } from '../../../lib/db/funds';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const id = Number(Astro.params.id);
+const fund = await getFundById(env.DB, id).catch(() => null);
+if (!fund) return Astro.redirect('/admin/funds');
+---
+<AdminLayout title={`Edit: ${fund.name}`} email={email} active="funds">
+  <FundForm fund={fund} />
+</AdminLayout>

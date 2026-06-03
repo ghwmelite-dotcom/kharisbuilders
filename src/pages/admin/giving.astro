@@ -1,0 +1,67 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { env } from '../../lib/runtime';
+import { getAdminEmail } from '../../lib/admin-auth';
+import { listDonations, totalsByFund, donationTotals } from '../../lib/db/donations';
+import { formatAmount } from '../../lib/giving/money';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const [donations, byFund, totals] = await Promise.all([
+  listDonations(env.DB, { limit: 100, offset: 0 }).catch(() => []),
+  totalsByFund(env.DB).catch(() => []),
+  donationTotals(env.DB).catch(() => ({ total: 0, count: 0 })),
+]);
+---
+<AdminLayout title="Giving" email={email} active="giving">
+  <div class="flex items-center justify-between mb-6">
+    <p class="text-on-surface-variant text-sm">
+      Total received: <span class="text-primary font-medium">{formatAmount(totals.total)}</span> · {totals.count} gifts
+    </p>
+    <a href="/admin/giving.csv" class="bg-primary text-on-primary px-5 py-2 text-sm uppercase tracking-wider">Export CSV</a>
+  </div>
+
+  <h2 class="font-display text-lg text-primary mb-3">By fund</h2>
+  <table class="w-full text-sm mb-10">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">Fund</th><th>Gifts</th><th class="text-right">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        byFund.map((r) => (
+          <tr class="border-b border-champagne/50">
+            <td class="py-3">{r.fund_name ?? 'Unassigned'}</td>
+            <td>{r.count}</td>
+            <td class="text-right">{formatAmount(r.total)}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+
+  <h2 class="font-display text-lg text-primary mb-3">Recent gifts</h2>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">Date</th><th>Name</th><th>Email</th><th>Amount</th><th>Status</th><th>Channel</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        donations.map((d) => (
+          <tr class="border-b border-champagne/50">
+            <td class="py-3">{d.created_at}</td>
+            <td>{d.name ?? '—'}</td>
+            <td>{d.email}</td>
+            <td>{formatAmount(d.amount, d.currency)}</td>
+            <td>{d.status}</td>
+            <td>{d.channel ?? '—'}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {donations.length === 0 && <p class="text-on-surface-variant mt-4">No gifts yet.</p>}
+</AdminLayout>
