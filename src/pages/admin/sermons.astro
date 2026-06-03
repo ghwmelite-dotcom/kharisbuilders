@@ -4,7 +4,7 @@ import { env } from '../../lib/runtime';
 import { getAdminEmail } from '../../lib/admin-auth';
 import { listAllSermons } from '../../lib/db/admin';
 
-const email = getAdminEmail(Astro.request, env);
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
 if (!email) return Astro.redirect('/admin/denied');
 const sermons = await listAllSermons(env.DB).catch(() => []);
 ---
