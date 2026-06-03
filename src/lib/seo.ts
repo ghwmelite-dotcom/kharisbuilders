@@ -18,12 +18,19 @@ export function absUrl(pathOrUrl: string, origin: string): string {
   return new URL(pathOrUrl, origin.endsWith('/') ? origin : origin + '/').href;
 }
 
-/** D1 UTC datetime "YYYY-MM-DD HH:MM:SS" -> ISO 8601 "…Z". */
+/**
+ * Normalize a D1 datetime/date to a valid schema.org/sitemap value.
+ * - "YYYY-MM-DD HH:MM:SS" (UTC) -> "YYYY-MM-DDTHH:MM:SSZ"
+ * - "YYYY-MM-DD" (date only)    -> "YYYY-MM-DD" (no spurious Z)
+ * - already-ISO ("…T…")         -> unchanged
+ */
 export function toIso(dt: string | null | undefined): string | undefined {
   if (!dt) return undefined;
   const trimmed = dt.trim();
   if (!trimmed) return undefined;
-  return trimmed.includes('T') ? trimmed : `${trimmed.replace(' ', 'T')}Z`;
+  if (trimmed.includes('T')) return trimmed;
+  if (trimmed.includes(' ')) return `${trimmed.replace(' ', 'T')}Z`;
+  return trimmed; // date-only — valid as-is
 }
 
 function parseSocials(raw: string | undefined): string[] | undefined {

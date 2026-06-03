@@ -24,6 +24,9 @@ describe('toIso', () => {
   it('converts a D1 UTC datetime to ISO 8601 Z', () => {
     expect(toIso('2026-07-01 18:30:00')).toBe('2026-07-01T18:30:00Z');
   });
+  it('leaves a date-only value untouched (no spurious Z)', () => {
+    expect(toIso('2024-12-01')).toBe('2024-12-01');
+  });
   it('returns undefined for empty', () => {
     expect(toIso('')).toBeUndefined();
     expect(toIso(null)).toBeUndefined();
