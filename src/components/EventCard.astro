@@ -2,24 +2,27 @@
 import type { EventRow } from '../lib/db/events';
 interface Props {
   event: EventRow;
+  image: string;
 }
-const { event } = Astro.props;
+const { event, image } = Astro.props;
 const date = event.start_at?.slice(0, 10) ?? '';
 ---
 <a
   href={`/events/${event.slug}`}
-  class="group bg-surface border border-champagne rounded-lg overflow-hidden flex flex-col"
+  class="group block border border-champagne-light/40 hover:border-heritage-gold/40 transition-colors duration-500 bg-surface-container-lowest overflow-hidden"
 >
-  <div class="aspect-[4/3] bg-primary-container"></div>
-  <div class="p-6 flex flex-col gap-2 grow">
-    <div class="flex justify-between items-start">
-      {event.category && <span class="text-xs uppercase tracking-widest text-accent">{event.category}</span>}
-      <span class="text-on-surface-variant text-xs">{date}</span>
+  <div class="aspect-[4/3] overflow-hidden">
+    <img src={image} alt={event.title} class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+  </div>
+  <div class="p-8">
+    <div class="flex justify-between items-start mb-4">
+      <span class="font-label-sm font-bold uppercase tracking-widest text-heritage-gold">{event.category ?? 'Event'}</span>
+      <span class="font-label-sm uppercase text-stone-gray">{date}</span>
     </div>
-    <h2 class="font-[var(--font-display)] text-xl text-primary group-hover:text-accent transition-colors">
-      {event.title}
-    </h2>
-    <p class="text-on-surface-variant text-sm grow">{event.description}</p>
-    {event.location && <p class="text-on-surface-variant text-xs">{event.location}</p>}
+    <h3 class="font-display text-headline-md text-primary mb-4">{event.title}</h3>
+    <p class="font-body text-body-md text-stone-gray mb-8 line-clamp-3">{event.description}</p>
+    <span class="font-label-md uppercase tracking-widest text-primary border-b border-primary/20 group-hover:border-heritage-gold transition-colors inline-block">
+      Learn More
+    </span>
   </div>
 </a>
