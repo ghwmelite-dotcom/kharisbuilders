@@ -1,5 +1,6 @@
 ---
 import PublicLayout from '../../layouts/PublicLayout.astro';
+import PageHero from '../../components/PageHero.astro';
 import EventCard from '../../components/EventCard.astro';
 import { env } from '../../lib/runtime';
 import { listUpcomingEvents, type EventRow } from '../../lib/db/events';
@@ -13,16 +14,13 @@ try {
 const imgs = ['/images/home-4.jpg', '/images/home-5.jpg', '/images/home-6.jpg'];
 ---
 <PublicLayout title="Events | Kharisbuilders" description="Upcoming gatherings at Kharisbuilders.">
-  <header class="relative h-[340px] md:h-[440px] flex items-center justify-center overflow-hidden">
-    <img src="/images/home-4.jpg" alt="" class="kenburns absolute inset-0 w-full h-full object-cover" style="filter:brightness(42%);" />
-    <div class="relative z-10 text-center px-4" data-reveal>
-      <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">What's On</span>
-      <h1 class="font-display text-display-mobile md:text-display-lg text-white">Upcoming Events</h1>
-      <p class="font-body text-body-lg text-white/80 max-w-2xl mx-auto mt-4">
-        Gather, grow, and belong — here's what's coming up.
-      </p>
-    </div>
-  </header>
+  <PageHero image="/images/home-4.jpg" height="h-[360px] md:h-[460px]">
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">What's On</span>
+    <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Upcoming Events</h1>
+    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">
+      Gather, grow, and belong — here's what's coming up.
+    </p>
+  </PageHero>
   <section class="py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
     {
       events.length === 0 ? (

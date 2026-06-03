@@ -1,5 +1,6 @@
 ---
 import PublicLayout from '../../layouts/PublicLayout.astro';
+import PageHero from '../../components/PageHero.astro';
 import SermonCard from '../../components/SermonCard.astro';
 import { env } from '../../lib/runtime';
 import { listPublishedSermons, type Sermon } from '../../lib/db/sermons';
@@ -13,16 +14,13 @@ try {
 const imgs = ['/images/home-3.jpg', '/images/ministries-2.jpg', '/images/home-5.jpg'];
 ---
 <PublicLayout title="Sermons | Kharisbuilders" description="Watch the latest messages from Kharisbuilders.">
-  <header class="relative h-[340px] md:h-[440px] flex items-center justify-center overflow-hidden">
-    <img src="/images/home-3.jpg" alt="" class="kenburns absolute inset-0 w-full h-full object-cover" style="filter:brightness(38%);" />
-    <div class="relative z-10 text-center px-4" data-reveal>
-      <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">Messages</span>
-      <h1 class="font-display text-display-mobile md:text-display-lg text-white">Sermons</h1>
-      <p class="font-body text-body-lg text-white/80 max-w-2xl mx-auto mt-4">
-        Ancient truth, modern application — catch up on recent messages.
-      </p>
-    </div>
-  </header>
+  <PageHero image="/images/home-3.jpg" height="h-[360px] md:h-[460px]">
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Messages</span>
+    <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Sermons</h1>
+    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">
+      Ancient truth, modern application — catch up on recent messages.
+    </p>
+  </PageHero>
   <section class="py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
     {
       sermons.length === 0 ? (

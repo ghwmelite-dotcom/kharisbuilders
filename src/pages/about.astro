@@ -1,5 +1,6 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
+import PageHero from '../components/PageHero.astro';
 
 const leaders = [
   { img: '/images/about-3.jpg', name: 'Dr. Samuel A. Kharis', role: 'Founding Pastor' },
@@ -29,16 +30,12 @@ const journey = [
 ---
 <PublicLayout title="About Us | Kharisbuilders" description="Architects of Faith, Builders of Destinies.">
   <!-- Hero -->
-  <header class="relative h-[460px] md:h-[614px] flex items-center justify-center overflow-hidden">
-    <img src="/images/about-1.jpg" alt="" class="kenburns absolute inset-0 w-full h-full object-cover" />
-    <div class="absolute inset-0" style="background: linear-gradient(to bottom, rgba(4,22,44,0.45), rgba(4,22,44,0.82));"></div>
-    <div class="relative z-10 text-center px-margin-mobile" data-reveal>
-      <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-6 block">Our Identity</span>
-      <h1 class="font-display text-display-mobile md:text-display-lg text-white max-w-4xl mx-auto">
-        Architects of Faith, Builders of Destinies
-      </h1>
-    </div>
-  </header>
+  <PageHero image="/images/about-1.jpg" height="h-[460px] md:h-[620px]">
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-6 block hero-shadow">Our Identity</span>
+    <h1 class="font-display text-display-mobile md:text-display-lg text-white max-w-4xl mx-auto hero-shadow">
+      Architects of Faith, Builders of Destinies
+    </h1>
+  </PageHero>
 
   <!-- Vision & Mission -->
   <section class="py-24 md:py-32 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
