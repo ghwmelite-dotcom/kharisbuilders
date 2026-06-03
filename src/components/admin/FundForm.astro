@@ -1,0 +1,20 @@
+---
+import Field from '../Field.astro';
+import Button from '../Button.astro';
+import type { FundFull } from '../../lib/db/funds';
+interface Props {
+  fund?: FundFull | null;
+}
+const { fund } = Astro.props;
+const isEdit = !!fund;
+---
+<form method="POST" action="/api/admin/funds" class="flex flex-col gap-6 max-w-xl">
+  <input type="hidden" name="_action" value={isEdit ? 'update' : 'create'} />
+  {isEdit && <input type="hidden" name="id" value={String(fund!.id)} />}
+  <Field label="Name" name="name" required value={fund?.name ?? ''} />
+  <Field label="Slug (optional)" name="slug" value={fund?.slug ?? ''} />
+  <Field label="Description" name="description" textarea value={fund?.description ?? ''} />
+  <Field label="Sort order" name="sort_order" type="number" min={0} value={fund?.sort_order != null ? String(fund.sort_order) : '0'} />
+  <Field label="Active" name="active" type="checkbox" checked={fund ? !!fund.active : true} />
+  <Button type="submit" variant="primary">{isEdit ? 'Save' : 'Create'}</Button>
+</form>

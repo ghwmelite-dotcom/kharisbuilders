@@ -1,0 +1,51 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { env } from '../../lib/runtime';
+import { getAdminEmail } from '../../lib/admin-auth';
+import { listAllFunds } from '../../lib/db/funds';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const funds = await listAllFunds(env.DB).catch(() => []);
+---
+<AdminLayout title="Funds" email={email} active="funds">
+  <a href="/admin/funds/new" class="inline-block mb-6 bg-primary text-on-primary px-5 py-2 text-sm uppercase tracking-wider">
+    + New fund
+  </a>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">Name</th><th>Order</th><th>Status</th><th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        funds.map((f) => (
+          <tr class="border-b border-champagne/50">
+            <td class="py-3">
+              <a href={`/admin/funds/${f.id}`} class="text-primary hover:text-accent">
+                {f.name}
+              </a>
+            </td>
+            <td>{f.sort_order}</td>
+            <td>{f.active ? 'Active' : 'Hidden'}</td>
+            <td class="text-right whitespace-nowrap">
+              <form method="POST" action="/api/admin/funds" class="inline">
+                <input type="hidden" name="_action" value="toggle" />
+                <input type="hidden" name="id" value={String(f.id)} />
+                <input type="hidden" name="active" value={f.active ? 'false' : 'true'} />
+                <button class="text-accent text-xs uppercase tracking-wider">{f.active ? 'Hide' : 'Show'}</button>
+              </form>
+              <form method="POST" action="/api/admin/funds" class="inline ml-3" onsubmit="return confirm('Delete this fund? Existing donations keep their history.')">
+                <input type="hidden" name="_action" value="delete" />
+                <input type="hidden" name="id" value={String(f.id)} />
+                <button class="text-accent-deep text-xs uppercase tracking-wider">Delete</button>
+              </form>
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {funds.length === 0 && <p class="text-on-surface-variant mt-4">No funds yet.</p>}
+</AdminLayout>
