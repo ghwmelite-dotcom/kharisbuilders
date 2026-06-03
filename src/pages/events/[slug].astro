@@ -3,6 +3,7 @@ import PublicLayout from '../../layouts/PublicLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import Field from '../../components/Field.astro';
 import { env } from '../../lib/runtime';
+import { mediaUrl } from '../../lib/media';
 import { getEventBySlug } from '../../lib/db/events';
 import { countRegistrations } from '../../lib/db/registrations';
 import { getAllSettings } from '../../lib/db/settings';
@@ -28,7 +29,7 @@ if (event.registration_enabled && event.capacity != null) {
 const registered = Astro.url.searchParams.get('registered') === '1';
 const fullParam = Astro.url.searchParams.get('full') === '1';
 const date = event.start_at?.slice(0, 16).replace('T', ' ') ?? '';
-const heroImg = '/images/home-4.jpg';
+const heroImg = mediaUrl(event.image_key) ?? '/images/home-4.jpg';
 ---
 <PublicLayout title={`${event.title} | Events`} description={event.description ?? 'Event'}>
   <!-- Cinematic hero banner -->

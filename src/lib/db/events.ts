@@ -140,3 +140,7 @@ export async function deleteEvent(db: D1Database, id: number): Promise<void> {
     db.prepare('DELETE FROM events WHERE id = ?').bind(id),
   ]);
 }
+
+export async function setEventImage(db: D1Database, id: number, key: string): Promise<void> {
+  await db.prepare("UPDATE events SET image_key=?, updated_at=datetime('now') WHERE id=?").bind(key, id).run();
+}

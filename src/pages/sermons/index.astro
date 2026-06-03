@@ -3,6 +3,7 @@ import PublicLayout from '../../layouts/PublicLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import SermonCard from '../../components/SermonCard.astro';
 import { env } from '../../lib/runtime';
+import { mediaUrl } from '../../lib/media';
 import { listPublishedSermons, type Sermon } from '../../lib/db/sermons';
 
 let sermons: Sermon[] = [];
@@ -28,7 +29,7 @@ const imgs = ['/images/home-3.jpg', '/images/ministries-2.jpg', '/images/home-5.
       ) : (
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" data-reveal>
           {sermons.map((s, i) => (
-            <SermonCard sermon={s} image={imgs[i % imgs.length]} />
+            <SermonCard sermon={s} image={mediaUrl(s.thumbnail_key) ?? imgs[i % imgs.length]} />
           ))}
         </div>
       )

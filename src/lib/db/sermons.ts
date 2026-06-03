@@ -115,3 +115,7 @@ export async function setSermonPublished(db: D1Database, id: number, published: 
 export async function deleteSermon(db: D1Database, id: number): Promise<void> {
   await db.prepare('DELETE FROM sermons WHERE id = ?').bind(id).run();
 }
+
+export async function setSermonImage(db: D1Database, id: number, key: string): Promise<void> {
+  await db.prepare("UPDATE sermons SET thumbnail_key=?, updated_at=datetime('now') WHERE id=?").bind(key, id).run();
+}
