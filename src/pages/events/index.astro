@@ -14,8 +14,8 @@ const imgs = ['/images/home-4.jpg', '/images/home-5.jpg', '/images/home-6.jpg'];
 ---
 <PublicLayout title="Events | Kharisbuilders" description="Upcoming gatherings at Kharisbuilders.">
   <header class="relative h-[340px] md:h-[440px] flex items-center justify-center overflow-hidden">
-    <img src="/images/home-4.jpg" alt="" class="absolute inset-0 w-full h-full object-cover" style="filter:brightness(42%);" />
-    <div class="relative z-10 text-center px-4">
+    <img src="/images/home-4.jpg" alt="" class="kenburns absolute inset-0 w-full h-full object-cover" style="filter:brightness(42%);" />
+    <div class="relative z-10 text-center px-4" data-reveal>
       <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">What's On</span>
       <h1 class="font-display text-display-mobile md:text-display-lg text-white">Upcoming Events</h1>
       <p class="font-body text-body-lg text-white/80 max-w-2xl mx-auto mt-4">
@@ -28,7 +28,7 @@ const imgs = ['/images/home-4.jpg', '/images/home-5.jpg', '/images/home-6.jpg'];
       events.length === 0 ? (
         <p class="text-center text-stone-gray font-body">No upcoming events right now — check back soon.</p>
       ) : (
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10" data-reveal>
           {events.map((e, i) => (
             <EventCard event={e} image={imgs[i % imgs.length]} />
           ))}

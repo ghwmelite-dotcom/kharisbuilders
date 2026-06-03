@@ -13,48 +13,116 @@ try {
 } catch {
   serviceTimes = [];
 }
+let socials: Record<string, string> = {};
+try {
+  socials = settings.socials ? JSON.parse(settings.socials) : {};
+} catch {
+  socials = {};
+}
+const explore = [
+  { label: 'Home', href: '/' },
+  { label: 'About', href: '/about' },
+  { label: 'Ministries', href: '/ministries' },
+  { label: 'Sermons', href: '/sermons' },
+  { label: 'Events', href: '/events' },
+  { label: 'Visit', href: '/visit' },
+];
 ---
-<footer class="bg-primary text-on-primary mt-24 py-16">
-  <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 grid grid-cols-1 gap-10 md:grid-cols-4">
-    <div>
-      <div class="font-[var(--font-display)] text-xl text-accent mb-4">Kharisbuilders</div>
-      <p class="text-on-primary/70 text-sm">Building Lives, Shaping Destinies.</p>
-    </div>
-    <div>
-      <h4 class="uppercase tracking-widest text-sm mb-4">Explore</h4>
-      <ul class="space-y-2 text-on-primary/70 text-sm">
-        <li><a href="/" class="hover:text-accent">Home</a></li>
-        <li><a href="/about" class="hover:text-accent">About</a></li>
-        <li><a href="/ministries" class="hover:text-accent">Ministries</a></li>
-        <li><a href="/visit" class="hover:text-accent">Visit</a></li>
-      </ul>
-    </div>
-    <div>
-      <h4 class="uppercase tracking-widest text-sm mb-4">Contact</h4>
-      <address class="not-italic space-y-2 text-on-primary/70 text-sm">
-        <p>{address}</p>
-        <p><a href={`mailto:${email}`} class="hover:text-accent">{email}</a></p>
-      </address>
-    </div>
-    <div>
-      <h4 class="uppercase tracking-widest text-sm mb-4">Service Times</h4>
-      {
-        serviceTimes.length > 0 ? (
-          <ul class="space-y-2 text-on-primary/70 text-sm">
-            {serviceTimes.map((s) => (
+<footer class="relative bg-primary text-on-primary mt-32 overflow-hidden">
+  <div class="hairline-gold h-px w-full opacity-40"></div>
+  <!-- soft radial glow -->
+  <div
+    class="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[680px] h-[680px] rounded-full opacity-[0.07]"
+    style="background: radial-gradient(circle, var(--kb-accent), transparent 60%);"
+  >
+  </div>
+
+  <div class="relative max-w-[var(--container-max)] mx-auto px-6 md:px-margin-desktop py-20">
+    <div class="grid grid-cols-2 md:grid-cols-12 gap-10 md:gap-8">
+      <!-- Brand -->
+      <div class="col-span-2 md:col-span-5">
+        <div class="font-display text-3xl text-gold-gradient mb-5">Kharisbuilders</div>
+        <p class="font-body text-body-md text-on-primary/65 max-w-xs leading-relaxed mb-8">
+          Building Lives, Shaping Destinies — a sanctuary where the weight of tradition meets the momentum of modern
+          life.
+        </p>
+        <div class="flex gap-3">
+          {
+            ['facebook', 'instagram', 'youtube'].map((net) => (
+              <a
+                href={socials[net] || '#'}
+                aria-label={net}
+                class="w-10 h-10 rounded-full border border-on-primary/20 flex items-center justify-center text-on-primary/70 hover:text-primary hover:bg-accent hover:border-accent transition-all duration-300"
+              >
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                  {net === 'facebook' && (
+                    <path d="M13 10h3l.5-3H13V5.5c0-.8.2-1.5 1.5-1.5H16V1.2C15.7 1.1 14.7 1 13.6 1 11.2 1 9.7 2.4 9.7 5v2H7v3h2.7v9H13v-9z" />
+                  )}
+                  {net === 'instagram' && (
+                    <path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.1.4.3 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.1-1 .3-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.1-.4-.3-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.1 1-.3 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 3.2A6.6 6.6 0 1 0 18.6 12 6.6 6.6 0 0 0 12 5.4zm0 10.9A4.3 4.3 0 1 1 16.3 12 4.3 4.3 0 0 1 12 16.3zm6.8-11.2a1.5 1.5 0 1 1-1.5-1.5 1.5 1.5 0 0 1 1.5 1.5z" />
+                  )}
+                  {net === 'youtube' && (
+                    <path d="M23 7.5a3 3 0 0 0-2.1-2.1C19 5 12 5 12 5s-7 0-8.9.4A3 3 0 0 0 1 7.5 31 31 0 0 0 .6 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2.1 2.1C5 19 12 19 12 19s7 0 8.9-.4a3 3 0 0 0 2.1-2.1A31 31 0 0 0 23.4 12 31 31 0 0 0 23 7.5zM9.8 15.3V8.7l5.7 3.3z" />
+                  )}
+                </svg>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Explore -->
+      <div class="md:col-span-3">
+        <h4 class="font-label-sm uppercase tracking-[0.2em] text-accent mb-6">Explore</h4>
+        <ul class="space-y-3">
+          {
+            explore.map((l) => (
               <li>
-                <span class="text-on-primary">{s.name}:</span> {s.time}
-                {s.note && <span class="text-on-primary/50"> · {s.note}</span>}
+                <a href={l.href} class="link-underline font-body text-body-md text-on-primary/65 hover:text-on-primary transition-colors">
+                  {l.label}
+                </a>
               </li>
-            ))}
-          </ul>
-        ) : (
-          <p class="text-on-primary/70 text-sm">Sunday: 9:00 AM &amp; 5:30 PM</p>
-        )
-      }
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="md:col-span-2">
+        <h4 class="font-label-sm uppercase tracking-[0.2em] text-accent mb-6">Contact</h4>
+        <address class="not-italic space-y-3 font-body text-body-md text-on-primary/65">
+          <p class="leading-relaxed">{address}</p>
+          <p>
+            <a href={`mailto:${email}`} class="link-underline hover:text-on-primary transition-colors">{email}</a>
+          </p>
+        </address>
+      </div>
+
+      <!-- Service Times -->
+      <div class="md:col-span-2">
+        <h4 class="font-label-sm uppercase tracking-[0.2em] text-accent mb-6">Gatherings</h4>
+        {
+          serviceTimes.length > 0 ? (
+            <ul class="space-y-3 font-body text-body-md text-on-primary/65">
+              {serviceTimes.map((s) => (
+                <li>
+                  <span class="text-on-primary block">{s.name}</span>
+                  {s.time}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="font-body text-body-md text-on-primary/65">Sundays 9:00 AM &amp; 5:30 PM</p>
+          )
+        }
+      </div>
     </div>
   </div>
-  <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 mt-12 pt-8 border-t border-white/10 text-center text-on-primary/50 text-sm">
-    © {year} Kharisbuilders.
+
+  <div class="relative border-t border-on-primary/10">
+    <div class="max-w-[var(--container-max)] mx-auto px-6 md:px-margin-desktop py-6 flex flex-col md:flex-row justify-between items-center gap-3">
+      <p class="font-body text-label-sm text-on-primary/45">© {year} Kharisbuilders. All rights reserved.</p>
+      <p class="font-label-sm uppercase tracking-[0.2em] text-on-primary/45">Building Lives · Shaping Destinies</p>
+    </div>
   </div>
 </footer>
