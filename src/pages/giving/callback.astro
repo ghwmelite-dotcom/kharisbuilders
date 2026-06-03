@@ -10,10 +10,14 @@ let state: 'success' | 'pending' | 'failed' = 'pending';
 let amountLabel = '';
 
 if (reference) {
+  const donation = await getDonationByReference(env.DB, reference).catch(() => null);
+  if (donation) amountLabel = formatAmount(donation.amount, donation.currency);
   const result = await verifyTransaction(reference, { secret: env.PAYSTACK_SECRET_KEY ?? '' }).catch(
     () => ({ ok: false as const, error: 'verify' }),
   );
-  if (result.ok && result.status === 'success') {
+  // Confirm success only when Paystack reports success AND the amount matches what we initialized.
+  const amountOk = !!donation && (result.ok && 'amount' in result && result.amount != null ? result.amount === donation.amount : true);
+  if (result.ok && result.status === 'success' && donation && amountOk) {
     await markDonationSuccess(env.DB, reference, {
       channel: result.channel ?? undefined,
       paystackStatus: result.status,
@@ -24,8 +28,6 @@ if (reference) {
     await markDonationFailed(env.DB, reference, { paystackStatus: result.status }).catch(() => {});
     state = 'failed';
   }
-  const donation = await getDonationByReference(env.DB, reference).catch(() => null);
-  if (donation) amountLabel = formatAmount(donation.amount, donation.currency);
 }
 ---
 <PublicLayout title="Thank you | Kharisbuilders" description="Thank you for your generosity." noindex={true}>

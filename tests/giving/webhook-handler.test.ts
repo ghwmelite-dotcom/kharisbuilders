@@ -39,4 +39,10 @@ describe('handlePaystackEvent', () => {
     await handlePaystackEvent(ctx.db, { event: 'charge.success', data: { reference: 'kb_does_not_exist', status: 'success' } });
     expect(await getDonationByReference(ctx.db, 'kb_does_not_exist')).toBeNull();
   });
+  it('does NOT confirm when Paystack reports a mismatched amount', async () => {
+    const f = await createFund(ctx.db, { name: 'M', slug: 'm', description: '', sort_order: 9, active: true }, 'a@x');
+    await createPendingDonation(ctx.db, { reference: 'kb_w2', email: 'g@x.com', name: '', amount: 10000, currency: 'GHS', fund_id: f, type: 'one_time', metadata: '{}' });
+    await handlePaystackEvent(ctx.db, { event: 'charge.success', data: { reference: 'kb_w2', amount: 500, status: 'success' } });
+    expect((await getDonationByReference(ctx.db, 'kb_w2'))?.status).toBe('pending'); // unchanged
+  });
 });
