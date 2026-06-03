@@ -9,19 +9,39 @@ if (!email) return Astro.redirect('/admin/denied');
 const ministries = await listAllMinistries(env.DB).catch(() => []);
 ---
 <AdminLayout title="Ministries" email={email} active="ministries">
+  <a href="/admin/ministries/new" class="inline-block mb-6 bg-primary text-on-primary px-5 py-2 text-sm uppercase tracking-wider">
+    + New ministry
+  </a>
   <table class="w-full text-sm">
     <thead>
       <tr class="text-left text-on-surface-variant border-b border-champagne">
-        <th class="py-2">Name</th><th>Order</th><th>Status</th>
+        <th class="py-2">Name</th><th>Order</th><th>Status</th><th class="text-right">Actions</th>
       </tr>
     </thead>
     <tbody>
       {
         ministries.map((m) => (
           <tr class="border-b border-champagne/50">
-            <td class="py-3 text-primary">{m.name}</td>
+            <td class="py-3">
+              <a href={`/admin/ministries/${m.id}`} class="text-primary hover:text-accent">
+                {m.name}
+              </a>
+            </td>
             <td>{m.sort_order}</td>
             <td>{m.published ? 'Published' : 'Draft'}</td>
+            <td class="text-right whitespace-nowrap">
+              <form method="POST" action="/api/admin/ministries" class="inline">
+                <input type="hidden" name="_action" value="toggle" />
+                <input type="hidden" name="id" value={String(m.id)} />
+                <input type="hidden" name="published" value={m.published ? 'false' : 'true'} />
+                <button class="text-accent text-xs uppercase tracking-wider">{m.published ? 'Unpublish' : 'Publish'}</button>
+              </form>
+              <form method="POST" action="/api/admin/ministries" class="inline ml-3" onsubmit="return confirm('Delete this ministry?')">
+                <input type="hidden" name="_action" value="delete" />
+                <input type="hidden" name="id" value={String(m.id)} />
+                <button class="text-accent-deep text-xs uppercase tracking-wider">Delete</button>
+              </form>
+            </td>
           </tr>
         ))
       }

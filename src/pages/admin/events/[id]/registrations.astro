@@ -1,0 +1,49 @@
+---
+import AdminLayout from '../../../../layouts/AdminLayout.astro';
+import { env } from '../../../../lib/runtime';
+import { getAdminEmail } from '../../../../lib/admin-auth';
+import { getEventById } from '../../../../lib/db/events';
+import { listRegistrationsForEvent } from '../../../../lib/db/registrations';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const id = Number(Astro.params.id);
+const event = await getEventById(env.DB, id).catch(() => null);
+if (!event) return Astro.redirect('/admin/events');
+const regs = await listRegistrationsForEvent(env.DB, id).catch(() => []);
+
+const csv = [
+  'name,email,phone,guests,created_at',
+  ...regs.map((r) =>
+    [r.name, r.email, r.phone ?? '', String(r.guests), r.created_at]
+      .map((x) => `"${String(x).replace(/"/g, '""')}"`)
+      .join(','),
+  ),
+].join('\n');
+const csvHref = `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`;
+---
+<AdminLayout title={`Registrations · ${event.title}`} email={email} active="events">
+  <a href={csvHref} download={`registrations-${event.slug}.csv`} class="inline-block mb-6 text-accent text-sm uppercase tracking-widest">Download CSV</a>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">Name</th><th>Email</th><th>Phone</th><th>Guests</th><th>When</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        regs.map((r) => (
+          <tr class="border-b border-champagne/50">
+            <td class="py-3 text-primary">{r.name}</td>
+            <td>{r.email}</td>
+            <td>{r.phone}</td>
+            <td>{r.guests}</td>
+            <td>{r.created_at?.slice(0, 16).replace('T', ' ')}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {regs.length === 0 && <p class="text-on-surface-variant mt-4">No registrations yet.</p>}
+  <a href="/admin/events" class="inline-block mt-8 text-accent text-sm uppercase tracking-widest">← Events</a>
+</AdminLayout>
