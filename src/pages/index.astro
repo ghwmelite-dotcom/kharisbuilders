@@ -1,25 +1,69 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
 import Button from '../components/Button.astro';
-import Card from '../components/Card.astro';
-import Icon from '../components/Icon.astro';
+import { env } from '../lib/runtime';
+import { getAllSettings } from '../lib/db/settings';
+
+let serviceTimes: Array<{ name: string; time: string; note?: string }> = [];
+try {
+  const settings = await getAllSettings(env.DB);
+  serviceTimes = settings.service_times ? JSON.parse(settings.service_times) : [];
+} catch {
+  serviceTimes = [];
+}
 ---
 <PublicLayout title="Kharisbuilders | Building Lives, Shaping Destinies">
-  <section class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-24 text-center">
-    <h1 class="font-[var(--font-display)] text-5xl text-primary mb-8">
-      Building Lives, Shaping Destinies.
-    </h1>
-    <div class="flex flex-col md:flex-row gap-4 justify-center mb-16">
-      <Button variant="primary" href="/visit">Join Us This Sunday</Button>
-      <Button variant="secondary" href="/sermons">
-        <Icon name="play" class="w-5 h-5 mr-2" />Watch Online
-      </Button>
+  <!-- Hero -->
+  <section class="bg-primary text-on-primary">
+    <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-32 text-center">
+      <span class="text-xs uppercase tracking-[0.3em] text-accent">Welcome Home</span>
+      <h1 class="font-[var(--font-display)] text-4xl md:text-6xl mt-4 mb-8">Building Lives, Shaping Destinies.</h1>
+      <div class="flex flex-col md:flex-row gap-4 justify-center">
+        <Button variant="primary" href="/visit">Join Us This Sunday</Button>
+        <Button variant="secondary" href="/give">Give Online</Button>
+      </div>
     </div>
-    <Card class="max-w-md mx-auto p-8 text-left">
-      <p class="font-[var(--font-display)] text-xl text-primary mb-2">A place for you</p>
-      <p class="text-on-surface-variant text-sm">
-        We are architects of hope — building lives and shaping destinies, together.
+  </section>
+
+  <!-- Welcome message -->
+  <section class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-24 text-center max-w-3xl">
+    <h2 class="font-[var(--font-display)] text-3xl md:text-4xl text-primary mb-6">A place for you</h2>
+    <p class="text-on-surface-variant">
+      Every individual has a divine blueprint — a destiny waiting to be realized. Whether you are exploring faith for
+      the first time or seeking to go deeper, there is a place for you in our sanctuary.
+    </p>
+  </section>
+
+  <!-- Service times (from settings) -->
+  {
+    serviceTimes.length > 0 && (
+      <section class="bg-champagne/40">
+        <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-20">
+          <h2 class="font-[var(--font-display)] text-3xl text-primary mb-8">Service Times</h2>
+          <div class="divide-y divide-accent/20">
+            {serviceTimes.map((s) => (
+              <div class="flex justify-between items-center py-5">
+                <div>
+                  <p class="text-primary font-[var(--font-display)] text-xl">{s.name}</p>
+                  {s.note && <p class="text-on-surface-variant text-sm">{s.note}</p>}
+                </div>
+                <span class="text-accent font-[var(--font-display)] text-xl">{s.time}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Giving CTA -->
+  <section class="bg-primary text-on-primary">
+    <div class="mx-auto max-w-[var(--container-max)] px-6 md:px-16 py-20 text-center">
+      <h2 class="font-[var(--font-display)] text-3xl mb-4">Invest in Destinies</h2>
+      <p class="text-on-primary/80 mb-8 max-w-xl mx-auto">
+        Your generosity fuels our mission to build lives and shape destinies.
       </p>
-    </Card>
+      <Button variant="secondary" href="/give">Give Online</Button>
+    </div>
   </section>
 </PublicLayout>
