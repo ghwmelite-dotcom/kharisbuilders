@@ -16,3 +16,22 @@ export async function countRegistrations(db: D1Database, eventId: number): Promi
     .first<{ taken: number }>();
   return Number(row?.taken ?? 0);
 }
+
+export interface RegistrationRow {
+  id: number;
+  name: string;
+  email: string;
+  phone: string | null;
+  guests: number;
+  created_at: string;
+}
+
+export async function listRegistrationsForEvent(db: D1Database, eventId: number): Promise<RegistrationRow[]> {
+  const { results } = await db
+    .prepare(
+      'SELECT id, name, email, phone, guests, created_at FROM event_registrations WHERE event_id = ? ORDER BY created_at ASC, id ASC',
+    )
+    .bind(eventId)
+    .all<RegistrationRow>();
+  return results;
+}

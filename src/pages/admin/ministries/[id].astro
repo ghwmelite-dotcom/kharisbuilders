@@ -1,0 +1,16 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import MinistryForm from '../../../components/admin/MinistryForm.astro';
+import { env } from '../../../lib/runtime';
+import { getAdminEmail } from '../../../lib/admin-auth';
+import { getMinistryById } from '../../../lib/db/ministries';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const ministry = await getMinistryById(env.DB, Number(Astro.params.id)).catch(() => null);
+if (!ministry) return Astro.redirect('/admin/ministries');
+---
+<AdminLayout title="Edit Ministry" email={email} active="ministries">
+  <MinistryForm ministry={ministry} />
+  <a href="/admin/ministries" class="inline-block mt-8 text-accent text-sm uppercase tracking-widest">← Back</a>
+</AdminLayout>

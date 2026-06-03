@@ -1,0 +1,26 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import Field from '../../components/Field.astro';
+import Button from '../../components/Button.astro';
+import { env } from '../../lib/runtime';
+import { getAdminEmail } from '../../lib/admin-auth';
+import { getAllSettings } from '../../lib/db/settings';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const s = await getAllSettings(env.DB).catch(() => ({}) as Record<string, string>);
+const saved = Astro.url.searchParams.get('saved') === '1';
+---
+<AdminLayout title="Settings" email={email} active="settings">
+  {saved && <p class="text-accent mb-6">Settings saved.</p>}
+  <form method="POST" action="/api/admin/settings" class="flex flex-col gap-6 max-w-xl">
+    <Field label="Address" name="address" value={s.address ?? ''} />
+    <Field label="Contact email" name="contact_email" type="email" value={s.contact_email ?? ''} />
+    <Field label="Phone" name="phone" value={s.phone ?? ''} />
+    <Field label="Service times (JSON)" name="service_times" textarea value={s.service_times ?? ''} />
+    <Field label="Socials (JSON)" name="socials" textarea value={s.socials ?? ''} />
+    <Field label="Default theme" name="default_theme" options={['sacred', 'purple']} value={s.default_theme ?? 'sacred'} />
+    <Field label="Turnstile site key" name="turnstile_site_key" value={s.turnstile_site_key ?? ''} />
+    <Button type="submit" variant="primary">Save settings</Button>
+  </form>
+</AdminLayout>

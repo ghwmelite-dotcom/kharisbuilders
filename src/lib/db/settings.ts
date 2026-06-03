@@ -16,3 +16,15 @@ export async function getAllSettings(db: D1Database): Promise<SettingsMap> {
   for (const row of results) map[row.key] = row.value;
   return map;
 }
+
+/** Upsert the given key/value settings (leaves other keys untouched). */
+export async function setSettings(db: D1Database, entries: Record<string, string>): Promise<void> {
+  const stmts = Object.entries(entries).map(([key, value]) =>
+    db
+      .prepare(
+        "INSERT INTO site_settings (key, value, updated_at) VALUES (?, ?, datetime('now')) ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated_at=datetime('now')",
+      )
+      .bind(key, value),
+  );
+  if (stmts.length) await db.batch(stmts);
+}
