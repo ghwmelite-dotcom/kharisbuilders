@@ -58,7 +58,7 @@ describe('handleInitialize (recurring)', () => {
     );
     expect(res.status).toBe(303);
     expect(res.redirect).toBe('https://pay/checkout');
-    expect((await getPlanByKey(ctx.db, 10000, 'monthly', 'GHS'))?.plan_code).toBe('PLN_m');
+    expect((await getPlanByKey(ctx.db, 10000, 'monthly', 'USD'))?.plan_code).toBe('PLN_m');
     const subs = await listSubscriptions(ctx.db, {});
     const sub = subs.find((s) => s.customer_email === 'g@x.com' && s.plan_code === 'PLN_m');
     expect(sub?.status).toBe('pending');

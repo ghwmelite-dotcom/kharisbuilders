@@ -4,6 +4,8 @@ import PageHero from '../../components/PageHero.astro';
 import SermonCard from '../../components/SermonCard.astro';
 import { env } from '../../lib/runtime';
 import { mediaUrl } from '../../lib/media';
+import { PLACEHOLDER } from '../../lib/images';
+import { SITE } from '../../lib/seo';
 import { listPublishedSermons, getPublishedSermonsByIds, searchSermonsKeyword, type Sermon } from '../../lib/db/sermons';
 import { workersAi, vectorize } from '../../lib/ai/clients';
 import { searchSermonIds } from '../../lib/ai/search';
@@ -37,9 +39,9 @@ try {
 } catch {
   sermons = [];
 }
-const imgs = ['/images/home-3.jpg', '/images/ministries-2.jpg', '/images/home-5.jpg'];
+const imgs = [PLACEHOLDER.card, PLACEHOLDER.card, PLACEHOLDER.card];
 ---
-<PublicLayout title="Sermons | Kharisbuilders" description="Watch and search the latest messages from Kharisbuilders.">
+<PublicLayout title={`Sermons | ${SITE.name}`} description={`Watch and search the latest messages from ${SITE.name}.`}>
   <PageHero image={cimg('pages.sermons_hero')} height="h-[360px] md:h-[460px]">
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Messages</span>
     <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Sermons</h1>

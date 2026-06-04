@@ -3,6 +3,8 @@ import PublicLayout from '../layouts/PublicLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import { env } from '../lib/runtime';
 import { mediaUrl } from '../lib/media';
+import { PLACEHOLDER } from '../lib/images';
+import { SITE } from '../lib/seo';
 import { listPublishedMinistries, type Ministry } from '../lib/db/ministries';
 import { getAllContent } from '../lib/db/content';
 import { makeImage } from '../lib/content/content';
@@ -20,17 +22,17 @@ try {
 }
 
 const bento = [
-  { span: 'md:col-span-8', img: '/images/ministries-2.jpg', dark: false, big: true },
-  { span: 'md:col-span-4', img: '/images/ministries-3.jpg', dark: false, big: false },
-  { span: 'md:col-span-4', img: '/images/ministries-4.jpg', dark: false, big: false },
-  { span: 'md:col-span-8', img: '/images/ministries-5.jpg', dark: true, big: true },
-  { span: 'md:col-span-12', img: '/images/ministries-6.jpg', dark: false, big: true },
+  { span: 'md:col-span-8', img: PLACEHOLDER.card, dark: false, big: true },
+  { span: 'md:col-span-4', img: PLACEHOLDER.card, dark: false, big: false },
+  { span: 'md:col-span-4', img: PLACEHOLDER.card, dark: false, big: false },
+  { span: 'md:col-span-8', img: PLACEHOLDER.card, dark: true, big: true },
+  { span: 'md:col-span-12', img: PLACEHOLDER.card, dark: false, big: true },
 ];
-const cfg = (i: number) => bento[i] ?? { span: 'md:col-span-4', img: '/images/ministries-3.jpg', dark: false, big: false };
+const cfg = (i: number) => bento[i] ?? { span: 'md:col-span-4', img: PLACEHOLDER.card, dark: false, big: false };
 ---
 <PublicLayout
-  title="Ministries | Kharisbuilders"
-  description="Find your place in the body of Christ at Kharisbuilders."
+  title={`Ministries | ${SITE.name}`}
+  description={`Find your place and get involved at ${SITE.name}.`}
 >
   <!-- Hero -->
   <PageHero image={cimg('pages.ministries_hero')}>
