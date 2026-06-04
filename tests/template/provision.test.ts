@@ -4,6 +4,7 @@ import {
   deriveNames,
   renderChurchConfigTs,
   renderWranglerJsonc,
+  retintSvg,
 } from '../../scripts/lib/provision.mjs';
 
 // Strip // line comments so the JSONC body can be JSON.parsed.
@@ -95,5 +96,23 @@ describe('renderWranglerJsonc', () => {
     const cfg = parseJsonc(out);
     expect(cfg.d1_databases[0].database_id).toBe('PASTE_FROM_D1_CREATE');
     expect(cfg.kv_namespaces[0].id).toBe('PASTE_FROM_KV_CREATE');
+  });
+});
+
+describe('retintSvg', () => {
+  const theme = { primary: '#112233', accent: '#445566', dark: '#778899', surface: '#ffffff' };
+  it('renders four valid SVGs that carry the new colours, not the generic ones', () => {
+    for (const key of ['wide', 'portrait', 'card', 'logo'] as const) {
+      const svg = retintSvg[key](theme);
+      expect(svg.trimStart().startsWith('<svg')).toBe(true);
+      expect(svg).toContain('#445566'); // accent (ring) appears in every variant
+      expect(svg).not.toContain('#b08a3e'); // generic gold must be gone
+      expect(svg).not.toContain('#3b3a6b'); // generic indigo must be gone
+    }
+  });
+  it('uses primary + dark as the gradient stops on the wide variant', () => {
+    const svg = retintSvg.wide(theme);
+    expect(svg).toContain('stop-color="#112233"'); // primary
+    expect(svg).toContain('stop-color="#778899"'); // dark
   });
 });
