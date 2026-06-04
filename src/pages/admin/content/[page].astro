@@ -5,12 +5,14 @@ import { env } from '../../../lib/runtime';
 import { getAdminEmail } from '../../../lib/admin-auth';
 import { getContentPage } from '../../../lib/content/fields';
 import { getAllContent } from '../../../lib/db/content';
+import { makeImage } from '../../../lib/content/content';
 
 const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
 if (!email) return Astro.redirect('/admin/denied');
 const page = getContentPage(String(Astro.params.page));
 if (!page) return Astro.redirect('/admin/content');
 const stored = await getAllContent(env.DB).catch(() => ({}) as Record<string, string>);
+const cimg = makeImage(stored);
 const saved = Astro.url.searchParams.get('saved') === '1';
 const val = (key: string, def: string) => (stored[key] != null && stored[key] !== '' ? stored[key] : def);
 const viewHref = page.slug === 'home' ? '/' : `/${page.slug}`;
@@ -26,7 +28,7 @@ const viewHref = page.slug === 'home' ? '/' : `/${page.slug}`;
       </p>
     )
   }
-  <form method="POST" action="/api/admin/content" class="max-w-2xl space-y-10">
+  <form method="POST" action="/api/admin/content" enctype="multipart/form-data" class="max-w-2xl space-y-10">
     <input type="hidden" name="_page" value={page.slug} />
     {
       page.groups.map((g) => (
@@ -38,7 +40,12 @@ const viewHref = page.slug === 'home' ? '/' : `/${page.slug}`;
                 <label for={f.key} class="text-xs uppercase tracking-wider text-on-surface-variant">
                   {f.label}
                 </label>
-                {f.type === 'textarea' ? (
+                {f.type === 'image' ? (
+                  <div class="flex items-center gap-4">
+                    <img src={cimg(f.key)} alt="" class="h-20 w-28 object-cover border border-champagne" />
+                    <input id={f.key} name={f.key} type="file" accept="image/*" class="text-sm text-on-surface-variant" />
+                  </div>
+                ) : f.type === 'textarea' ? (
                   <textarea
                     id={f.key}
                     name={f.key}
@@ -55,6 +62,7 @@ const viewHref = page.slug === 'home' ? '/' : `/${page.slug}`;
                     value={val(f.key, f.default)}
                   />
                 )}
+                {f.type === 'image' && !f.help && <p class="text-xs text-on-surface-variant">Upload to replace; leave empty to keep the current image.</p>}
                 {f.help && <p class="text-xs text-on-surface-variant">{f.help}</p>}
               </div>
             ))}
