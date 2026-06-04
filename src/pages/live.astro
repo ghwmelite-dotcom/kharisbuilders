@@ -1,0 +1,207 @@
+---
+import PublicLayout from '../layouts/PublicLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import Field from '../components/Field.astro';
+import { env } from '../lib/runtime';
+import { getAllSettings } from '../lib/db/settings';
+import { getAllContent } from '../lib/db/content';
+import { makeContent, makeImage } from '../lib/content/content';
+import { computeLiveStatus, type ScheduleEntry } from '../lib/live/status';
+import { toLiveEmbed } from '../lib/live/embed';
+import { listPublishedSermons } from '../lib/db/sermons';
+import { mediaUrl } from '../lib/media';
+import { SITE } from '../lib/seo';
+
+const [settings, content] = await Promise.all([
+  getAllSettings(env.DB).catch(() => ({}) as Record<string, string>),
+  getAllContent(env.DB).catch(() => ({}) as Record<string, string>),
+]);
+const c = makeContent(content);
+const cimg = makeImage(content);
+let schedule: ScheduleEntry[] = [];
+try {
+  const parsed = JSON.parse(c('home.gathering_schedule'));
+  if (Array.isArray(parsed)) schedule = parsed;
+} catch {
+  schedule = [];
+}
+const status = computeLiveStatus(
+  schedule,
+  Number(settings.live_duration_min ?? 90) || 90,
+  settings.live_state ?? 'auto',
+  Number(settings.live_tz_offset_min ?? 0) || 0,
+  new Date(),
+);
+const host = (Astro.site ?? new URL(SITE.url)).host;
+const embed = toLiveEmbed(settings.live_stream_url ?? '', host);
+const chatOn = (settings.live_chat_enabled ?? 'true') === 'true' && !!embed.chatUrl;
+const connectOn = (settings.live_connect_enabled ?? 'true') === 'true';
+const siteKey = settings.turnstile_site_key ?? '1x00000000000000000000AA';
+const bulletinTitle = settings.live_bulletin_title ?? '';
+const bulletinBody = settings.live_bulletin_body ?? '';
+const latest = (await listPublishedSermons(env.DB, 1).catch(() => []))[0] ?? null;
+const connectMsg = Astro.url.searchParams.get('connect');
+const prayerMsg = Astro.url.searchParams.get('prayer');
+const isLive = status.isLive;
+---
+<PublicLayout title="Watch Live | Kharisbuilders" description="Join the Kharisbuilders service online, live.">
+  <div data-live-root data-islive={String(isLive)}>
+    {
+      isLive ? (
+        <section class="bg-primary-container py-10 md:py-14">
+          <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop">
+            <div class="flex items-center gap-3 mb-6">
+              <span class="inline-flex items-center gap-2 bg-accent-deep text-white text-xs uppercase tracking-[0.2em] px-3 py-1 rounded-full">
+                <span class="w-2 h-2 rounded-full bg-white animate-pulse" /> Live now
+              </span>
+              <span class="font-display text-white text-xl">We're Live</span>
+            </div>
+            <div class={`grid gap-6 ${chatOn ? 'lg:grid-cols-3' : ''}`}>
+              <div class={chatOn ? 'lg:col-span-2' : ''}>
+                <div class="aspect-video overflow-hidden border border-white/10 bg-black elev-2">
+                  {embed.embedUrl ? (
+                    <iframe class="w-full h-full" src={embed.embedUrl} title="Live service" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen />
+                  ) : (
+                    <div class="w-full h-full flex items-center justify-center text-white/60 font-body">The stream will appear here shortly.</div>
+                  )}
+                </div>
+              </div>
+              {chatOn && (
+                <div class="h-[360px] lg:h-auto overflow-hidden border border-white/10 bg-white">
+                  <iframe class="w-full h-full min-h-[360px]" src={embed.chatUrl!} title="Live chat" />
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      ) : (
+        <PageHero image={cimg('home.hero_image')} height="h-[420px] md:h-[520px]">
+          <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Online Campus</span>
+          <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">We Gather Soon</h1>
+          {status.next && (
+            <div class="mt-7 inline-flex flex-wrap justify-center items-center gap-x-5 gap-y-2 glass-card rounded-full px-7 py-3.5">
+              <span class="font-label-sm uppercase tracking-[0.25em] text-heritage-gold">Next Gathering</span>
+              <span id="live-countdown" class="font-display text-white text-xl tabular-nums" data-at={String(status.next.atMs)}>
+                —
+              </span>
+              <span class="font-body text-body-md text-white/70 hidden sm:block">{status.next.label}</span>
+            </div>
+          )}
+        </PageHero>
+      )
+    }
+
+    <section class="py-16 md:py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-14">
+        <div class="lg:col-span-2 space-y-10">
+          {
+            !isLive && latest && (
+              <a href={`/sermons/${latest.slug}`} class="card-lift group block overflow-hidden border border-champagne elev-1" data-reveal>
+                <div class="relative aspect-video overflow-hidden">
+                  <img src={mediaUrl(latest.thumbnail_key) ?? '/images/home-3.jpg'} alt={latest.title} class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" />
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-16 h-16 rounded-full border border-heritage-gold/60 flex items-center justify-center bg-white/10 backdrop-blur-sm">
+                      <svg class="w-7 h-7 text-white translate-x-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-7">
+                  <span class="font-label-sm uppercase tracking-widest text-heritage-gold">Catch the latest message</span>
+                  <h3 class="font-display text-headline-md text-primary mt-1">{latest.title}</h3>
+                </div>
+              </a>
+            )
+          }
+
+          {
+            (bulletinTitle || bulletinBody) && (
+              <div data-reveal>
+                <SectionIntro eyebrow="This Week" title={bulletinTitle || 'Order of Service'} align="left" class="mb-6" />
+                <p class="font-body text-body-md text-stone-gray leading-relaxed whitespace-pre-line">{bulletinBody}</p>
+              </div>
+            )
+          }
+        </div>
+
+        <aside class="space-y-8">
+          <div class="flex flex-col sm:flex-row lg:flex-col gap-4">
+            <a href="/giving" class="flex-1 text-center bg-heritage-gold text-primary hover:bg-secondary hover:text-white font-label-md uppercase tracking-[0.14em] px-6 py-4 transition-colors">Give</a>
+            <a href="#prayer" class="flex-1 text-center border border-primary/30 text-primary hover:border-heritage-gold font-label-md uppercase tracking-[0.14em] px-6 py-4 transition-colors">Request Prayer</a>
+          </div>
+
+          {
+            connectOn && (
+              <div class="bg-surface-container p-6 elev-1">
+                <h3 class="font-display text-headline-md text-primary mb-1">Connect with us</h3>
+                <p class="font-body text-body-sm text-stone-gray mb-4">Watching online? Let us know you're here.</p>
+                {connectMsg === 'ok' ? (
+                  <p class="font-body text-body-md text-primary">Thank you — we're glad you're with us! 🙏</p>
+                ) : (
+                  <form method="POST" action="/api/forms/online-connect" class="space-y-4">
+                    {connectMsg === 'err' && <p class="text-accent-deep text-body-sm">Please check your details and try again.</p>}
+                    <Field label="Name" name="name" required />
+                    <Field label="Email" name="email" type="email" required />
+                    <Field label="Watching from" name="location" />
+                    <div class="cf-turnstile" data-sitekey={siteKey} />
+                    <button type="submit" class="w-full bg-primary text-on-primary font-label-md uppercase tracking-widest py-3">I'm Here</button>
+                  </form>
+                )}
+              </div>
+            )
+          }
+
+          <div id="prayer" class="bg-surface-container-high p-6">
+            <h3 class="font-display text-headline-md text-primary mb-1">Request prayer</h3>
+            <p class="font-body text-body-sm text-stone-gray mb-4">Our team will pray with you. Requests are private.</p>
+            {prayerMsg === 'ok' ? (
+              <p class="font-body text-body-md text-primary">Received — we're praying with you. 🙏</p>
+            ) : (
+              <form method="POST" action="/api/forms/prayer" class="space-y-4">
+                {prayerMsg === 'err' && <p class="text-accent-deep text-body-sm">Please share your request and try again.</p>}
+                <Field label="Name (optional)" name="name" />
+                <Field label="Your request" name="request" textarea required />
+                <input type="hidden" name="is_private" value="true" />
+                <div class="cf-turnstile" data-sitekey={siteKey} />
+                <button type="submit" class="w-full bg-primary text-on-primary font-label-md uppercase tracking-widest py-3">Send Request</button>
+              </form>
+            )}
+          </div>
+        </aside>
+      </div>
+    </section>
+  </div>
+
+  <script is:inline>
+    // Countdown to the next gathering (offline state)
+    (function () {
+      const el = document.getElementById('live-countdown');
+      if (!el) return;
+      const at = Number(el.getAttribute('data-at'));
+      const pad = (n) => String(n).padStart(2, '0');
+      function tick() {
+        let s = Math.max(0, Math.floor((at - Date.now()) / 1000));
+        const d = Math.floor(s / 86400); s %= 86400;
+        const h = Math.floor(s / 3600); s %= 3600;
+        const m = Math.floor(s / 60); const ss = s % 60;
+        el.textContent = `${d}d ${pad(h)}h ${pad(m)}m ${pad(ss)}s`;
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+    // Poll live status; reload when it flips so the page swaps live<->offline
+    (function () {
+      const root = document.querySelector('[data-live-root]');
+      if (!root) return;
+      const wasLive = root.getAttribute('data-islive') === 'true';
+      setInterval(async () => {
+        try {
+          const r = await fetch('/api/live/status', { cache: 'no-store' });
+          const d = await r.json();
+          if (!!d.isLive !== wasLive) location.reload();
+        } catch (e) { /* ignore */ }
+      }, 30000);
+    })();
+  </script>
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</PublicLayout>
