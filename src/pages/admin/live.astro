@@ -1,0 +1,112 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import Button from '../../components/Button.astro';
+import { env } from '../../lib/runtime';
+import { getAdminEmail } from '../../lib/admin-auth';
+import { getAllSettings } from '../../lib/db/settings';
+import { listOnlineAttendances } from '../../lib/db/online-attendances';
+import { listPrayerRequests } from '../../lib/db/prayer-requests';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const s = await getAllSettings(env.DB).catch(() => ({}) as Record<string, string>);
+const attendances = await listOnlineAttendances(env.DB, 50).catch(() => []);
+const prayers = await listPrayerRequests(env.DB, 50).catch(() => []);
+const saved = Astro.url.searchParams.get('saved') === '1';
+const v = (key: string, def: string) => s[key] ?? def;
+---
+<AdminLayout title="Live / Online Campus" email={email} active="live">
+  {
+    saved && (
+      <p class="mb-6 bg-accent/10 text-primary text-sm px-4 py-3">
+        Saved.{' '}
+        <a href="/live" target="_blank" class="underline">
+          View the live page →
+        </a>
+      </p>
+    )
+  }
+  <form method="POST" action="/api/admin/live" class="max-w-xl space-y-5 mb-12">
+    <label class="block text-xs uppercase tracking-wider text-on-surface-variant">
+      Status
+      <select name="live_state" class="mt-1 w-full border border-champagne bg-surface px-4 py-2 text-sm text-primary">
+        <option value="auto" selected={v('live_state', 'auto') === 'auto'}>Auto (follow schedule)</option>
+        <option value="live" selected={v('live_state', 'auto') === 'live'}>Live now (force on)</option>
+        <option value="off" selected={v('live_state', 'auto') === 'off'}>Off (force offline)</option>
+      </select>
+    </label>
+    <label class="block text-xs uppercase tracking-wider text-on-surface-variant">
+      Stream URL (YouTube / Vimeo / Facebook / embed)
+      <input name="live_stream_url" value={v('live_stream_url', '')} class="mt-1 w-full border border-champagne bg-surface px-4 py-2 text-sm text-primary" />
+    </label>
+    <div class="grid grid-cols-2 gap-4">
+      <label class="block text-xs uppercase tracking-wider text-on-surface-variant">
+        Service length (minutes)
+        <input name="live_duration_min" type="number" min="15" value={v('live_duration_min', '90')} class="mt-1 w-full border border-champagne bg-surface px-4 py-2 text-sm text-primary" />
+      </label>
+      <label class="block text-xs uppercase tracking-wider text-on-surface-variant">
+        Timezone offset (min from UTC; Accra = 0)
+        <input name="live_tz_offset_min" type="number" value={v('live_tz_offset_min', '0')} class="mt-1 w-full border border-champagne bg-surface px-4 py-2 text-sm text-primary" />
+      </label>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <label class="block text-xs uppercase tracking-wider text-on-surface-variant">
+        Embedded chat
+        <select name="live_chat_enabled" class="mt-1 w-full border border-champagne bg-surface px-4 py-2 text-sm text-primary">
+          <option value="true" selected={v('live_chat_enabled', 'true') === 'true'}>Yes</option>
+          <option value="false" selected={v('live_chat_enabled', 'true') === 'false'}>No</option>
+        </select>
+      </label>
+      <label class="block text-xs uppercase tracking-wider text-on-surface-variant">
+        Connect card
+        <select name="live_connect_enabled" class="mt-1 w-full border border-champagne bg-surface px-4 py-2 text-sm text-primary">
+          <option value="true" selected={v('live_connect_enabled', 'true') === 'true'}>Yes</option>
+          <option value="false" selected={v('live_connect_enabled', 'true') === 'false'}>No</option>
+        </select>
+      </label>
+    </div>
+    <label class="block text-xs uppercase tracking-wider text-on-surface-variant">
+      Bulletin title
+      <input name="live_bulletin_title" value={v('live_bulletin_title', '')} class="mt-1 w-full border border-champagne bg-surface px-4 py-2 text-sm text-primary" />
+    </label>
+    <div class="flex flex-col gap-1">
+      <label class="text-xs uppercase tracking-wider text-on-surface-variant">Bulletin body</label>
+      <textarea name="live_bulletin_body" rows="5" class="border border-champagne bg-surface px-4 py-2 text-sm text-primary" set:text={v('live_bulletin_body', '')} />
+    </div>
+    <Button type="submit" variant="primary">Save</Button>
+  </form>
+
+  <h2 class="font-display text-lg text-primary mb-3">Online attendance ({attendances.length})</h2>
+  <table class="w-full text-sm mb-10">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">When</th><th>Name</th><th>Email</th><th>From</th>
+      </tr>
+    </thead>
+    <tbody>
+      {attendances.map((a) => (
+        <tr class="border-b border-champagne/50">
+          <td class="py-2">{a.created_at}</td><td>{a.name}</td><td>{a.email}</td><td>{a.location}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  {attendances.length === 0 && <p class="text-on-surface-variant mb-10">No online check-ins yet.</p>}
+
+  <h2 class="font-display text-lg text-primary mb-3">Prayer requests ({prayers.length})</h2>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">When</th><th>Name</th><th>Request</th><th>Private</th>
+      </tr>
+    </thead>
+    <tbody>
+      {prayers.map((p) => (
+        <tr class="border-b border-champagne/50">
+          <td class="py-2">{p.created_at}</td><td>{p.name ?? '—'}</td><td>{p.request}</td><td>{p.is_private ? 'Yes' : 'No'}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  {prayers.length === 0 && <p class="text-on-surface-variant mt-4">No prayer requests yet.</p>}
+</AdminLayout>

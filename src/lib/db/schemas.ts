@@ -52,6 +52,21 @@ export const EventInputSchema = z.object({
 });
 export type EventInput = z.infer<typeof EventInputSchema>;
 
+export const OnlineConnectInputSchema = z.object({
+  name: z.string().trim().min(1, 'Please enter your name').max(120),
+  email: z.string().trim().email('Please enter a valid email').max(200),
+  location: z.string().trim().max(120).optional().or(z.literal('')),
+});
+export type OnlineConnectInput = z.infer<typeof OnlineConnectInputSchema>;
+
+export const PrayerInputSchema = z.object({
+  name: z.string().trim().max(120).optional().or(z.literal('')),
+  email: z.string().trim().email().max(200).optional().or(z.literal('')),
+  request: z.string().trim().min(1, 'Please share your request').max(2000),
+  is_private: z.coerce.boolean().default(true),
+});
+export type PrayerInput = z.infer<typeof PrayerInputSchema>;
+
 export const LeaderInputSchema = z.object({
   name: z.string().trim().min(1).max(120),
   role: z.string().trim().max(120).optional().or(z.literal('')),
