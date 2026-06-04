@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import { CHURCH } from '../config/church';
+import { brandVars } from '../config/theme-vars';
 interface Props {
   title: string;
   email: string;
@@ -24,11 +26,12 @@ const nav = [
 ];
 ---
 <!doctype html>
-<html lang="en" data-theme="purple">
+<html lang={CHURCH.locale} data-theme="purple">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
+    <style is:global set:html={`:root{ ${brandVars(CHURCH.theme)} }`}></style>
     <title>{title} · Admin</title>
   </head>
   <body class="min-h-screen md:grid md:grid-cols-[240px_1fr]">

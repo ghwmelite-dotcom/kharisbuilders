@@ -6,6 +6,8 @@ import { resolveTheme } from '../lib/theme';
 import { env } from '../lib/runtime';
 import { getAllSettings, type SettingsMap } from '../lib/db/settings';
 import { SITE, absUrl, organizationJsonLd, websiteJsonLd } from '../lib/seo';
+import { CHURCH } from '../config/church';
+import { brandVars } from '../config/theme-vars';
 
 interface Props {
   title: string;
@@ -39,10 +41,11 @@ const ogImage = absUrl(image ?? SITE.ogImage, origin);
 const seoNodes = [organizationJsonLd(origin, settings), websiteJsonLd(origin), ...jsonLd];
 ---
 <!doctype html>
-<html lang="en" data-theme={theme}>
+<html lang={CHURCH.locale} data-theme={theme}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style is:global set:html={`:root{ ${brandVars(CHURCH.theme)} }`}></style>
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
