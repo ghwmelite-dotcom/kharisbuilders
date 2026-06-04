@@ -5,3 +5,4 @@ dist/
 .dev.vars
 *.local
 .DS_Store
+scripts/new-church.config.json
