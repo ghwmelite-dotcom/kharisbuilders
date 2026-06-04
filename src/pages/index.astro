@@ -11,7 +11,8 @@ import { makeContent, makeImage } from '../lib/content/content';
 import { mediaUrl } from '../lib/media';
 import { listHomeCards } from '../lib/db/homeCards';
 import { PLACEHOLDER } from '../lib/images';
-import { feature } from '../config/church';
+import { SITE } from '../lib/seo';
+import { CHURCH, feature } from '../config/church';
 
 let latestSermon: Awaited<ReturnType<typeof listPublishedSermons>>[number] | null = null;
 let events: Awaited<ReturnType<typeof listUpcomingEvents>> = [];
@@ -55,10 +56,10 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
   img: mediaUrl(cd.image_key ?? null) ?? cardFallbackImg[i % cardFallbackImg.length],
 }));
 ---
-<PublicLayout title="Kharisbuilders | Building Lives, Shaping Destinies" image={cimg('home.hero_image')}>
+<PublicLayout title={`${SITE.name} | ${SITE.tagline}`} image={cimg('home.hero_image')}>
   <!-- Cinematic hero -->
   <section class="relative min-h-dvh flex flex-col overflow-hidden bg-primary">
-    <img src={cimg('home.hero_image')} alt="The Kharisbuilders sanctuary" class="kenburns absolute inset-0 w-full h-full object-cover opacity-40" />
+    <img src={cimg('home.hero_image')} alt="" class="kenburns absolute inset-0 w-full h-full object-cover opacity-40" />
     <!-- legibility veil + vertical depth (darkens the bright windows behind the text) -->
     <div class="absolute inset-0 bg-[#2c1745]/60"></div>
     <div class="absolute inset-0" style="background: linear-gradient(180deg, rgba(44,23,69,0.66) 0%, rgba(44,23,69,0.24) 42%, rgba(44,23,69,0.82) 100%);"></div>
@@ -75,7 +76,7 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
     <!-- content centred in a region that clears the nav (top) and reserves space for the overlapping cards (bottom) -->
     <div class="relative z-10 flex-1 flex items-center justify-center px-6 pt-28 pb-44 md:pb-56">
       <div class="text-center max-w-4xl mx-auto w-full">
-      <img src="/images/kharis-logo.png" alt="" class="hero-swirl hero-fade w-20 h-20 md:w-24 md:h-24 mx-auto mb-7" style="--line-delay:0ms" />
+      <img src={CHURCH.logo} alt="" class="hero-swirl hero-fade w-20 h-20 md:w-24 md:h-24 mx-auto mb-7" style="--line-delay:0ms" />
       <span class="hero-line inline-flex items-center gap-3 font-label-sm uppercase tracking-[0.45em] text-heritage-gold mb-6" style="--line-delay:140ms; text-shadow:0 1px 10px rgba(0,0,0,0.6);">
         <Adinkra symbol="adinkrahene" class="w-3.5 h-3.5 opacity-80" />
         {c('home.hero_kicker')}
@@ -236,12 +237,12 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
     </div>
   </section>
 
-  <!-- This Week at Kharis — service times as elevated cards -->
+  <!-- This Week — service times as elevated cards -->
   {
     serviceTimes.length > 0 && (
       <section class="py-24 md:py-36 bg-surface">
         <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop">
-          <SectionIntro eyebrow="Join Us" title="This Week at Kharis" />
+          <SectionIntro eyebrow="Join Us" title="This Week" />
           <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {serviceTimes.map((s, i) => (
               <div
@@ -299,7 +300,7 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
         <div class="absolute bottom-0 left-0 p-8 md:p-12 bg-gradient-to-t from-black/80 to-transparent w-full">
           <h3 class="text-white font-display text-headline-md mb-2">{latestSermon?.title ?? 'Watch our latest message'}</h3>
           <p class="text-white/70 font-body text-body-md">
-            {latestSermon?.speaker ?? 'Kharisbuilders'}{latestSermon?.sermon_date ? ` · ${fmtDate(latestSermon.sermon_date)}` : ''}
+            {latestSermon?.speaker ?? SITE.name}{latestSermon?.sermon_date ? ` · ${fmtDate(latestSermon.sermon_date)}` : ''}
           </p>
         </div>
       </a>

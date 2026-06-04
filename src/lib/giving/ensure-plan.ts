@@ -1,6 +1,7 @@
 import { getPlanByKey, insertPlan } from '../db/plans';
 import { createPlan } from '../paystack/client';
 import { fromMinorUnits } from './money';
+import { CHURCH } from '../../config/church';
 
 export type EnsurePlanResult = { ok: true; planCode: string; planId: number } | { ok: false; error: string };
 
@@ -16,7 +17,7 @@ export async function ensurePlan(
   if (cached) return { ok: true, planCode: cached.plan_code, planId: cached.id };
 
   const label = INTERVAL_LABEL[key.interval] ?? key.interval;
-  const name = `Kharis ${label} ${key.currency} ${fromMinorUnits(key.amount).toFixed(2)}`;
+  const name = `${CHURCH.name} ${label} ${key.currency} ${fromMinorUnits(key.amount).toFixed(2)}`;
   const created = await createPlan({ name, amount: key.amount, interval: key.interval, currency: key.currency }, cfg);
   if (!created.ok) return { ok: false, error: created.error };
 

@@ -49,7 +49,7 @@ const connectMsg = Astro.url.searchParams.get('connect');
 const prayerMsg = Astro.url.searchParams.get('prayer');
 const isLive = status.isLive;
 ---
-<PublicLayout title="Watch Live | Kharisbuilders" description="Join the Kharisbuilders service online, live.">
+<PublicLayout title={`Watch Live | ${SITE.name}`} description={`Join the ${SITE.name} service online, live.`}>
   <div data-live-root data-islive={String(isLive)}>
     {
       isLive ? (
