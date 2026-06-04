@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import { CHURCH } from '../config/church';
 const links = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
@@ -17,13 +18,13 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   <nav class="mx-auto flex h-20 max-w-[var(--container-max)] items-center justify-between px-6 md:px-margin-desktop">
     <a href="/" class="flex items-center gap-3 group">
       <img
-        src="/images/kharis-logo.png"
-        alt="Kharisbuilders"
+        src={CHURCH.logo}
+        alt={CHURCH.name}
         width="40"
         height="40"
         class="w-9 h-9 md:w-10 md:h-10 transition-transform duration-700 ease-out group-hover:rotate-[45deg]"
       />
-      <span class="nav-logo font-display text-2xl tracking-tight">Kharisbuilders</span>
+      <span class="nav-logo font-display text-2xl tracking-tight">{CHURCH.name}</span>
     </a>
     <div class="hidden md:flex items-center gap-9">
       {

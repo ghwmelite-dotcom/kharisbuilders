@@ -1,11 +1,15 @@
 ---
 import Adinkra from './Adinkra.astro';
+import { CHURCH } from '../config/church';
 import type { SettingsMap } from '../lib/db/settings';
 interface Props {
   settings?: SettingsMap;
 }
 const { settings = {} } = Astro.props;
 const year = new Date().getFullYear();
+// Tagline without its trailing period; the bottom bar separates clauses with a middot.
+const tagline = CHURCH.tagline.replace(/\.\s*$/, '');
+const taglineDots = tagline.replace(/,\s*/g, ' · ');
 const address = settings.address ?? '12 Cathedral Way, West End, London';
 const email = settings.contact_email ?? 'hello@kharisbuilders.org';
 let serviceTimes: Array<{ name: string; time: string; note?: string }> = [];
@@ -54,8 +58,8 @@ const explore = [
       <!-- Brand -->
       <div class="col-span-2 md:col-span-5">
         <div class="flex items-center gap-3 mb-5">
-          <img src="/images/kharis-logo.png" alt="" class="w-10 h-10" />
-          <span class="font-display text-3xl text-gold-gradient">Kharisbuilders</span>
+          <img src={CHURCH.logo} alt="" class="w-10 h-10" />
+          <span class="font-display text-3xl text-gold-gradient">{CHURCH.name}</span>
         </div>
         <p class="font-body text-body-md text-on-primary/65 max-w-xs leading-relaxed mb-8">
           Building Lives, Shaping Destinies — a sanctuary where the weight of tradition meets the momentum of modern
@@ -136,8 +140,8 @@ const explore = [
 
   <div class="relative border-t border-on-primary/10">
     <div class="max-w-[var(--container-max)] mx-auto px-6 md:px-margin-desktop py-6 flex flex-col md:flex-row justify-between items-center gap-3">
-      <p class="font-body text-label-sm text-on-primary/45">© {year} Kharisbuilders. All rights reserved.</p>
-      <p class="font-label-sm uppercase tracking-[0.2em] text-on-primary/45">Building Lives · Shaping Destinies</p>
+      <p class="font-body text-label-sm text-on-primary/45">© {year} {CHURCH.name}. All rights reserved.</p>
+      <p class="font-label-sm uppercase tracking-[0.2em] text-on-primary/45">{taglineDots}</p>
     </div>
   </div>
 </footer>
