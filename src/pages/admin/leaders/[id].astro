@@ -1,0 +1,14 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import LeaderForm from '../../../components/admin/LeaderForm.astro';
+import { env } from '../../../lib/runtime';
+import { getAdminEmail } from '../../../lib/admin-auth';
+import { getLeaderById } from '../../../lib/db/leaders';
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const leader = await getLeaderById(env.DB, Number(Astro.params.id)).catch(() => null);
+if (!leader) return Astro.redirect('/admin/leaders');
+---
+<AdminLayout title={`Edit: ${leader.name}`} email={email} active="leaders">
+  <LeaderForm leader={leader} />
+</AdminLayout>

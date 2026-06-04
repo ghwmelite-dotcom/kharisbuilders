@@ -1,0 +1,38 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { env } from '../../lib/runtime';
+import { getAdminEmail } from '../../lib/admin-auth';
+import { listLeaders } from '../../lib/db/leaders';
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const leaders = await listLeaders(env.DB).catch(() => []);
+---
+<AdminLayout title="Leadership" email={email} active="leaders">
+  <a href="/admin/leaders/new" class="inline-block mb-6 bg-primary text-on-primary px-5 py-2 text-sm uppercase tracking-wider">+ New leader</a>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">Name</th><th>Role</th><th>Order</th><th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        leaders.map((l) => (
+          <tr class="border-b border-champagne/50">
+            <td class="py-3"><a href={`/admin/leaders/${l.id}`} class="text-primary hover:text-accent">{l.name}</a></td>
+            <td>{l.role}</td>
+            <td>{l.sort_order}</td>
+            <td class="text-right">
+              <form method="POST" action="/api/admin/leaders" class="inline" onsubmit="return confirm('Delete this leader?')">
+                <input type="hidden" name="_action" value="delete" />
+                <input type="hidden" name="id" value={String(l.id)} />
+                <button class="text-accent-deep text-xs uppercase tracking-wider">Delete</button>
+              </form>
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {leaders.length === 0 && <p class="text-on-surface-variant mt-4">No leaders yet.</p>}
+</AdminLayout>
