@@ -4,6 +4,7 @@ import { getAllSettings } from '../../../lib/db/settings';
 import { getAllContent } from '../../../lib/db/content';
 import { makeContent } from '../../../lib/content/content';
 import { computeLiveStatus, type ScheduleEntry } from '../../../lib/live/status';
+import { CHURCH } from '../../../config/church';
 
 export const GET: APIRoute = async () => {
   const json = (b: unknown) =>
@@ -22,7 +23,7 @@ export const GET: APIRoute = async () => {
       schedule,
       Number(settings.live_duration_min ?? 90) || 90,
       settings.live_state ?? 'auto',
-      Number(settings.live_tz_offset_min ?? 0) || 0,
+      Number(settings.live_tz_offset_min ?? CHURCH.timezoneOffsetMin) || CHURCH.timezoneOffsetMin,
       new Date(),
     );
     return json(status);

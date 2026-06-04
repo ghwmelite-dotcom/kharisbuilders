@@ -1,7 +1,7 @@
-/* Theme tokens — values sourced from the two DESIGN.md files
-   (sacred_structure_1 = sacred/midnight-gold, sacred_structure_2 = purple).
-   Runtime theme vars use a --kb-* prefix so they never collide with
-   Tailwind's own --color-* theme namespace (mapped in global.css). */
+/* Theme tokens — the single brand theme is derived from the four --brand-*
+   anchors that church.config supplies (injected as :root custom props by
+   brandVars()). Runtime theme vars use a --kb-* prefix so they never collide
+   with Tailwind's own --color-* theme namespace (mapped in global.css). */
 :root {
   --container-max: 1280px;
   --space-unit: 8px;
@@ -10,54 +10,32 @@
   --font-body: 'Manrope', sans-serif;
 }
 
-[data-theme='sacred'] {
-  --kb-surface: #fbf9f4;
-  --kb-surface-dim: #dbdad5;
-  --kb-surface-container-lowest: #ffffff;
-  --kb-surface-container-low: #f5f3ee;
-  --kb-surface-container: #f0eee9;
-  --kb-surface-container-high: #eae8e3;
-  --kb-surface-container-highest: #e4e2dd;
-  --kb-on-surface: #1b1c19;
-  --kb-on-surface-variant: #44474d;
-  --kb-primary: #04162c;
-  --kb-on-primary: #ffffff;
-  --kb-primary-container: #1a2b42; /* midnight blue */
-  --kb-on-primary-container: #8292ae;
-  --kb-secondary: #725b35;
-  --kb-secondary-container: #fedeae;
-  --kb-on-secondary-container: #78613a;
-  --kb-accent: #8c734b; /* heritage gold */
-  --kb-accent-deep: #4a0e0e; /* sacred burgundy */
-  --kb-muted: #4d4d4d; /* stone gray */
-  --kb-champagne: #e5dcc5; /* champagne light */
-  --kb-shadow-ambient: 0 12px 32px -4px rgba(26, 43, 66, 0.08);
-}
-
 [data-theme='purple'] {
-  /* Royal-purple + kente-gold identity. Surfaces are a clean violet-tinted white;
-     primary is a deep royal purple (white text 11.4:1, AAA); dark sections use a
-     rich aubergine; the accent is an antique/kente gold (regal purple+gold pairing,
-     AA-large ≥3:1 on light, purple, and aubergine alike). */
-  --kb-surface: #faf6fe;
-  --kb-surface-dim: #ddd2e6;
+  /* Brand theme — every token is derived from the four --brand-* anchors that
+     church.config supplies (injected as :root custom props by brandVars()).
+     The color-mix percentages are tuned so Kharis's anchors
+     (primary #4a2a6b, accent #a87f2e, dark #2c1745, surface #faf6fe)
+     reproduce its hand-picked palette; any church's 4 colors yield a cohesive,
+     AA-respecting theme with no other edits. */
+  --kb-surface: var(--brand-surface);
   --kb-surface-container-lowest: #ffffff;
-  --kb-surface-container-low: #f7f0fb;
-  --kb-surface-container: #f2e9f7;
-  --kb-surface-container-high: #ebe0f2;
-  --kb-surface-container-highest: #e4d7ee;
-  --kb-on-surface: #1d1426;
-  --kb-on-surface-variant: #4b4255;
-  --kb-primary: #4a2a6b; /* deep royal purple */
+  --kb-surface-container-low: color-mix(in srgb, var(--brand-primary) 4%, var(--brand-surface));
+  --kb-surface-container: color-mix(in srgb, var(--brand-primary) 7%, var(--brand-surface));
+  --kb-surface-container-high: color-mix(in srgb, var(--brand-primary) 11%, var(--brand-surface));
+  --kb-surface-container-highest: color-mix(in srgb, var(--brand-primary) 16%, var(--brand-surface));
+  --kb-surface-dim: color-mix(in srgb, var(--brand-primary) 18%, var(--brand-surface));
+  --kb-on-surface: color-mix(in srgb, var(--brand-primary) 42%, #000);
+  --kb-on-surface-variant: color-mix(in srgb, var(--brand-primary) 30%, #2a2730);
+  --kb-primary: var(--brand-primary);
   --kb-on-primary: #ffffff;
-  --kb-primary-container: #2c1745; /* deep aubergine (dark/hero sections) */
-  --kb-on-primary-container: #cdb6e6;
-  --kb-secondary: #8a6a34; /* bronze-gold — gold buttons darken to this on hover */
-  --kb-secondary-container: #ead7fb;
-  --kb-on-secondary-container: #5a4076;
-  --kb-accent: #a87f2e; /* antique / kente gold */
-  --kb-accent-deep: #5b2a4a; /* deep plum-wine (danger / delete) */
-  --kb-muted: #4b4255;
-  --kb-champagne: #efe6d4; /* warm champagne (kente-gold tint) */
-  --kb-shadow-ambient: 0 12px 32px -4px rgba(46, 23, 69, 0.1);
+  --kb-primary-container: var(--brand-dark);
+  --kb-on-primary-container: color-mix(in srgb, var(--brand-primary) 26%, #ffffff);
+  --kb-secondary: color-mix(in srgb, var(--brand-accent) 82%, #000);
+  --kb-secondary-container: color-mix(in srgb, var(--brand-primary) 12%, #ffffff);
+  --kb-on-secondary-container: color-mix(in srgb, var(--brand-primary) 78%, #ffffff);
+  --kb-accent: var(--brand-accent);
+  --kb-accent-deep: color-mix(in srgb, var(--brand-primary) 55%, #7a1f3a);
+  --kb-muted: color-mix(in srgb, var(--brand-primary) 30%, #2a2730);
+  --kb-champagne: color-mix(in srgb, var(--brand-accent) 18%, #ffffff);
+  --kb-shadow-ambient: 0 12px 32px -4px color-mix(in srgb, var(--brand-dark) 16%, transparent);
 }
