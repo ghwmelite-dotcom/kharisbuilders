@@ -1,6 +1,7 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
 import PageHero from '../components/PageHero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
 
 const leaders = [
   { img: '/images/about-3.jpg', name: 'Dr. Samuel A. Kharis', role: 'Founding Pastor' },
@@ -65,17 +66,17 @@ const journey = [
 
   <!-- The Builders -->
   <section class="bg-surface-container-low py-24 md:py-32">
-    <div class="px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto text-center mb-20">
-      <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">The Shepherds</span>
-      <h2 class="font-display text-display-mobile md:text-display-lg text-primary">The Builders</h2>
+    <div class="px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto mb-20">
+      <SectionIntro eyebrow="The Shepherds" title="The Builders" />
     </div>
     <div class="px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto grid grid-cols-1 md:grid-cols-3 gap-gutter">
       {
-        leaders.map((l) => (
-          <div class="group">
-            <div class="relative overflow-hidden mb-8 aspect-[4/5]">
+        leaders.map((l, i) => (
+          <div class="group" data-reveal style={`--reveal-delay:${i * 110}ms`}>
+            <div class="card-lift relative overflow-hidden mb-8 aspect-[4/5] elev-2">
               <img src={l.img} alt={l.name} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-              <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div class="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/10 to-transparent" />
+              <span class="absolute left-5 top-5 w-8 h-px bg-heritage-gold/70" />
             </div>
             <h3 class="font-display text-headline-md text-primary mb-1">{l.name}</h3>
             <p class="font-label-sm uppercase tracking-widest text-heritage-gold">{l.role}</p>
@@ -88,21 +89,22 @@ const journey = [
   <!-- Our Journey -->
   <section class="py-24 md:py-32 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
     <div class="max-w-3xl mx-auto">
-      <div class="text-center mb-20">
-        <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">The Blueprint</span>
-        <h2 class="font-display text-headline-lg text-primary">Our Journey</h2>
-      </div>
+      <SectionIntro eyebrow="The Blueprint" title="Our Journey" class="mb-20" />
       <div class="space-y-20 md:space-y-28">
         {
           journey.map((p, i) => (
-            <div class={`flex flex-col md:flex-row items-center gap-8 md:gap-12 ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+            <div
+              class={`flex flex-col md:flex-row items-center gap-8 md:gap-12 ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}
+              data-reveal
+            >
               <div class={`w-full md:w-1/2 ${i % 2 === 0 ? 'md:text-right' : ''}`}>
-                <span class="font-display text-headline-lg text-heritage-gold/40 block mb-4">{p.year}</span>
+                <span class="font-display text-display-mobile text-gold-gradient block mb-4">{p.year}</span>
                 <h4 class="font-display text-headline-md text-primary mb-4">{p.title}</h4>
                 <p class="font-body text-body-md text-stone-gray">{p.text}</p>
               </div>
-              <div class="w-full md:w-1/2">
-                <img src={p.img} alt={p.title} class="w-full aspect-video object-cover" />
+              <div class="w-full md:w-1/2 relative">
+                <div class={`absolute inset-0 translate-y-4 ${i % 2 === 0 ? '-translate-x-4' : 'translate-x-4'} border border-heritage-gold/40 pointer-events-none`} />
+                <img src={p.img} alt={p.title} class="relative w-full aspect-video object-cover elev-2" />
               </div>
             </div>
           ))
