@@ -8,6 +8,7 @@ interface Props {
 const { title, email, active = '' } = Astro.props;
 const nav = [
   { label: 'Dashboard', href: '/admin', key: 'dashboard' },
+  { label: 'Content', href: '/admin/content', key: 'content' },
   { label: 'Sermons', href: '/admin/sermons', key: 'sermons' },
   { label: 'Events', href: '/admin/events', key: 'events' },
   { label: 'Ministries', href: '/admin/ministries', key: 'ministries' },
