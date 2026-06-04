@@ -5,6 +5,10 @@ import EventCard from '../../components/EventCard.astro';
 import { env } from '../../lib/runtime';
 import { mediaUrl } from '../../lib/media';
 import { listUpcomingEvents, type EventRow } from '../../lib/db/events';
+import { getAllContent } from '../../lib/db/content';
+import { makeImage } from '../../lib/content/content';
+
+const cimg = makeImage(await getAllContent(env.DB).catch(() => ({})));
 
 let events: EventRow[] = [];
 try {
@@ -15,7 +19,7 @@ try {
 const imgs = ['/images/home-4.jpg', '/images/home-5.jpg', '/images/home-6.jpg'];
 ---
 <PublicLayout title="Events | Kharisbuilders" description="Upcoming gatherings at Kharisbuilders.">
-  <PageHero image="/images/home-4.jpg" height="h-[360px] md:h-[460px]">
+  <PageHero image={cimg('pages.events_hero')} height="h-[360px] md:h-[460px]">
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">What's On</span>
     <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Upcoming Events</h1>
     <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">
