@@ -7,7 +7,10 @@ import { mediaUrl } from '../../lib/media';
 import { listPublishedSermons, getPublishedSermonsByIds, searchSermonsKeyword, type Sermon } from '../../lib/db/sermons';
 import { workersAi, vectorize } from '../../lib/ai/clients';
 import { searchSermonIds } from '../../lib/ai/search';
+import { getAllContent } from '../../lib/db/content';
+import { makeImage } from '../../lib/content/content';
 
+const cimg = makeImage(await getAllContent(env.DB).catch(() => ({})));
 const q = (Astro.url.searchParams.get('q') ?? '').trim();
 let sermons: Sermon[] = [];
 try {
@@ -28,7 +31,7 @@ try {
 const imgs = ['/images/home-3.jpg', '/images/ministries-2.jpg', '/images/home-5.jpg'];
 ---
 <PublicLayout title="Sermons | Kharisbuilders" description="Watch and search the latest messages from Kharisbuilders.">
-  <PageHero image="/images/home-3.jpg" height="h-[360px] md:h-[460px]">
+  <PageHero image={cimg('pages.sermons_hero')} height="h-[360px] md:h-[460px]">
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Messages</span>
     <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Sermons</h1>
     <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">
