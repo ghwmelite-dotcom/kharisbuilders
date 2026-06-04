@@ -52,6 +52,30 @@ export const EventInputSchema = z.object({
 });
 export type EventInput = z.infer<typeof EventInputSchema>;
 
+export const LeaderInputSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  role: z.string().trim().max(120).optional().or(z.literal('')),
+  sort_order: z.coerce.number().int().min(0).default(0),
+});
+export type LeaderInput = z.infer<typeof LeaderInputSchema>;
+
+export const JourneyInputSchema = z.object({
+  year: z.string().trim().min(1).max(20),
+  title: z.string().trim().min(1).max(200),
+  body: z.string().trim().max(2000).optional().or(z.literal('')),
+  sort_order: z.coerce.number().int().min(0).default(0),
+});
+export type JourneyInput = z.infer<typeof JourneyInputSchema>;
+
+export const HomeCardInputSchema = z.object({
+  eyebrow: z.string().trim().max(80).optional().or(z.literal('')),
+  title: z.string().trim().min(1).max(120),
+  description: z.string().trim().max(400).optional().or(z.literal('')),
+  href: z.string().trim().min(1).max(200),
+  sort_order: z.coerce.number().int().min(0).default(0),
+});
+export type HomeCardInput = z.infer<typeof HomeCardInputSchema>;
+
 export const FundInputSchema = z.object({
   name: z.string().trim().min(1).max(120),
   slug: z.string().trim().max(120).optional().or(z.literal('')),
