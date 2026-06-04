@@ -8,22 +8,27 @@ import { listUpcomingEvents } from '../lib/db/events';
 import { getAllSettings } from '../lib/db/settings';
 import { getAllContent } from '../lib/db/content';
 import { makeContent } from '../lib/content/content';
+import { mediaUrl } from '../lib/media';
+import { listHomeCards } from '../lib/db/homeCards';
 
 let latestSermon: Awaited<ReturnType<typeof listPublishedSermons>>[number] | null = null;
 let events: Awaited<ReturnType<typeof listUpcomingEvents>> = [];
 let serviceTimes: Array<{ name: string; time: string; note?: string }> = [];
 let contentMap: Record<string, string> = {};
+let dbCards: Awaited<ReturnType<typeof listHomeCards>> = [];
 try {
-  const [s, e, settings, cm] = await Promise.all([
+  const [s, e, settings, cm, cards] = await Promise.all([
     listPublishedSermons(env.DB, 1),
     listUpcomingEvents(env.DB, 3),
     getAllSettings(env.DB),
     getAllContent(env.DB),
+    listHomeCards(env.DB),
   ]);
   latestSermon = s[0] ?? null;
   events = e;
   serviceTimes = settings.service_times ? JSON.parse(settings.service_times) : [];
   contentMap = cm;
+  dbCards = cards;
 } catch {
   /* fall back to static content */
 }
@@ -31,11 +36,20 @@ const c = makeContent(contentMap);
 const eventImages = ['/images/home-4.jpg', '/images/home-5.jpg', '/images/home-6.jpg'];
 const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
 // Intro cards that overlap the hero's bottom edge — the signature church-theme depth device.
-const introCards = [
-  { label: 'New Here?', title: 'Plan a Visit', href: '/visit', img: '/images/visit-1.jpg', desc: 'Know what to expect and let us welcome you home.' },
-  { label: 'Messages', title: 'Watch Sermons', href: '/sermons', img: '/images/home-3.jpg', desc: 'Catch up on recent messages, anytime, anywhere.' },
-  { label: 'Generosity', title: 'Give', href: '/giving', img: '/images/home-2.jpg', desc: 'Partner with the mission and the ministries.' },
+// Render from the editable home_cards list, falling back to the original three when empty.
+const cardFallbackImg = ['/images/visit-1.jpg', '/images/home-3.jpg', '/images/home-2.jpg'];
+const defaultCards = [
+  { eyebrow: 'New Here?', title: 'Plan a Visit', href: '/visit', description: 'Know what to expect and let us welcome you home.', image_key: null },
+  { eyebrow: 'Messages', title: 'Watch Sermons', href: '/sermons', description: 'Catch up on recent messages, anytime, anywhere.', image_key: null },
+  { eyebrow: 'Generosity', title: 'Give', href: '/giving', description: 'Partner with the mission and the ministries.', image_key: null },
 ];
+const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
+  label: cd.eyebrow ?? '',
+  title: cd.title,
+  href: cd.href,
+  desc: cd.description ?? '',
+  img: mediaUrl(cd.image_key ?? null) ?? cardFallbackImg[i % cardFallbackImg.length],
+}));
 ---
 <PublicLayout title="Kharisbuilders | Building Lives, Shaping Destinies" image="/images/home-1.jpg">
   <!-- Cinematic hero -->
