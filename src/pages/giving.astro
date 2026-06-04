@@ -6,17 +6,20 @@ import { getAllSettings } from '../lib/db/settings';
 import { listActiveFunds, type Fund } from '../lib/db/funds';
 import { getAllContent } from '../lib/db/content';
 import { makeImage } from '../lib/content/content';
+import { CHURCH, feature } from '../config/church';
+
+if (!feature('giving')) return Astro.redirect('/');
 
 const cimg = makeImage(await getAllContent(env.DB).catch(() => ({})));
 let funds: Fund[] = [];
 let givingEnabled = false;
 let siteKey = '1x00000000000000000000AA';
-let currency = 'GHS';
+let currency = CHURCH.currency;
 try {
   const settings = await getAllSettings(env.DB);
   givingEnabled = settings.giving_enabled === 'true';
   siteKey = settings.turnstile_site_key ?? siteKey;
-  currency = settings.currency ?? 'GHS';
+  currency = settings.currency ?? CHURCH.currency;
   funds = await listActiveFunds(env.DB);
 } catch {
   /* defaults; page degrades gracefully */
