@@ -46,7 +46,7 @@ const cfg = (i: number) => bento[i] ?? { span: 'md:col-span-4', img: '/images/mi
             const c = cfg(i);
             const img = mediaUrl(m.image_key) ?? c.img;
             return c.dark ? (
-              <div class={`group relative overflow-hidden bg-primary text-white min-h-[360px] ${c.span}`}>
+              <div class={`card-lift elev-2 group relative overflow-hidden bg-primary text-white min-h-[360px] ${c.span}`}>
                 <img src={img} alt={m.name} class="absolute inset-0 w-full h-full object-cover opacity-40 grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105" />
                 <div class="relative z-10 p-10 md:p-12 flex flex-col justify-end h-full min-h-[360px]">
                   <h2 class="font-display text-headline-lg text-white mb-4">{m.name}</h2>
@@ -55,7 +55,7 @@ const cfg = (i: number) => bento[i] ?? { span: 'md:col-span-4', img: '/images/mi
                 </div>
               </div>
             ) : (
-              <div class={`group relative overflow-hidden bg-surface-container border border-champagne-light ${c.span}`}>
+              <div class={`card-lift elev-1 group relative overflow-hidden bg-surface-container border border-champagne ${c.span}`}>
                 <div class={`overflow-hidden ${c.big ? 'aspect-[16/9]' : 'aspect-square'}`}>
                   <img src={img} alt={m.name} class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 </div>
@@ -79,8 +79,9 @@ const cfg = (i: number) => bento[i] ?? { span: 'md:col-span-4', img: '/images/mi
 
   <!-- CTA -->
   <section class="bg-surface-container-high py-24 text-center">
-    <div class="max-w-3xl mx-auto px-4">
-      <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-6">Can't find what you're looking for?</h2>
+    <div class="max-w-3xl mx-auto px-4" data-reveal>
+      <span class="kente-rule w-16 mx-auto mb-8 block"></span>
+      <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-6 pullquote">Can't find what you're looking for?</h2>
       <p class="font-body text-body-lg text-stone-gray mb-10">
         Our team is here to help you navigate your journey and find the ministry that best fits your gifts and season of
         life.

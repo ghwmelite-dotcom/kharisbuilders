@@ -1,6 +1,7 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
 import PageHero from '../components/PageHero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
 import Field from '../components/Field.astro';
 import { env } from '../lib/runtime';
 import { getAllSettings } from '../lib/db/settings';
@@ -55,7 +56,7 @@ const mapsHref = address
         </div>
       </div>
 
-      <div class="lg:col-span-5 bg-surface-container p-8 md:p-12 shadow-[0_10px_30px_-10px_rgba(26,43,66,0.12)]">
+      <div class="lg:col-span-5 bg-surface-container p-8 md:p-12 elev-2">
         {
           submitted ? (
             <p class="font-display text-headline-md text-primary">Thank you — we'll see you soon!</p>
@@ -123,10 +124,7 @@ const mapsHref = address
 
   <!-- What to Expect -->
   <section class="py-28 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
-    <div class="text-center mb-16">
-      <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-4">What to Expect</h2>
-      <div class="kente-rule w-24 mx-auto"></div>
-    </div>
+    <SectionIntro eyebrow="Your First Visit" title="What to Expect" class="mb-16" />
     <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
       <div class="md:col-span-2 bg-surface-container-lowest p-10 md:p-12 border-t-2 border-heritage-gold shadow-[0_10px_30px_-10px_rgba(26,43,66,0.08)]">
         <h3 class="font-display text-headline-md text-primary mb-4">What should I wear?</h3>
