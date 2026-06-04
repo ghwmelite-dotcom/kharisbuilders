@@ -18,11 +18,17 @@ const q = (Astro.url.searchParams.get('q') ?? '').trim();
 let sermons: Sermon[] = [];
 try {
   if (q) {
-    try {
-      const ids = await searchSermonIds({ ai: workersAi(env.AI), store: vectorize(env.SERMONS) }, q, 12);
-      sermons = await getPublishedSermonsByIds(env.DB, ids);
-      if (sermons.length === 0) sermons = await searchSermonsKeyword(env.DB, q);
-    } catch {
+    if (feature('ai')) {
+      // AI semantic search: embed the query, match against the sermon vectors,
+      // and fall back to keyword search if it returns nothing or errors.
+      try {
+        const ids = await searchSermonIds({ ai: workersAi(env.AI), store: vectorize(env.SERMONS) }, q, 12);
+        sermons = await getPublishedSermonsByIds(env.DB, ids);
+        if (sermons.length === 0) sermons = await searchSermonsKeyword(env.DB, q);
+      } catch {
+        sermons = await searchSermonsKeyword(env.DB, q);
+      }
+    } else {
       sermons = await searchSermonsKeyword(env.DB, q);
     }
   } else {
