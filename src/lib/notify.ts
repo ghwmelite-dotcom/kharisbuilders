@@ -11,7 +11,7 @@ export interface NotifyEnv {
 export async function notifyStaff(env: NotifyEnv, subject: string, body: string): Promise<void> {
   const key = env.RESEND_API_KEY;
   const to = env.STAFF_EMAIL;
-  const from = env.FROM_EMAIL ?? 'no-reply@kharisbuilders.org';
+  const from = env.FROM_EMAIL ?? 'no-reply@example.com';
   if (!key || !to) return;
   try {
     await fetch('https://api.resend.com/emails', {
