@@ -416,3 +416,55 @@ html {
 .gold-shadow {
   filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.55));
 }
+
+/* ====== Premium depth + editorial layer (redesign) ====== */
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Layered elevation scale for cards/surfaces */
+.elev-1 {
+  box-shadow: 0 10px 30px -12px rgba(46, 23, 69, 0.14);
+}
+.elev-2 {
+  box-shadow: 0 22px 50px -20px rgba(46, 23, 69, 0.22);
+}
+.elev-3 {
+  box-shadow: 0 34px 70px -28px rgba(46, 23, 69, 0.3);
+}
+
+/* Card hover-lift (motion-safe, transform/opacity only) */
+.card-lift {
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+    box-shadow 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .card-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 36px 70px -28px rgba(46, 23, 69, 0.34);
+  }
+}
+
+/* Subtle desktop parallax for statement bands (disabled on mobile + reduced-motion) */
+.parallax-fixed {
+  background-size: cover;
+  background-position: center;
+}
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .parallax-fixed {
+    background-attachment: fixed;
+  }
+}
+
+/* Big editorial pull-quote */
+.pullquote {
+  font-feature-settings: 'liga' 1;
+  text-wrap: balance;
+}

@@ -1,21 +1,35 @@
 ---
 import PublicLayout from '../layouts/PublicLayout.astro';
 import Adinkra from '../components/Adinkra.astro';
+import SectionIntro from '../components/SectionIntro.astro';
 import { env } from '../lib/runtime';
 import { listPublishedSermons } from '../lib/db/sermons';
 import { listUpcomingEvents } from '../lib/db/events';
+import { getAllSettings } from '../lib/db/settings';
 
 let latestSermon: Awaited<ReturnType<typeof listPublishedSermons>>[number] | null = null;
 let events: Awaited<ReturnType<typeof listUpcomingEvents>> = [];
+let serviceTimes: Array<{ name: string; time: string; note?: string }> = [];
 try {
-  const [s, e] = await Promise.all([listPublishedSermons(env.DB, 1), listUpcomingEvents(env.DB, 3)]);
+  const [s, e, settings] = await Promise.all([
+    listPublishedSermons(env.DB, 1),
+    listUpcomingEvents(env.DB, 3),
+    getAllSettings(env.DB),
+  ]);
   latestSermon = s[0] ?? null;
   events = e;
+  serviceTimes = settings.service_times ? JSON.parse(settings.service_times) : [];
 } catch {
   /* fall back to static content */
 }
 const eventImages = ['/images/home-4.jpg', '/images/home-5.jpg', '/images/home-6.jpg'];
 const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
+// Intro cards that overlap the hero's bottom edge — the signature church-theme depth device.
+const introCards = [
+  { label: 'New Here?', title: 'Plan a Visit', href: '/visit', img: '/images/visit-1.jpg', desc: 'Know what to expect and let us welcome you home.' },
+  { label: 'Messages', title: 'Watch Sermons', href: '/sermons', img: '/images/home-3.jpg', desc: 'Catch up on recent messages, anytime, anywhere.' },
+  { label: 'Generosity', title: 'Give', href: '/giving', img: '/images/home-2.jpg', desc: 'Partner with the mission and the ministries.' },
+];
 ---
 <PublicLayout title="Kharisbuilders | Building Lives, Shaping Destinies" image="/images/home-1.jpg">
   <!-- Cinematic hero -->
@@ -65,6 +79,38 @@ const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
       <span class="w-px h-8 bg-gradient-to-b from-heritage-gold to-transparent"></span>
     </div>
   </section>
+
+  <!-- Overlapping intro cards — depth device that breaks the hero's bottom edge -->
+  <section class="relative z-20 -mt-20 md:-mt-28 px-margin-mobile md:px-margin-desktop">
+    <div class="max-w-[var(--container-max)] mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+      {
+        introCards.map((c, i) => (
+          <a
+            href={c.href}
+            class="card-lift group relative block overflow-hidden bg-surface-container-lowest elev-2 border-t-2 border-heritage-gold"
+            data-reveal
+            style={`--reveal-delay:${i * 110}ms`}
+          >
+            <div class="relative aspect-[16/10] overflow-hidden">
+              <img src={c.img} alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <div class="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/10 to-transparent" />
+            </div>
+            <div class="p-7 md:p-8">
+              <span class="font-label-sm uppercase tracking-[0.25em] text-heritage-gold">{c.label}</span>
+              <h3 class="font-display text-headline-md text-primary mt-2 mb-3 group-hover:text-heritage-gold transition-colors">{c.title}</h3>
+              <p class="font-body text-body-md text-stone-gray mb-5">{c.desc}</p>
+              <span class="inline-flex items-center gap-2 font-label-sm uppercase tracking-[0.18em] text-primary">
+                Explore
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </span>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
   <script>
     (function () {
       const out = document.getElementById('hero-countdown');
@@ -111,18 +157,24 @@ const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
     })();
   </script>
 
-  <!-- Pastor's welcome -->
-  <section class="py-24 md:py-40 bg-surface">
-    <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+  <!-- Pastor's welcome — layered offset gold frame -->
+  <section class="py-28 md:py-40 bg-surface overflow-hidden">
+    <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-12 gap-gutter md:gap-16 items-center">
       <div class="md:col-span-5 relative" data-reveal>
-        <div class="aspect-[3/4] overflow-hidden border border-heritage-gold/20 shadow-ambient">
-          <img src="/images/home-2.jpg" alt="Our Lead Pastor" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+        <!-- offset gold frame behind the portrait -->
+        <div class="absolute inset-0 translate-x-4 translate-y-4 md:translate-x-6 md:translate-y-6 border border-heritage-gold/60 pointer-events-none"></div>
+        <div class="relative aspect-[3/4] overflow-hidden elev-3">
+          <img src="/images/home-2.jpg" alt="Our Lead Pastor" class="kenburns w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"></div>
         </div>
-        <div class="absolute -bottom-8 -right-8 w-48 h-48 bg-heritage-gold/10 -z-10 hidden md:block"></div>
+        <Adinkra symbol="adinkrahene" class="absolute -top-6 -left-6 w-14 h-14 text-heritage-gold/30 hidden md:block" />
       </div>
-      <div class="md:col-span-7 md:pl-16 mt-16 md:mt-0" data-reveal style="--reveal-delay:120ms">
-        <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-5 block">A Word of Welcome</span>
-        <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-8">A Message from Our Pastor</h2>
+      <div class="md:col-span-7 mt-16 md:mt-0" data-reveal style="--reveal-delay:120ms">
+        <span class="inline-flex items-center gap-3 font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-5">
+          <Adinkra symbol="adinkrahene" class="w-3.5 h-3.5 opacity-80" />
+          A Word of Welcome
+        </span>
+        <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-8 pullquote">A Message from Our Pastor</h2>
         <p class="font-body text-body-lg text-stone-gray mb-6 leading-relaxed">
           Welcome to Kharisbuilders. We believe that every individual has a divine blueprint — a destiny waiting to be
           realized. Our mission is to provide the spiritual foundation and community support needed to build that life.
@@ -132,12 +184,64 @@ const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
           a place for you in our sanctuary. We are more than a congregation; we are architects of hope.
         </p>
         <div class="flex items-center gap-4">
-          <div class="h-px w-12 bg-heritage-gold"></div>
+          <span class="kente-rule w-12"></span>
           <span class="font-display text-headline-md text-primary italic">Lead Pastor David Anderson</span>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- Scripture statement band (dark, subtle desktop parallax) -->
+  <section
+    class="parallax-fixed relative py-28 md:py-44 bg-primary-container"
+    style="background-image: linear-gradient(rgba(44,23,69,0.86), rgba(44,23,69,0.92)), url('/images/home-7.jpg');"
+  >
+    <div class="hero-glows absolute inset-0 pointer-events-none opacity-60">
+      <span class="glow glow-orange"></span>
+      <span class="glow glow-purple"></span>
+    </div>
+    <div class="relative z-10 max-w-4xl mx-auto px-6 text-center" data-reveal>
+      <Adinkra symbol="nyame-dua" class="w-10 h-10 text-heritage-gold/80 mx-auto mb-8" title="Nyame Dua — the presence of God" />
+      <blockquote class="font-display text-3xl md:text-5xl leading-[1.25] text-white pullquote hero-shadow">
+        “Now faith is the substance of things hoped for, the evidence of things not seen.”
+      </blockquote>
+      <p class="mt-8 font-label-sm uppercase tracking-[0.35em] text-heritage-gold">Hebrews 11:1</p>
+      <span class="kente-rule w-24 mx-auto mt-8 is-light"></span>
+    </div>
+  </section>
+
+  <!-- This Week at Kharis — service times as elevated cards -->
+  {
+    serviceTimes.length > 0 && (
+      <section class="py-24 md:py-36 bg-surface">
+        <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop">
+          <SectionIntro eyebrow="Join Us" title="This Week at Kharis" />
+          <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {serviceTimes.map((s, i) => (
+              <div
+                class="card-lift bg-surface-container-lowest border border-champagne elev-1 p-8 text-center"
+                data-reveal
+                style={`--reveal-delay:${i * 100}ms`}
+              >
+                <Adinkra symbol="adinkrahene" class="w-7 h-7 text-heritage-gold/70 mx-auto mb-5" />
+                <h3 class="font-display text-headline-md text-primary mb-2">{s.name}</h3>
+                <p class="font-display text-2xl text-heritage-gold mb-2">{s.time}</p>
+                {s.note && <p class="font-body text-body-md text-stone-gray">{s.note}</p>}
+              </div>
+            ))}
+          </div>
+          <div class="text-center mt-14" data-reveal>
+            <a
+              href="/visit"
+              class="inline-flex items-center gap-3 bg-heritage-gold text-primary hover:bg-secondary hover:text-white font-label-md uppercase tracking-[0.14em] px-10 py-4 transition-colors"
+            >
+              Plan Your Visit
+            </a>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   <!-- Latest sermon -->
   <section class="bg-primary-container py-24 md:py-32">
@@ -176,22 +280,18 @@ const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
   </section>
 
   <!-- Upcoming gatherings -->
-  <section class="py-24 md:py-40 bg-surface">
+  <section class="py-24 md:py-40 bg-surface-container-low">
     <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop">
-      <div class="text-center mb-20" data-reveal>
-        <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">Mark Your Calendar</span>
-        <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-5">Upcoming Gatherings</h2>
-        <div class="h-px w-24 hairline-gold mx-auto"></div>
-      </div>
+      <SectionIntro eyebrow="Mark Your Calendar" title="Upcoming Gatherings" class="mb-20" />
       {
         events.length === 0 ? (
           <p class="text-center text-stone-gray font-body">New gatherings are being planned — check back soon.</p>
         ) : (
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
             {events.map((e, i) => (
               <a
                 href={`/events/${e.slug}`}
-                class="group border border-champagne-light/40 hover:border-heritage-gold/40 transition-all duration-500 bg-surface-container-lowest block hover:-translate-y-1.5 hover:shadow-ambient"
+                class="card-lift group border border-champagne bg-surface-container-lowest elev-1 block overflow-hidden"
                 data-reveal
                 style={`--reveal-delay:${i * 110}ms`}
               >
@@ -229,7 +329,7 @@ const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
           on our community and beyond.
         </p>
         <div class="flex flex-col md:flex-row gap-5 justify-center">
-          <a href="/give" class="bg-heritage-gold text-primary hover:bg-secondary hover:text-white font-label-md uppercase tracking-[0.14em] px-12 py-5 transition-colors duration-300">Give Online</a>
+          <a href="/giving" class="bg-heritage-gold text-primary hover:bg-secondary hover:text-white font-label-md uppercase tracking-[0.14em] px-12 py-5 transition-colors duration-300">Give Online</a>
           <a href="/visit" class="btn-fill border border-white/30 text-white font-label-md uppercase tracking-[0.14em] px-12 py-5">Plan a Visit</a>
         </div>
       </div>

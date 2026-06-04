@@ -8,7 +8,7 @@ const { sermon, image } = Astro.props;
 ---
 <a
   href={`/sermons/${sermon.slug}`}
-  class="group block bg-surface-container-lowest border border-champagne-light/40 hover:border-heritage-gold/40 transition-colors duration-500 overflow-hidden"
+  class="card-lift group block bg-surface-container-lowest border border-champagne elev-1 hover:border-heritage-gold/40 overflow-hidden"
 >
   <div class="relative aspect-video overflow-hidden">
     <img src={image} alt={sermon.title} class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" />
