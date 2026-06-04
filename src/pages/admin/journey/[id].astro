@@ -1,0 +1,14 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import JourneyForm from '../../../components/admin/JourneyForm.astro';
+import { env } from '../../../lib/runtime';
+import { getAdminEmail } from '../../../lib/admin-auth';
+import { getJourneyById } from '../../../lib/db/journey';
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const milestone = await getJourneyById(env.DB, Number(Astro.params.id)).catch(() => null);
+if (!milestone) return Astro.redirect('/admin/journey');
+---
+<AdminLayout title={`Edit: ${milestone.year}`} email={email} active="journey">
+  <JourneyForm milestone={milestone} />
+</AdminLayout>
