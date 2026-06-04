@@ -10,4 +10,4 @@ PAYSTACK_WEBHOOK_SECRET=
 TURNSTILE_SECRET_KEY=
 
 # Local admin identity (dev only — production uses Cloudflare Access)
-DEV_ADMIN_EMAIL=dev@kharisbuilders.local
+DEV_ADMIN_EMAIL=dev@example.local
