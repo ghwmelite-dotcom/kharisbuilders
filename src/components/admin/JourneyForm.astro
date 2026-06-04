@@ -1,0 +1,24 @@
+---
+import Field from '../Field.astro';
+import Button from '../Button.astro';
+import type { Journey } from '../../lib/db/journey';
+interface Props {
+  milestone?: Journey | null;
+}
+const { milestone } = Astro.props;
+const isEdit = !!milestone;
+---
+<form method="POST" action="/api/admin/journey" enctype="multipart/form-data" class="flex flex-col gap-6 max-w-xl">
+  <input type="hidden" name="_action" value={isEdit ? 'update' : 'create'} />
+  {isEdit && <input type="hidden" name="id" value={String(milestone!.id)} />}
+  <Field label="Year" name="year" required value={milestone?.year ?? ''} />
+  <Field label="Title" name="title" required value={milestone?.title ?? ''} />
+  <Field label="Body" name="body" textarea value={milestone?.body ?? ''} />
+  <Field label="Sort order" name="sort_order" type="number" min={0} value={milestone?.sort_order != null ? String(milestone.sort_order) : '0'} />
+  <div class="flex flex-col gap-1">
+    <label for="f-image" class="text-xs uppercase tracking-wider text-on-surface-variant">Image (optional, max 6 MB)</label>
+    <input id="f-image" name="image" type="file" accept="image/*" class="text-sm text-on-surface-variant" />
+    {milestone?.image_key && <p class="text-xs text-on-surface-variant">Current: {milestone.image_key}</p>}
+  </div>
+  <Button type="submit" variant="primary">{isEdit ? 'Save' : 'Create'}</Button>
+</form>

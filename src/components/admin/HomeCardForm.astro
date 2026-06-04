@@ -1,0 +1,25 @@
+---
+import Field from '../Field.astro';
+import Button from '../Button.astro';
+import type { HomeCard } from '../../lib/db/homeCards';
+interface Props {
+  card?: HomeCard | null;
+}
+const { card } = Astro.props;
+const isEdit = !!card;
+---
+<form method="POST" action="/api/admin/home-cards" enctype="multipart/form-data" class="flex flex-col gap-6 max-w-xl">
+  <input type="hidden" name="_action" value={isEdit ? 'update' : 'create'} />
+  {isEdit && <input type="hidden" name="id" value={String(card!.id)} />}
+  <Field label="Eyebrow" name="eyebrow" value={card?.eyebrow ?? ''} />
+  <Field label="Title" name="title" required value={card?.title ?? ''} />
+  <Field label="Description" name="description" textarea value={card?.description ?? ''} />
+  <Field label="Link (e.g. /visit)" name="href" required value={card?.href ?? ''} />
+  <Field label="Sort order" name="sort_order" type="number" min={0} value={card?.sort_order != null ? String(card.sort_order) : '0'} />
+  <div class="flex flex-col gap-1">
+    <label for="f-image" class="text-xs uppercase tracking-wider text-on-surface-variant">Image (optional, max 6 MB)</label>
+    <input id="f-image" name="image" type="file" accept="image/*" class="text-sm text-on-surface-variant" />
+    {card?.image_key && <p class="text-xs text-on-surface-variant">Current: {card.image_key}</p>}
+  </div>
+  <Button type="submit" variant="primary">{isEdit ? 'Save' : 'Create'}</Button>
+</form>

@@ -1,0 +1,11 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import HomeCardForm from '../../../components/admin/HomeCardForm.astro';
+import { env } from '../../../lib/runtime';
+import { getAdminEmail } from '../../../lib/admin-auth';
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+---
+<AdminLayout title="New card" email={email} active="home-cards">
+  <HomeCardForm />
+</AdminLayout>

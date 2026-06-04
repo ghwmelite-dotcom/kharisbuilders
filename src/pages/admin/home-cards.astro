@@ -1,0 +1,39 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { env } from '../../lib/runtime';
+import { getAdminEmail } from '../../lib/admin-auth';
+import { listHomeCards } from '../../lib/db/homeCards';
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const cards = await listHomeCards(env.DB).catch(() => []);
+---
+<AdminLayout title="Home Cards" email={email} active="home-cards">
+  <p class="text-on-surface-variant text-sm mb-4">The quick-link cards that overlap the home hero. If you delete them all, the original three return.</p>
+  <a href="/admin/home-cards/new" class="inline-block mb-6 bg-primary text-on-primary px-5 py-2 text-sm uppercase tracking-wider">+ New card</a>
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="text-left text-on-surface-variant border-b border-champagne">
+        <th class="py-2">Title</th><th>Link</th><th>Order</th><th class="text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        cards.map((cd) => (
+          <tr class="border-b border-champagne/50">
+            <td class="py-3"><a href={`/admin/home-cards/${cd.id}`} class="text-primary hover:text-accent">{cd.title}</a></td>
+            <td>{cd.href}</td>
+            <td>{cd.sort_order}</td>
+            <td class="text-right">
+              <form method="POST" action="/api/admin/home-cards" class="inline" onsubmit="return confirm('Delete this card?')">
+                <input type="hidden" name="_action" value="delete" />
+                <input type="hidden" name="id" value={String(cd.id)} />
+                <button class="text-accent-deep text-xs uppercase tracking-wider">Delete</button>
+              </form>
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+  {cards.length === 0 && <p class="text-on-surface-variant mt-4">No cards — the home page shows the default three.</p>}
+</AdminLayout>

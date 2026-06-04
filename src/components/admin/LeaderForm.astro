@@ -1,0 +1,23 @@
+---
+import Field from '../Field.astro';
+import Button from '../Button.astro';
+import type { Leader } from '../../lib/db/leaders';
+interface Props {
+  leader?: Leader | null;
+}
+const { leader } = Astro.props;
+const isEdit = !!leader;
+---
+<form method="POST" action="/api/admin/leaders" enctype="multipart/form-data" class="flex flex-col gap-6 max-w-xl">
+  <input type="hidden" name="_action" value={isEdit ? 'update' : 'create'} />
+  {isEdit && <input type="hidden" name="id" value={String(leader!.id)} />}
+  <Field label="Name" name="name" required value={leader?.name ?? ''} />
+  <Field label="Role" name="role" value={leader?.role ?? ''} />
+  <Field label="Sort order" name="sort_order" type="number" min={0} value={leader?.sort_order != null ? String(leader.sort_order) : '0'} />
+  <div class="flex flex-col gap-1">
+    <label for="f-image" class="text-xs uppercase tracking-wider text-on-surface-variant">Photo (optional, max 6 MB)</label>
+    <input id="f-image" name="image" type="file" accept="image/*" class="text-sm text-on-surface-variant" />
+    {leader?.image_key && <p class="text-xs text-on-surface-variant">Current: {leader.image_key}</p>}
+  </div>
+  <Button type="submit" variant="primary">{isEdit ? 'Save' : 'Create'}</Button>
+</form>
