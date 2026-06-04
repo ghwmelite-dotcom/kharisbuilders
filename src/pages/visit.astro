@@ -7,6 +7,7 @@ import { env } from '../lib/runtime';
 import { getAllSettings } from '../lib/db/settings';
 import { getAllContent } from '../lib/db/content';
 import { makeContent, makeImage } from '../lib/content/content';
+import { SITE } from '../lib/seo';
 
 let address = '';
 let siteKey = '1x00000000000000000000AA';
@@ -29,7 +30,7 @@ const mapsHref = address
   ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
   : 'https://www.google.com/maps';
 ---
-<PublicLayout title="Visit Us | Kharisbuilders" description="Plan your visit to Kharisbuilders.">
+<PublicLayout title={`Visit Us | ${SITE.name}`} description={`Plan your visit to ${SITE.name}.`}>
   <!-- Hero -->
   <PageHero image={cimg('visit.hero_image')}>
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">{c('visit.hero_kicker')}</span>

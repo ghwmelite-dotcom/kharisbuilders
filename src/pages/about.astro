@@ -6,6 +6,8 @@ import { env } from '../lib/runtime';
 import { getAllContent } from '../lib/db/content';
 import { makeContent, makeImage } from '../lib/content/content';
 import { mediaUrl } from '../lib/media';
+import { PLACEHOLDER } from '../lib/images';
+import { SITE } from '../lib/seo';
 import { listLeaders } from '../lib/db/leaders';
 import { listJourney } from '../lib/db/journey';
 
@@ -14,10 +16,10 @@ const c = makeContent(contentMap);
 const cimg = makeImage(contentMap);
 const leaders = await listLeaders(env.DB).catch(() => []);
 const journey = await listJourney(env.DB).catch(() => []);
-const leaderFallback = ['/images/about-3.jpg', '/images/about-4.jpg', '/images/about-5.jpg'];
-const journeyFallback = ['/images/about-6.jpg', '/images/about-7.jpg', '/images/about-8.jpg'];
+const leaderFallback = [PLACEHOLDER.portrait, PLACEHOLDER.portrait, PLACEHOLDER.portrait];
+const journeyFallback = [PLACEHOLDER.card, PLACEHOLDER.card, PLACEHOLDER.card];
 ---
-<PublicLayout title="About Us | Kharisbuilders" description="Architects of Faith, Builders of Destinies.">
+<PublicLayout title={`About Us | ${SITE.name}`} description="Meet our church family — who we are, what we believe, and where we're headed.">
   <!-- Hero -->
   <PageHero image={cimg('about.hero_image')} height="h-[460px] md:h-[620px]">
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-6 block hero-shadow">{c('about.hero_kicker')}</span>

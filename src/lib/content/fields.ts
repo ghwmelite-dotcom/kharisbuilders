@@ -16,6 +16,8 @@ export interface ContentPage {
   groups: ContentGroup[];
 }
 
+import { PLACEHOLDER } from '../images';
+
 export const CONTENT_PAGES: ContentPage[] = [
   {
     slug: 'home',
@@ -25,9 +27,9 @@ export const CONTENT_PAGES: ContentPage[] = [
         title: 'Hero',
         fields: [
           { key: 'home.hero_kicker', label: 'Eyebrow', type: 'text', default: 'Welcome Home' },
-          { key: 'home.hero_line1', label: 'Headline line 1', type: 'text', default: 'Building Lives,' },
-          { key: 'home.hero_line2', label: 'Headline line 2 (gold)', type: 'text', default: 'Shaping Destinies.' },
-          { key: 'home.cta1_label', label: 'Button 1 label', type: 'text', default: 'Join Us This Sunday' },
+          { key: 'home.hero_line1', label: 'Headline line 1', type: 'text', default: 'A Place to' },
+          { key: 'home.hero_line2', label: 'Headline line 2 (gold)', type: 'text', default: 'Belong.' },
+          { key: 'home.cta1_label', label: 'Button 1 label', type: 'text', default: 'Plan a Visit' },
           { key: 'home.cta1_href', label: 'Button 1 link', type: 'url', default: '/visit' },
           { key: 'home.cta2_label', label: 'Button 2 label', type: 'text', default: 'Watch Online' },
           { key: 'home.cta2_href', label: 'Button 2 link', type: 'url', default: '/sermons' },
@@ -51,16 +53,16 @@ export const CONTENT_PAGES: ContentPage[] = [
             label: 'Paragraph 1',
             type: 'textarea',
             default:
-              'Welcome to Kharisbuilders. We believe that every individual has a divine blueprint — a destiny waiting to be realized. Our mission is to provide the spiritual foundation and community support needed to build that life.',
+              "Welcome! Whether you're exploring faith for the first time or looking for a church to call home, we're so glad you found us. Our prayer is that you'd encounter God's love and find a community that truly knows and cares for you.",
           },
           {
             key: 'home.pastor_body2',
             label: 'Paragraph 2',
             type: 'textarea',
             default:
-              'Whether you are exploring faith for the first time or seeking a deeper connection with your Creator, there is a place for you in our sanctuary. We are more than a congregation; we are architects of hope.',
+              "There's a place for you here — come as you are. We'd love to meet you this weekend and help you take your next step in faith.",
           },
-          { key: 'home.pastor_name', label: 'Signature', type: 'text', default: 'Lead Pastor David Anderson' },
+          { key: 'home.pastor_name', label: 'Signature', type: 'text', default: 'Lead Pastor' },
         ],
       },
       {
@@ -71,22 +73,22 @@ export const CONTENT_PAGES: ContentPage[] = [
             label: 'Verse',
             type: 'textarea',
             help: 'Quotation marks are added automatically.',
-            default: 'Now faith is the substance of things hoped for, the evidence of things not seen.',
+            default: 'For where two or three gather in my name, there am I with them.',
           },
-          { key: 'home.scripture_ref', label: 'Reference', type: 'text', default: 'Hebrews 11:1' },
+          { key: 'home.scripture_ref', label: 'Reference', type: 'text', default: 'Matthew 18:20' },
         ],
       },
       {
         title: 'Giving banner',
         fields: [
           { key: 'home.giving_eyebrow', label: 'Eyebrow', type: 'text', default: 'Generosity' },
-          { key: 'home.giving_heading', label: 'Heading', type: 'text', default: 'Invest in Destinies' },
+          { key: 'home.giving_heading', label: 'Heading', type: 'text', default: 'Give Generously' },
           {
             key: 'home.giving_body',
             label: 'Body',
             type: 'textarea',
             default:
-              'Your generosity fuels our mission to build lives and shape destinies. Together, we can make an eternal impact on our community and beyond.',
+              'Your generosity helps us serve our community, support those in need, and share hope near and far. Thank you for partnering with us.',
           },
           { key: 'home.giving_cta1_label', label: 'Button 1 label', type: 'text', default: 'Give Online' },
           { key: 'home.giving_cta2_label', label: 'Button 2 label', type: 'text', default: 'Plan a Visit' },
@@ -95,10 +97,10 @@ export const CONTENT_PAGES: ContentPage[] = [
       {
         title: 'Images',
         fields: [
-          { key: 'home.hero_image', label: 'Hero background', type: 'image', default: '/images/home-1.jpg' },
-          { key: 'home.pastor_image', label: 'Pastor photo', type: 'image', default: '/images/home-2.jpg' },
-          { key: 'home.scripture_image', label: 'Scripture band background', type: 'image', default: '/images/home-7.jpg' },
-          { key: 'home.giving_image', label: 'Giving band background', type: 'image', default: '/images/home-7.jpg' },
+          { key: 'home.hero_image', label: 'Hero background', type: 'image', default: PLACEHOLDER.wide },
+          { key: 'home.pastor_image', label: 'Pastor photo', type: 'image', default: PLACEHOLDER.portrait },
+          { key: 'home.scripture_image', label: 'Scripture band background', type: 'image', default: PLACEHOLDER.wide },
+          { key: 'home.giving_image', label: 'Giving band background', type: 'image', default: PLACEHOLDER.wide },
         ],
       },
     ],
@@ -110,36 +112,36 @@ export const CONTENT_PAGES: ContentPage[] = [
       {
         title: 'Hero',
         fields: [
-          { key: 'about.hero_kicker', label: 'Eyebrow', type: 'text', default: 'Our Identity' },
-          { key: 'about.hero_title', label: 'Title', type: 'text', default: 'Architects of Faith, Builders of Destinies' },
+          { key: 'about.hero_kicker', label: 'Eyebrow', type: 'text', default: 'Who We Are' },
+          { key: 'about.hero_title', label: 'Title', type: 'text', default: 'A Community of Faith, Hope, and Love' },
         ],
       },
       {
         title: 'Vision & Mission',
         fields: [
-          { key: 'about.vision_heading', label: 'Vision heading', type: 'text', default: 'The Vision' },
+          { key: 'about.vision_heading', label: 'Vision heading', type: 'text', default: 'Our Vision' },
           {
             key: 'about.vision_body',
             label: 'Vision text',
             type: 'textarea',
             default:
-              "To see every life constructed on the unshakeable foundation of grace, transforming individuals into living monuments of God's presence within their spheres of influence.",
+              'To be a welcoming family where people from every walk of life encounter God, grow in faith, and are equipped to make a difference in their community and the world.',
           },
-          { key: 'about.mission_heading', label: 'Mission heading', type: 'text', default: 'The Mission' },
+          { key: 'about.mission_heading', label: 'Mission heading', type: 'text', default: 'Our Mission' },
           {
             key: 'about.mission_body',
             label: 'Mission text',
             type: 'textarea',
             default:
-              'We are committed to building people through the precise teaching of the Word, the warmth of communal fellowship, and the strategic deployment of spiritual gifts for societal impact.',
+              'We exist to help people know God, find genuine community, discover their purpose, and make a difference — through worship, teaching, and serving together.',
           },
         ],
       },
       {
         title: 'Images',
         fields: [
-          { key: 'about.hero_image', label: 'Hero background', type: 'image', default: '/images/about-1.jpg' },
-          { key: 'about.vision_image', label: 'Vision & Mission image', type: 'image', default: '/images/about-2.jpg' },
+          { key: 'about.hero_image', label: 'Hero background', type: 'image', default: PLACEHOLDER.wide },
+          { key: 'about.vision_image', label: 'Vision & Mission image', type: 'image', default: PLACEHOLDER.card },
         ],
       },
     ],
@@ -157,7 +159,7 @@ export const CONTENT_PAGES: ContentPage[] = [
             key: 'visit.hero_subtitle',
             label: 'Subtitle',
             type: 'textarea',
-            default: "Experience the intersection of tradition and transformation. We can't wait to welcome you home.",
+            default: "We can't wait to meet you. Here's everything you need to know before your first visit.",
           },
         ],
       },
@@ -176,7 +178,7 @@ export const CONTENT_PAGES: ContentPage[] = [
             key: 'visit.parking_body',
             label: 'Parking note',
             type: 'textarea',
-            default: 'Free on-site parking is available, with assistance for elderly visitors.',
+            default: 'Free on-site parking is available, with assistance for those who need it.',
           },
         ],
       },
@@ -191,7 +193,7 @@ export const CONTENT_PAGES: ContentPage[] = [
             label: 'Card 1 body',
             type: 'textarea',
             default:
-              "We value your presence more than your attire. You'll find some people in suits and others in jeans — wear whatever makes you feel comfortable and ready to connect with the community.",
+              "Come as you are. You'll find some people dressed up and others in jeans — wear whatever makes you feel comfortable.",
           },
           { key: 'visit.expect_kids_title', label: 'Card 2 title', type: 'text', default: 'Kids?' },
           {
@@ -199,7 +201,7 @@ export const CONTENT_PAGES: ContentPage[] = [
             label: 'Card 2 body',
             type: 'textarea',
             default:
-              "Our 'Kharis Kids' program offers a safe, fun, and spiritually enriching environment for ages 2–11 during the morning service.",
+              'We offer a safe, fun, and caring environment for children during the service, with trained and screened volunteers.',
           },
           { key: 'visit.expect_service_title', label: 'Card 3 title', type: 'text', default: 'The Service?' },
           {
@@ -207,22 +209,22 @@ export const CONTENT_PAGES: ContentPage[] = [
             label: 'Card 3 body',
             type: 'textarea',
             default:
-              'Services typically last 75 minutes — soulful music, communal prayer, and a message both ancient in truth and modern in application.',
+              'Services last about 75 minutes — uplifting music, prayer, and a practical, encouraging message from the Bible.',
           },
           { key: 'visit.expect_afterward_title', label: 'Card 4 title', type: 'text', default: 'Afterward' },
           {
             key: 'visit.expect_afterward_body',
             label: 'Card 4 body',
             type: 'textarea',
-            default: 'Join us in the Glass Atrium for artisanal coffee and a chance to meet our leadership team.',
+            default: "Stay for coffee and a chance to meet our team — we'd love to say hello and answer any questions.",
           },
         ],
       },
       {
         title: 'Images',
         fields: [
-          { key: 'visit.hero_image', label: 'Hero background', type: 'image', default: '/images/visit-1.jpg' },
-          { key: 'visit.afterward_image', label: '"Afterward" image', type: 'image', default: '/images/visit-2.jpg' },
+          { key: 'visit.hero_image', label: 'Hero background', type: 'image', default: PLACEHOLDER.wide },
+          { key: 'visit.afterward_image', label: '"Afterward" image', type: 'image', default: PLACEHOLDER.card },
         ],
       },
     ],
@@ -234,10 +236,10 @@ export const CONTENT_PAGES: ContentPage[] = [
       {
         title: 'Hero backgrounds',
         fields: [
-          { key: 'pages.sermons_hero', label: 'Sermons hero', type: 'image', default: '/images/home-3.jpg' },
-          { key: 'pages.events_hero', label: 'Events hero', type: 'image', default: '/images/home-4.jpg' },
-          { key: 'pages.ministries_hero', label: 'Ministries hero', type: 'image', default: '/images/ministries-1.jpg' },
-          { key: 'pages.giving_hero', label: 'Giving hero', type: 'image', default: '/images/home-2.jpg' },
+          { key: 'pages.sermons_hero', label: 'Sermons hero', type: 'image', default: PLACEHOLDER.wide },
+          { key: 'pages.events_hero', label: 'Events hero', type: 'image', default: PLACEHOLDER.wide },
+          { key: 'pages.ministries_hero', label: 'Ministries hero', type: 'image', default: PLACEHOLDER.wide },
+          { key: 'pages.giving_hero', label: 'Giving hero', type: 'image', default: PLACEHOLDER.wide },
         ],
       },
     ],

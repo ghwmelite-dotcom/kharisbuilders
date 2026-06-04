@@ -10,8 +10,8 @@ const year = new Date().getFullYear();
 // Tagline without its trailing period; the bottom bar separates clauses with a middot.
 const tagline = CHURCH.tagline.replace(/\.\s*$/, '');
 const taglineDots = tagline.replace(/,\s*/g, ' · ');
-const address = settings.address ?? '12 Cathedral Way, West End, London';
-const email = settings.contact_email ?? 'hello@kharisbuilders.org';
+const address = settings.address ?? '';
+const email = settings.contact_email ?? 'hello@example.com';
 let serviceTimes: Array<{ name: string; time: string; note?: string }> = [];
 try {
   serviceTimes = settings.service_times ? JSON.parse(settings.service_times) : [];
@@ -62,8 +62,7 @@ const explore = [
           <span class="font-display text-3xl text-gold-gradient">{CHURCH.name}</span>
         </div>
         <p class="font-body text-body-md text-on-primary/65 max-w-xs leading-relaxed mb-8">
-          Building Lives, Shaping Destinies — a sanctuary where the weight of tradition meets the momentum of modern
-          life.
+          {CHURCH.description}
         </p>
         <div class="flex gap-3">
           {
