@@ -6,22 +6,28 @@ import { env } from '../lib/runtime';
 import { listPublishedSermons } from '../lib/db/sermons';
 import { listUpcomingEvents } from '../lib/db/events';
 import { getAllSettings } from '../lib/db/settings';
+import { getAllContent } from '../lib/db/content';
+import { makeContent } from '../lib/content/content';
 
 let latestSermon: Awaited<ReturnType<typeof listPublishedSermons>>[number] | null = null;
 let events: Awaited<ReturnType<typeof listUpcomingEvents>> = [];
 let serviceTimes: Array<{ name: string; time: string; note?: string }> = [];
+let contentMap: Record<string, string> = {};
 try {
-  const [s, e, settings] = await Promise.all([
+  const [s, e, settings, cm] = await Promise.all([
     listPublishedSermons(env.DB, 1),
     listUpcomingEvents(env.DB, 3),
     getAllSettings(env.DB),
+    getAllContent(env.DB),
   ]);
   latestSermon = s[0] ?? null;
   events = e;
   serviceTimes = settings.service_times ? JSON.parse(settings.service_times) : [];
+  contentMap = cm;
 } catch {
   /* fall back to static content */
 }
+const c = makeContent(contentMap);
 const eventImages = ['/images/home-4.jpg', '/images/home-5.jpg', '/images/home-6.jpg'];
 const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
 // Intro cards that overlap the hero's bottom edge — the signature church-theme depth device.
@@ -54,26 +60,26 @@ const introCards = [
       <img src="/images/kharis-logo.png" alt="" class="hero-swirl hero-fade w-20 h-20 md:w-24 md:h-24 mx-auto mb-7" style="--line-delay:0ms" />
       <span class="hero-line inline-flex items-center gap-3 font-label-sm uppercase tracking-[0.45em] text-heritage-gold mb-6" style="--line-delay:140ms; text-shadow:0 1px 10px rgba(0,0,0,0.6);">
         <Adinkra symbol="adinkrahene" class="w-3.5 h-3.5 opacity-80" />
-        Welcome Home
+        {c('home.hero_kicker')}
         <Adinkra symbol="adinkrahene" class="w-3.5 h-3.5 opacity-80" />
       </span>
       <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-10" style="text-shadow:0 2px 24px rgba(0,0,0,0.55);">
-        <span class="hero-line block" style="--line-delay:240ms">Building Lives,</span>
-        <span class="hero-line block text-gold-gradient" style="--line-delay:360ms; filter: drop-shadow(0 2px 14px rgba(0,0,0,0.6));">Shaping Destinies.</span>
+        <span class="hero-line block" style="--line-delay:240ms">{c('home.hero_line1')}</span>
+        <span class="hero-line block text-gold-gradient" style="--line-delay:360ms; filter: drop-shadow(0 2px 14px rgba(0,0,0,0.6));">{c('home.hero_line2')}</span>
       </h1>
 
       <!-- Live next-gathering countdown -->
       <div class="hero-fade inline-flex flex-wrap justify-center items-center gap-x-5 gap-y-2 glass-card rounded-full px-7 py-3.5 mb-9" style="--line-delay:560ms">
         <span class="font-label-sm uppercase tracking-[0.25em] text-heritage-gold">Next Gathering</span>
         <span class="w-px h-6 bg-white/20 hidden sm:block"></span>
-        <span id="hero-countdown" class="font-display text-white text-xl tabular-nums tracking-wide">—</span>
+        <span id="hero-countdown" class="font-display text-white text-xl tabular-nums tracking-wide" data-schedule={c('home.gathering_schedule')}>—</span>
         <span class="w-px h-6 bg-white/20 hidden sm:block"></span>
         <span id="hero-next" class="font-body text-body-md text-white/70 hidden sm:block">Sunday · 9:00 AM</span>
       </div>
 
       <div class="hero-fade flex flex-col sm:flex-row gap-4 justify-center items-center" style="--line-delay:680ms">
-        <a href="/visit" class="bg-heritage-gold text-primary hover:bg-secondary hover:text-white font-label-md uppercase tracking-[0.14em] px-10 py-5 transition-colors duration-300">Join Us This Sunday</a>
-        <a href="/sermons" class="btn-fill border border-white/40 text-white font-label-md uppercase tracking-[0.14em] px-10 py-5">Watch Online</a>
+        <a href={c('home.cta1_href')} class="bg-heritage-gold text-primary hover:bg-secondary hover:text-white font-label-md uppercase tracking-[0.14em] px-10 py-5 transition-colors duration-300">{c('home.cta1_label')}</a>
+        <a href={c('home.cta2_href')} class="btn-fill border border-white/40 text-white font-label-md uppercase tracking-[0.14em] px-10 py-5">{c('home.cta2_label')}</a>
       </div>
       </div>
     </div>
@@ -115,11 +121,20 @@ const introCards = [
       const out = document.getElementById('hero-countdown');
       const nextEl = document.getElementById('hero-next');
       if (!out) return;
-      const sched = [
+      let sched = [
         [0, 9, 0, 'Sunday · 9:00 AM'],
         [0, 17, 30, 'Sunday · 5:30 PM'],
         [3, 19, 0, 'Wednesday · 7:00 PM'],
       ];
+      try {
+        const raw = out.getAttribute('data-schedule');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length) sched = parsed.map((x) => [x.day, x.hour, x.min || 0, x.label]);
+        }
+      } catch (e) {
+        /* keep the default schedule */
+      }
       function nextOccurrence(day, h, m) {
         const now = new Date();
         const d = new Date(now);
@@ -171,20 +186,14 @@ const introCards = [
       <div class="md:col-span-7 mt-16 md:mt-0" data-reveal style="--reveal-delay:120ms">
         <span class="inline-flex items-center gap-3 font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-5">
           <Adinkra symbol="adinkrahene" class="w-3.5 h-3.5 opacity-80" />
-          A Word of Welcome
+          {c('home.pastor_eyebrow')}
         </span>
-        <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-8 pullquote">A Message from Our Pastor</h2>
-        <p class="font-body text-body-lg text-stone-gray mb-6 leading-relaxed">
-          Welcome to Kharisbuilders. We believe that every individual has a divine blueprint — a destiny waiting to be
-          realized. Our mission is to provide the spiritual foundation and community support needed to build that life.
-        </p>
-        <p class="font-body text-body-lg text-stone-gray mb-10 leading-relaxed">
-          Whether you are exploring faith for the first time or seeking a deeper connection with your Creator, there is
-          a place for you in our sanctuary. We are more than a congregation; we are architects of hope.
-        </p>
+        <h2 class="font-display text-display-mobile md:text-headline-lg text-primary mb-8 pullquote">{c('home.pastor_heading')}</h2>
+        <p class="font-body text-body-lg text-stone-gray mb-6 leading-relaxed whitespace-pre-line">{c('home.pastor_body1')}</p>
+        <p class="font-body text-body-lg text-stone-gray mb-10 leading-relaxed whitespace-pre-line">{c('home.pastor_body2')}</p>
         <div class="flex items-center gap-4">
           <span class="kente-rule w-12"></span>
-          <span class="font-display text-headline-md text-primary italic">Lead Pastor David Anderson</span>
+          <span class="font-display text-headline-md text-primary italic">{c('home.pastor_name')}</span>
         </div>
       </div>
     </div>
@@ -202,9 +211,9 @@ const introCards = [
     <div class="relative z-10 max-w-4xl mx-auto px-6 text-center" data-reveal>
       <Adinkra symbol="nyame-dua" class="w-10 h-10 text-heritage-gold/80 mx-auto mb-8" title="Nyame Dua — the presence of God" />
       <blockquote class="font-display text-3xl md:text-5xl leading-[1.25] text-white pullquote hero-shadow">
-        “Now faith is the substance of things hoped for, the evidence of things not seen.”
+        “{c('home.scripture_verse')}”
       </blockquote>
-      <p class="mt-8 font-label-sm uppercase tracking-[0.35em] text-heritage-gold">Hebrews 11:1</p>
+      <p class="mt-8 font-label-sm uppercase tracking-[0.35em] text-heritage-gold">{c('home.scripture_ref')}</p>
       <span class="kente-rule w-24 mx-auto mt-8 is-light"></span>
     </div>
   </section>
@@ -321,15 +330,12 @@ const introCards = [
     <img src="/images/home-7.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-luminosity" />
     <div class="relative z-10 max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop text-center">
       <div class="max-w-2xl mx-auto" data-reveal>
-        <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-5 block">Generosity</span>
-        <h2 class="font-display text-display-mobile md:text-headline-lg text-white mb-6">Invest in Destinies</h2>
-        <p class="text-white/80 font-body text-body-lg mb-12">
-          Your generosity fuels our mission to build lives and shape destinies. Together, we can make an eternal impact
-          on our community and beyond.
-        </p>
+        <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-5 block">{c('home.giving_eyebrow')}</span>
+        <h2 class="font-display text-display-mobile md:text-headline-lg text-white mb-6">{c('home.giving_heading')}</h2>
+        <p class="text-white/80 font-body text-body-lg mb-12 whitespace-pre-line">{c('home.giving_body')}</p>
         <div class="flex flex-col md:flex-row gap-5 justify-center">
-          <a href="/giving" class="bg-heritage-gold text-primary hover:bg-secondary hover:text-white font-label-md uppercase tracking-[0.14em] px-12 py-5 transition-colors duration-300">Give Online</a>
-          <a href="/visit" class="btn-fill border border-white/30 text-white font-label-md uppercase tracking-[0.14em] px-12 py-5">Plan a Visit</a>
+          <a href="/giving" class="bg-heritage-gold text-primary hover:bg-secondary hover:text-white font-label-md uppercase tracking-[0.14em] px-12 py-5 transition-colors duration-300">{c('home.giving_cta1_label')}</a>
+          <a href="/visit" class="btn-fill border border-white/30 text-white font-label-md uppercase tracking-[0.14em] px-12 py-5">{c('home.giving_cta2_label')}</a>
         </div>
       </div>
     </div>

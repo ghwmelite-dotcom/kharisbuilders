@@ -2,6 +2,11 @@
 import PublicLayout from '../layouts/PublicLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import SectionIntro from '../components/SectionIntro.astro';
+import { env } from '../lib/runtime';
+import { getAllContent } from '../lib/db/content';
+import { makeContent } from '../lib/content/content';
+
+const c = makeContent(await getAllContent(env.DB).catch(() => ({})));
 
 const leaders = [
   { img: '/images/about-3.jpg', name: 'Dr. Samuel A. Kharis', role: 'Founding Pastor' },
@@ -32,9 +37,9 @@ const journey = [
 <PublicLayout title="About Us | Kharisbuilders" description="Architects of Faith, Builders of Destinies.">
   <!-- Hero -->
   <PageHero image="/images/about-1.jpg" height="h-[460px] md:h-[620px]">
-    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-6 block hero-shadow">Our Identity</span>
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-6 block hero-shadow">{c('about.hero_kicker')}</span>
     <h1 class="font-display text-display-mobile md:text-display-lg text-white max-w-4xl mx-auto hero-shadow">
-      Architects of Faith, Builders of Destinies
+      {c('about.hero_title')}
     </h1>
   </PageHero>
 
@@ -43,18 +48,12 @@ const journey = [
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center" data-reveal>
       <div class="space-y-12">
         <div>
-          <h2 class="font-display text-headline-lg text-primary mb-6">The Vision</h2>
-          <p class="font-body text-body-lg text-stone-gray leading-relaxed">
-            To see every life constructed on the unshakeable foundation of grace, transforming individuals into living
-            monuments of God's presence within their spheres of influence.
-          </p>
+          <h2 class="font-display text-headline-lg text-primary mb-6">{c('about.vision_heading')}</h2>
+          <p class="font-body text-body-lg text-stone-gray leading-relaxed whitespace-pre-line">{c('about.vision_body')}</p>
         </div>
         <div class="pt-8 border-t border-heritage-gold/20">
-          <h2 class="font-display text-headline-lg text-primary mb-6">The Mission</h2>
-          <p class="font-body text-body-lg text-stone-gray leading-relaxed">
-            We are committed to building people through the precise teaching of the Word, the warmth of communal
-            fellowship, and the strategic deployment of spiritual gifts for societal impact.
-          </p>
+          <h2 class="font-display text-headline-lg text-primary mb-6">{c('about.mission_heading')}</h2>
+          <p class="font-body text-body-lg text-stone-gray leading-relaxed whitespace-pre-line">{c('about.mission_body')}</p>
         </div>
       </div>
       <div class="relative aspect-square">
