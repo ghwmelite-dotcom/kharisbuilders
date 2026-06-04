@@ -5,6 +5,7 @@ import {
   renderChurchConfigTs,
   renderWranglerJsonc,
   retintSvg,
+  buildChecklist,
 } from '../../scripts/lib/provision.mjs';
 
 // Strip // line comments so the JSONC body can be JSON.parsed.
@@ -114,5 +115,25 @@ describe('retintSvg', () => {
     const svg = retintSvg.wide(theme);
     expect(svg).toContain('stop-color="#112233"'); // primary
     expect(svg).toContain('stop-color="#778899"'); // dark
+  });
+});
+
+describe('buildChecklist', () => {
+  const base = validateChurchInput(valid).value;
+  it('always includes D1 create, migrate, deploy and the Access app', () => {
+    const md = buildChecklist(base);
+    expect(md).toContain('wrangler d1 create grace-community');
+    expect(md).toContain('wrangler d1 migrations apply grace-community --remote');
+    expect(md).toContain('npm run deploy');
+    expect(md).toMatch(/api\/admin/);
+  });
+  it('is feature-aware (ai → vectorize/reindex; giving → paystack)', () => {
+    const md = buildChecklist(base);
+    expect(md).toContain('wrangler vectorize create grace-community-sermons');
+    expect(md).toContain('PAYSTACK_SECRET_KEY');
+
+    const off = buildChecklist({ ...base, features: { ...base.features, ai: false, giving: false } });
+    expect(off).not.toContain('vectorize create');
+    expect(off).not.toContain('PAYSTACK_SECRET_KEY');
   });
 });
