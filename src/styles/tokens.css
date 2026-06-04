@@ -13,9 +13,9 @@
 [data-theme='purple'] {
   /* Brand theme — every token is derived from the four --brand-* anchors that
      church.config supplies (injected as :root custom props by brandVars()).
-     The color-mix percentages are tuned so Kharis's anchors
+     The color-mix percentages are tuned against a reference set of anchors
      (primary #4a2a6b, accent #a87f2e, dark #2c1745, surface #faf6fe)
-     reproduce its hand-picked palette; any church's 4 colors yield a cohesive,
+     that reproduce a hand-picked palette; any church's 4 colors yield a cohesive,
      AA-respecting theme with no other edits. */
   --kb-surface: var(--brand-surface);
   --kb-surface-container-lowest: #ffffff;

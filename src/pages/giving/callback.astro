@@ -4,7 +4,7 @@ import { env } from '../../lib/runtime';
 import { verifyTransaction } from '../../lib/paystack/client';
 import { getDonationByReference, markDonationSuccess, markDonationFailed } from '../../lib/db/donations';
 import { formatAmount } from '../../lib/giving/money';
-import { feature } from '../../config/church';
+import { CHURCH, feature } from '../../config/church';
 
 if (!feature('giving')) return Astro.redirect('/');
 
@@ -33,7 +33,7 @@ if (reference) {
   }
 }
 ---
-<PublicLayout title="Thank you | Kharisbuilders" description="Thank you for your generosity." noindex={true}>
+<PublicLayout title={`Thank you | ${CHURCH.name}`} description="Thank you for your generosity." noindex={true}>
   <section class="min-h-[60vh] flex items-center justify-center py-24 px-6">
     <div class="text-center max-w-xl">
       {

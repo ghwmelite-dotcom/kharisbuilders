@@ -38,7 +38,7 @@ const nav = allNav.filter((n) => !n.gate || feature(n.gate));
   </head>
   <body class="min-h-screen md:grid md:grid-cols-[240px_1fr]">
     <aside class="bg-primary text-on-primary p-6 md:min-h-screen">
-      <div class="font-[var(--font-display)] text-xl text-accent mb-8">Kharisbuilders</div>
+      <div class="font-[var(--font-display)] text-xl text-accent mb-8">{CHURCH.name}</div>
       <nav class="flex flex-col gap-1">
         {
           nav.map((n) => (
