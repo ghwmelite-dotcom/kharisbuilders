@@ -1,4 +1,4 @@
-export type FieldType = 'text' | 'textarea' | 'url';
+export type FieldType = 'text' | 'textarea' | 'url' | 'image';
 export interface ContentField {
   key: string;
   label: string;
@@ -11,7 +11,7 @@ export interface ContentGroup {
   fields: ContentField[];
 }
 export interface ContentPage {
-  slug: 'home' | 'about' | 'visit';
+  slug: 'home' | 'about' | 'visit' | 'pages';
   title: string;
   groups: ContentGroup[];
 }
@@ -92,6 +92,15 @@ export const CONTENT_PAGES: ContentPage[] = [
           { key: 'home.giving_cta2_label', label: 'Button 2 label', type: 'text', default: 'Plan a Visit' },
         ],
       },
+      {
+        title: 'Images',
+        fields: [
+          { key: 'home.hero_image', label: 'Hero background', type: 'image', default: '/images/home-1.jpg' },
+          { key: 'home.pastor_image', label: 'Pastor photo', type: 'image', default: '/images/home-2.jpg' },
+          { key: 'home.scripture_image', label: 'Scripture band background', type: 'image', default: '/images/home-7.jpg' },
+          { key: 'home.giving_image', label: 'Giving band background', type: 'image', default: '/images/home-7.jpg' },
+        ],
+      },
     ],
   },
   {
@@ -124,6 +133,13 @@ export const CONTENT_PAGES: ContentPage[] = [
             default:
               'We are committed to building people through the precise teaching of the Word, the warmth of communal fellowship, and the strategic deployment of spiritual gifts for societal impact.',
           },
+        ],
+      },
+      {
+        title: 'Images',
+        fields: [
+          { key: 'about.hero_image', label: 'Hero background', type: 'image', default: '/images/about-1.jpg' },
+          { key: 'about.vision_image', label: 'Vision & Mission image', type: 'image', default: '/images/about-2.jpg' },
         ],
       },
     ],
@@ -200,6 +216,28 @@ export const CONTENT_PAGES: ContentPage[] = [
             type: 'textarea',
             default: 'Join us in the Glass Atrium for artisanal coffee and a chance to meet our leadership team.',
           },
+        ],
+      },
+      {
+        title: 'Images',
+        fields: [
+          { key: 'visit.hero_image', label: 'Hero background', type: 'image', default: '/images/visit-1.jpg' },
+          { key: 'visit.afterward_image', label: '"Afterward" image', type: 'image', default: '/images/visit-2.jpg' },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'pages',
+    title: 'Other Pages',
+    groups: [
+      {
+        title: 'Hero backgrounds',
+        fields: [
+          { key: 'pages.sermons_hero', label: 'Sermons hero', type: 'image', default: '/images/home-3.jpg' },
+          { key: 'pages.events_hero', label: 'Events hero', type: 'image', default: '/images/home-4.jpg' },
+          { key: 'pages.ministries_hero', label: 'Ministries hero', type: 'image', default: '/images/ministries-1.jpg' },
+          { key: 'pages.giving_hero', label: 'Giving hero', type: 'image', default: '/images/home-2.jpg' },
         ],
       },
     ],

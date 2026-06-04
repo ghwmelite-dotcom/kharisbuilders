@@ -4,6 +4,10 @@ import PageHero from '../components/PageHero.astro';
 import { env } from '../lib/runtime';
 import { mediaUrl } from '../lib/media';
 import { listPublishedMinistries, type Ministry } from '../lib/db/ministries';
+import { getAllContent } from '../lib/db/content';
+import { makeImage } from '../lib/content/content';
+
+const cimg = makeImage(await getAllContent(env.DB).catch(() => ({})));
 
 let ministries: Ministry[] = [];
 try {
@@ -26,7 +30,7 @@ const cfg = (i: number) => bento[i] ?? { span: 'md:col-span-4', img: '/images/mi
   description="Find your place in the body of Christ at Kharisbuilders."
 >
   <!-- Hero -->
-  <PageHero image="/images/ministries-1.jpg">
+  <PageHero image={cimg('pages.ministries_hero')}>
     <span class="font-label-sm text-heritage-gold uppercase tracking-[0.3em] mb-4 block hero-shadow">Our Community</span>
     <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-6 hero-shadow">Ministries</h1>
     <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto hero-shadow">

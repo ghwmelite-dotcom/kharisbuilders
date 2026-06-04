@@ -6,7 +6,7 @@ import Field from '../components/Field.astro';
 import { env } from '../lib/runtime';
 import { getAllSettings } from '../lib/db/settings';
 import { getAllContent } from '../lib/db/content';
-import { makeContent } from '../lib/content/content';
+import { makeContent, makeImage } from '../lib/content/content';
 
 let address = '';
 let siteKey = '1x00000000000000000000AA';
@@ -22,6 +22,7 @@ try {
   /* defaults */
 }
 const c = makeContent(contentMap);
+const cimg = makeImage(contentMap);
 const submitted = Astro.url.searchParams.get('submitted') === '1';
 const serviceOptions = serviceTimes.map((s) => `${s.name} ${s.time}`);
 const mapsHref = address
@@ -30,7 +31,7 @@ const mapsHref = address
 ---
 <PublicLayout title="Visit Us | Kharisbuilders" description="Plan your visit to Kharisbuilders.">
   <!-- Hero -->
-  <PageHero image="/images/visit-1.jpg">
+  <PageHero image={cimg('visit.hero_image')}>
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">{c('visit.hero_kicker')}</span>
     <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-4 hero-shadow">{c('visit.hero_title')}</h1>
     <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto hero-shadow whitespace-pre-line">{c('visit.hero_subtitle')}</p>
@@ -140,7 +141,7 @@ const mapsHref = address
         <p class="font-body text-body-md text-stone-gray leading-relaxed whitespace-pre-line">{c('visit.expect_service_body')}</p>
       </div>
       <div class="md:col-span-2 relative min-h-[300px] overflow-hidden group">
-        <img src="/images/visit-2.jpg" alt="" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+        <img src={cimg('visit.afterward_image')} alt="" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
         <div class="absolute inset-0 bg-midnight-blue/60 flex items-end p-10 md:p-12">
           <div class="text-white">
             <h3 class="font-display text-headline-md mb-2">{c('visit.expect_afterward_title')}</h3>

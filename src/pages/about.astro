@@ -4,12 +4,14 @@ import PageHero from '../components/PageHero.astro';
 import SectionIntro from '../components/SectionIntro.astro';
 import { env } from '../lib/runtime';
 import { getAllContent } from '../lib/db/content';
-import { makeContent } from '../lib/content/content';
+import { makeContent, makeImage } from '../lib/content/content';
 import { mediaUrl } from '../lib/media';
 import { listLeaders } from '../lib/db/leaders';
 import { listJourney } from '../lib/db/journey';
 
-const c = makeContent(await getAllContent(env.DB).catch(() => ({})));
+const contentMap = await getAllContent(env.DB).catch(() => ({}));
+const c = makeContent(contentMap);
+const cimg = makeImage(contentMap);
 const leaders = await listLeaders(env.DB).catch(() => []);
 const journey = await listJourney(env.DB).catch(() => []);
 const leaderFallback = ['/images/about-3.jpg', '/images/about-4.jpg', '/images/about-5.jpg'];
@@ -17,7 +19,7 @@ const journeyFallback = ['/images/about-6.jpg', '/images/about-7.jpg', '/images/
 ---
 <PublicLayout title="About Us | Kharisbuilders" description="Architects of Faith, Builders of Destinies.">
   <!-- Hero -->
-  <PageHero image="/images/about-1.jpg" height="h-[460px] md:h-[620px]">
+  <PageHero image={cimg('about.hero_image')} height="h-[460px] md:h-[620px]">
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-6 block hero-shadow">{c('about.hero_kicker')}</span>
     <h1 class="font-display text-display-mobile md:text-display-lg text-white max-w-4xl mx-auto hero-shadow">
       {c('about.hero_title')}
@@ -39,7 +41,7 @@ const journeyFallback = ['/images/about-6.jpg', '/images/about-7.jpg', '/images/
       </div>
       <div class="relative aspect-square">
         <div class="absolute -inset-4 border border-heritage-gold/30 translate-x-4 translate-y-4"></div>
-        <img src="/images/about-2.jpg" alt="" class="w-full h-full object-cover relative z-10 grayscale hover:grayscale-0 transition-all duration-700" />
+        <img src={cimg('about.vision_image')} alt="" class="w-full h-full object-cover relative z-10 grayscale hover:grayscale-0 transition-all duration-700" />
       </div>
     </div>
   </section>
