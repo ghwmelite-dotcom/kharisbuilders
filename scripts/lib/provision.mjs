@@ -1,0 +1,65 @@
+// Pure template-provisioning core: validation + file renderers.
+// No fs, no network, no third-party imports — runnable by plain `node` and by vitest.
+
+/**
+ * @typedef {{ primary: string, accent: string, dark: string, surface: string }} ChurchTheme
+ * @typedef {{ sermons: boolean, events: boolean, ministries: boolean, giving: boolean, ai: boolean, live: boolean }} ChurchFeatures
+ * @typedef {{ worker: string, database: string, bucket: string, vectorize: string }} DerivedNames
+ * @typedef {{ name: string, slug: string, tagline: string, description: string, url: string, locale: string, currency: string, timezoneOffsetMin: number, motifs: boolean, theme: ChurchTheme, features: ChurchFeatures, names: DerivedNames }} ChurchInput
+ */
+
+const SLUG_RE = /^[a-z0-9]([a-z0-9-]{0,38}[a-z0-9])$/;
+const HEX_RE = /^#[0-9a-fA-F]{6}$/;
+const FEATURE_KEYS = ['sermons', 'events', 'ministries', 'giving', 'ai', 'live'];
+
+/** @param {string} slug @returns {DerivedNames} */
+export function deriveNames(slug) {
+  return { worker: slug, database: slug, bucket: `${slug}-media`, vectorize: `${slug}-sermons` };
+}
+
+/**
+ * @param {unknown} raw
+ * @returns {{ ok: true, value: ChurchInput } | { ok: false, errors: string[] }}
+ */
+export function validateChurchInput(raw) {
+  const errors = [];
+  const r = /** @type {any} */ (raw ?? {});
+  const nonEmpty = (k) => typeof r[k] === 'string' && r[k].trim().length > 0;
+
+  for (const k of ['name', 'tagline', 'description', 'url', 'locale']) {
+    if (!nonEmpty(k)) errors.push(`"${k}" must be a non-empty string`);
+  }
+  if (typeof r.slug !== 'string' || !SLUG_RE.test(r.slug)) {
+    errors.push('"slug" must be lowercase letters/digits/hyphens, 2–40 chars, no leading/trailing hyphen');
+  }
+  if (r.slug === 'example-church') {
+    errors.push('"slug" is still the example value — copy scripts/new-church.config.example.json to scripts/new-church.config.json and edit it first');
+  }
+  if (typeof r.currency !== 'string' || !/^[A-Z]{3}$/.test(r.currency)) {
+    errors.push('"currency" must be a 3-letter uppercase code (e.g. USD, GHS)');
+  }
+  if (!Number.isInteger(r.timezoneOffsetMin) || r.timezoneOffsetMin < -720 || r.timezoneOffsetMin > 840) {
+    errors.push('"timezoneOffsetMin" must be an integer between -720 and 840');
+  }
+  if (typeof r.motifs !== 'boolean') errors.push('"motifs" must be a boolean');
+
+  const t = r.theme ?? {};
+  for (const k of ['primary', 'accent', 'dark', 'surface']) {
+    if (typeof t[k] !== 'string' || !HEX_RE.test(t[k])) errors.push(`"theme.${k}" must be a 6-digit hex colour like #3b3a6b`);
+  }
+  const f = r.features ?? {};
+  for (const k of FEATURE_KEYS) {
+    if (typeof f[k] !== 'boolean') errors.push(`"features.${k}" must be a boolean`);
+  }
+
+  if (errors.length) return { ok: false, errors };
+
+  const value = {
+    name: r.name, slug: r.slug, tagline: r.tagline, description: r.description, url: r.url,
+    locale: r.locale, currency: r.currency, timezoneOffsetMin: r.timezoneOffsetMin, motifs: r.motifs,
+    theme: { primary: t.primary, accent: t.accent, dark: t.dark, surface: t.surface },
+    features: Object.fromEntries(FEATURE_KEYS.map((k) => [k, f[k]])),
+    names: deriveNames(r.slug),
+  };
+  return { ok: true, value };
+}
