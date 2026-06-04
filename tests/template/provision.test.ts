@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateChurchInput, deriveNames } from '../../scripts/lib/provision.mjs';
+import { validateChurchInput, deriveNames, renderChurchConfigTs } from '../../scripts/lib/provision.mjs';
 
 const valid = {
   name: 'Grace Community Church',
@@ -50,5 +50,23 @@ describe('validateChurchInput', () => {
   it('rejects a non-boolean feature flag and an out-of-range timezone', () => {
     expect(validateChurchInput({ ...valid, features: { ...valid.features, ai: 'yes' } }).ok).toBe(false);
     expect(validateChurchInput({ ...valid, timezoneOffsetMin: 9999 }).ok).toBe(false);
+  });
+});
+
+describe('renderChurchConfigTs', () => {
+  const out = renderChurchConfigTs(validateChurchInput(valid).value);
+  it('emits a valid CHURCH literal with the church identity', () => {
+    expect(out).toContain('export const CHURCH: ChurchConfig = {');
+    expect(out).toContain('name: "Grace Community Church"');
+    expect(out).toContain('currency: "USD"');
+    expect(out).toContain('export function feature(name: keyof ChurchFeatures): boolean');
+  });
+  it('keeps logo/og pointed at placeholder assets and carries the theme + flags', () => {
+    expect(out).toContain("logo: '/images/logo-placeholder.svg'");
+    expect(out).toContain('primary: "#3b3a6b"');
+    expect(out).toContain('giving: true');
+  });
+  it('leaves no unfilled template markers', () => {
+    expect(out).not.toMatch(/\$\{|PASTE_FROM|TODO/);
   });
 });
