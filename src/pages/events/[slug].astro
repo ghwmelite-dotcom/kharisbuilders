@@ -8,6 +8,9 @@ import { SITE, eventJsonLd } from '../../lib/seo';
 import { getEventBySlug } from '../../lib/db/events';
 import { countRegistrations } from '../../lib/db/registrations';
 import { getAllSettings } from '../../lib/db/settings';
+import { feature } from '../../config/church';
+
+if (!feature('events')) return Astro.redirect('/');
 
 const { slug } = Astro.params;
 const event = slug ? await getEventBySlug(env.DB, slug).catch(() => null) : null;

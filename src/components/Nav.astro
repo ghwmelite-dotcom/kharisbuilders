@@ -1,7 +1,7 @@
 ---
 import Icon from './Icon.astro';
-import { CHURCH } from '../config/church';
-const links = [
+import { CHURCH, feature, type ChurchFeatures } from '../config/church';
+const allLinks = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Ministries', href: '/ministries' },
@@ -11,6 +11,18 @@ const links = [
   { label: 'Give', href: '/giving' },
   { label: 'Visit', href: '/visit' },
 ];
+// Links whose page is feature-gated; the rest (Home/About/Visit) are always shown.
+const featureOf: Record<string, keyof ChurchFeatures | undefined> = {
+  '/ministries': 'ministries',
+  '/sermons': 'sermons',
+  '/live': 'live',
+  '/events': 'events',
+  '/giving': 'giving',
+};
+const links = allLinks.filter((l) => {
+  const f = featureOf[l.href];
+  return !f || feature(f);
+});
 const path = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---

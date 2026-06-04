@@ -4,6 +4,9 @@ import { env } from '../../lib/runtime';
 import { getSermonBySlug } from '../../lib/db/sermons';
 import { toEmbedUrl } from '../../lib/video';
 import { SITE, videoJsonLd } from '../../lib/seo';
+import { feature } from '../../config/church';
+
+if (!feature('sermons')) return Astro.redirect('/');
 
 const { slug } = Astro.params;
 const sermon = slug ? await getSermonBySlug(env.DB, slug).catch(() => null) : null;

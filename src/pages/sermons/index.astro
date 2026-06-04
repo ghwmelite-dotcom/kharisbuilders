@@ -9,6 +9,9 @@ import { workersAi, vectorize } from '../../lib/ai/clients';
 import { searchSermonIds } from '../../lib/ai/search';
 import { getAllContent } from '../../lib/db/content';
 import { makeImage } from '../../lib/content/content';
+import { feature } from '../../config/church';
+
+if (!feature('sermons')) return Astro.redirect('/');
 
 const cimg = makeImage(await getAllContent(env.DB).catch(() => ({})));
 const q = (Astro.url.searchParams.get('q') ?? '').trim();

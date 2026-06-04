@@ -7,6 +7,9 @@ import { mediaUrl } from '../../lib/media';
 import { listUpcomingEvents, type EventRow } from '../../lib/db/events';
 import { getAllContent } from '../../lib/db/content';
 import { makeImage } from '../../lib/content/content';
+import { feature } from '../../config/church';
+
+if (!feature('events')) return Astro.redirect('/');
 
 const cimg = makeImage(await getAllContent(env.DB).catch(() => ({})));
 

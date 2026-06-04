@@ -1,6 +1,6 @@
 ---
 import '../styles/global.css';
-import { CHURCH } from '../config/church';
+import { CHURCH, feature, type ChurchFeatures } from '../config/church';
 import { brandVars } from '../config/theme-vars';
 interface Props {
   title: string;
@@ -8,22 +8,24 @@ interface Props {
   active?: string;
 }
 const { title, email, active = '' } = Astro.props;
-const nav = [
+// `gate` ties an admin section to a feature flag; undefined = always shown.
+const allNav: Array<{ label: string; href: string; key: string; gate?: keyof ChurchFeatures }> = [
   { label: 'Dashboard', href: '/admin', key: 'dashboard' },
   { label: 'Content', href: '/admin/content', key: 'content' },
-  { label: 'Live', href: '/admin/live', key: 'live' },
+  { label: 'Live', href: '/admin/live', key: 'live', gate: 'live' },
   { label: 'Leadership', href: '/admin/leaders', key: 'leaders' },
   { label: 'Journey', href: '/admin/journey', key: 'journey' },
   { label: 'Home Cards', href: '/admin/home-cards', key: 'home-cards' },
-  { label: 'Sermons', href: '/admin/sermons', key: 'sermons' },
-  { label: 'Events', href: '/admin/events', key: 'events' },
-  { label: 'Ministries', href: '/admin/ministries', key: 'ministries' },
+  { label: 'Sermons', href: '/admin/sermons', key: 'sermons', gate: 'sermons' },
+  { label: 'Events', href: '/admin/events', key: 'events', gate: 'events' },
+  { label: 'Ministries', href: '/admin/ministries', key: 'ministries', gate: 'ministries' },
   { label: 'People', href: '/admin/people', key: 'people' },
-  { label: 'Funds', href: '/admin/funds', key: 'funds' },
-  { label: 'Giving', href: '/admin/giving', key: 'giving' },
-  { label: 'Recurring', href: '/admin/subscriptions', key: 'subscriptions' },
+  { label: 'Funds', href: '/admin/funds', key: 'funds', gate: 'giving' },
+  { label: 'Giving', href: '/admin/giving', key: 'giving', gate: 'giving' },
+  { label: 'Recurring', href: '/admin/subscriptions', key: 'subscriptions', gate: 'giving' },
   { label: 'Settings', href: '/admin/settings', key: 'settings' },
 ];
+const nav = allNav.filter((n) => !n.gate || feature(n.gate));
 ---
 <!doctype html>
 <html lang={CHURCH.locale} data-theme="purple">

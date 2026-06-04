@@ -10,6 +10,7 @@ import { getAllContent } from '../lib/db/content';
 import { makeContent, makeImage } from '../lib/content/content';
 import { mediaUrl } from '../lib/media';
 import { listHomeCards } from '../lib/db/homeCards';
+import { feature } from '../config/church';
 
 let latestSermon: Awaited<ReturnType<typeof listPublishedSermons>>[number] | null = null;
 let events: Awaited<ReturnType<typeof listUpcomingEvents>> = [];
@@ -268,6 +269,7 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
   }
 
   <!-- Latest sermon -->
+  {feature('sermons') && (
   <section class="bg-primary-container py-24 md:py-32">
     <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop">
       <div class="flex justify-between items-end mb-16" data-reveal>
@@ -302,8 +304,10 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
       </a>
     </div>
   </section>
+  )}
 
   <!-- Upcoming gatherings -->
+  {feature('events') && (
   <section class="py-24 md:py-40 bg-surface-container-low">
     <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop">
       <SectionIntro eyebrow="Mark Your Calendar" title="Upcoming Gatherings" class="mb-20" />
@@ -340,8 +344,10 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
       }
     </div>
   </section>
+  )}
 
   <!-- Giving -->
+  {feature('giving') && (
   <section class="relative py-32 overflow-hidden bg-primary">
     <img src={cimg('home.giving_image')} alt="" class="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-luminosity" />
     <div class="relative z-10 max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop text-center">
@@ -356,4 +362,5 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
       </div>
     </div>
   </section>
+  )}
 </PublicLayout>
