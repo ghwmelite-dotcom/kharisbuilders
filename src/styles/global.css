@@ -173,6 +173,14 @@ html {
     #e08a80 18px 21px
   );
 }
+/* Motifs disabled (church.config motifs:false): the kente weave collapses to a
+   plain gold hairline. Adinkra glyphs/medallion/watermark already no-op via the
+   component, so this is all that remains to neutralize. */
+.motifs-off .kente-rule,
+.motifs-off .kente-rule.is-light {
+  background-image: none;
+  background-color: var(--kb-accent);
+}
 .shadow-ambient {
   box-shadow: var(--kb-shadow-ambient);
 }
