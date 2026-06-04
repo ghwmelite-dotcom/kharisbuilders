@@ -1,0 +1,26 @@
+---
+import Adinkra from './Adinkra.astro';
+/**
+ * Editorial section header — gold Adinkra eyebrow + serif display heading + kente rule.
+ * align: 'center' (default) or 'left'. tone: 'dark' for light text on dark bands.
+ */
+interface Props {
+  eyebrow: string;
+  title: string;
+  align?: 'center' | 'left';
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+const { eyebrow, title, align = 'center', tone = 'light', class: cls = '' } = Astro.props;
+const isCenter = align === 'center';
+const titleColor = tone === 'dark' ? 'text-white' : 'text-primary';
+const wrap = isCenter ? 'text-center items-center' : 'items-start text-left';
+---
+<div class={`flex flex-col ${wrap} ${cls}`} data-reveal>
+  <span class={`inline-flex items-center gap-3 font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-5 ${tone === 'dark' ? 'hero-shadow' : ''}`}>
+    <Adinkra symbol="adinkrahene" class="w-3.5 h-3.5 opacity-80" />
+    {eyebrow}
+  </span>
+  <h2 class={`font-display text-display-mobile md:text-headline-lg ${titleColor} pullquote ${tone === 'dark' ? 'hero-shadow' : ''}`}>{title}</h2>
+  <span class={`kente-rule w-20 mt-6 ${isCenter ? 'mx-auto' : ''}`}></span>
+</div>
