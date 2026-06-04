@@ -1,0 +1,11 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import JourneyForm from '../../../components/admin/JourneyForm.astro';
+import { env } from '../../../lib/runtime';
+import { getAdminEmail } from '../../../lib/admin-auth';
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+---
+<AdminLayout title="New milestone" email={email} active="journey">
+  <JourneyForm />
+</AdminLayout>

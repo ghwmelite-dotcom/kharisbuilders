@@ -5,34 +5,15 @@ import SectionIntro from '../components/SectionIntro.astro';
 import { env } from '../lib/runtime';
 import { getAllContent } from '../lib/db/content';
 import { makeContent } from '../lib/content/content';
+import { mediaUrl } from '../lib/media';
+import { listLeaders } from '../lib/db/leaders';
+import { listJourney } from '../lib/db/journey';
 
 const c = makeContent(await getAllContent(env.DB).catch(() => ({})));
-
-const leaders = [
-  { img: '/images/about-3.jpg', name: 'Dr. Samuel A. Kharis', role: 'Founding Pastor' },
-  { img: '/images/about-4.jpg', name: 'Pastor Elena Kharis', role: 'Executive Pastor' },
-  { img: '/images/about-5.jpg', name: 'Min. David Chen', role: 'Worship & Arts' },
-];
-const journey = [
-  {
-    year: '2012',
-    img: '/images/about-6.jpg',
-    title: 'The First Cornerstone',
-    text: 'Kharisbuilders began as a small gathering of twelve in a downtown studio, united by a vision for architectural spiritual growth.',
-  },
-  {
-    year: '2017',
-    img: '/images/about-7.jpg',
-    title: 'Expanding the Walls',
-    text: 'Our community grew to five hundred, leading us to our current sanctuary — a space designed to facilitate spiritual encounter and professional excellence.',
-  },
-  {
-    year: '2024',
-    img: '/images/about-8.jpg',
-    title: 'Shaping the Future',
-    text: "Launching our digital global campus and the 'Builders Academy,' training leaders for the next generation of societal transformation.",
-  },
-];
+const leaders = await listLeaders(env.DB).catch(() => []);
+const journey = await listJourney(env.DB).catch(() => []);
+const leaderFallback = ['/images/about-3.jpg', '/images/about-4.jpg', '/images/about-5.jpg'];
+const journeyFallback = ['/images/about-6.jpg', '/images/about-7.jpg', '/images/about-8.jpg'];
 ---
 <PublicLayout title="About Us | Kharisbuilders" description="Architects of Faith, Builders of Destinies.">
   <!-- Hero -->
@@ -64,51 +45,63 @@ const journey = [
   </section>
 
   <!-- The Builders -->
-  <section class="bg-surface-container-low py-24 md:py-32">
-    <div class="px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto mb-20">
-      <SectionIntro eyebrow="The Shepherds" title="The Builders" />
-    </div>
-    <div class="px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto grid grid-cols-1 md:grid-cols-3 gap-gutter">
-      {
-        leaders.map((l, i) => (
-          <div class="group" data-reveal style={`--reveal-delay:${i * 110}ms`}>
-            <div class="card-lift relative overflow-hidden mb-8 aspect-[4/5] elev-2">
-              <img src={l.img} alt={l.name} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-              <div class="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/10 to-transparent" />
-              <span class="absolute left-5 top-5 w-8 h-px bg-heritage-gold/70" />
+  {
+    leaders.length > 0 && (
+      <section class="bg-surface-container-low py-24 md:py-32">
+        <div class="px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto mb-20">
+          <SectionIntro eyebrow="The Shepherds" title="The Builders" />
+        </div>
+        <div class="px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto grid grid-cols-1 md:grid-cols-3 gap-gutter">
+          {leaders.map((l, i) => (
+            <div class="group" data-reveal style={`--reveal-delay:${i * 110}ms`}>
+              <div class="card-lift relative overflow-hidden mb-8 aspect-[4/5] elev-2">
+                <img
+                  src={mediaUrl(l.image_key) ?? leaderFallback[i % leaderFallback.length]}
+                  alt={l.name}
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/10 to-transparent" />
+                <span class="absolute left-5 top-5 w-8 h-px bg-heritage-gold/70" />
+              </div>
+              <h3 class="font-display text-headline-md text-primary mb-1">{l.name}</h3>
+              <p class="font-label-sm uppercase tracking-widest text-heritage-gold">{l.role}</p>
             </div>
-            <h3 class="font-display text-headline-md text-primary mb-1">{l.name}</h3>
-            <p class="font-label-sm uppercase tracking-widest text-heritage-gold">{l.role}</p>
-          </div>
-        ))
-      }
-    </div>
-  </section>
+          ))}
+        </div>
+      </section>
+    )
+  }
 
   <!-- Our Journey -->
-  <section class="py-24 md:py-32 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
-    <div class="max-w-3xl mx-auto">
-      <SectionIntro eyebrow="The Blueprint" title="Our Journey" class="mb-20" />
-      <div class="space-y-20 md:space-y-28">
-        {
-          journey.map((p, i) => (
-            <div
-              class={`flex flex-col md:flex-row items-center gap-8 md:gap-12 ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}
-              data-reveal
-            >
-              <div class={`w-full md:w-1/2 ${i % 2 === 0 ? 'md:text-right' : ''}`}>
-                <span class="font-display text-display-mobile text-gold-gradient block mb-4">{p.year}</span>
-                <h4 class="font-display text-headline-md text-primary mb-4">{p.title}</h4>
-                <p class="font-body text-body-md text-stone-gray">{p.text}</p>
+  {
+    journey.length > 0 && (
+      <section class="py-24 md:py-32 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+        <div class="max-w-3xl mx-auto">
+          <SectionIntro eyebrow="The Blueprint" title="Our Journey" class="mb-20" />
+          <div class="space-y-20 md:space-y-28">
+            {journey.map((p, i) => (
+              <div
+                class={`flex flex-col md:flex-row items-center gap-8 md:gap-12 ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}
+                data-reveal
+              >
+                <div class={`w-full md:w-1/2 ${i % 2 === 0 ? 'md:text-right' : ''}`}>
+                  <span class="font-display text-display-mobile text-gold-gradient block mb-4">{p.year}</span>
+                  <h4 class="font-display text-headline-md text-primary mb-4">{p.title}</h4>
+                  <p class="font-body text-body-md text-stone-gray whitespace-pre-line">{p.body}</p>
+                </div>
+                <div class="w-full md:w-1/2 relative">
+                  <div class={`absolute inset-0 translate-y-4 ${i % 2 === 0 ? '-translate-x-4' : 'translate-x-4'} border border-heritage-gold/40 pointer-events-none`} />
+                  <img
+                    src={mediaUrl(p.image_key) ?? journeyFallback[i % journeyFallback.length]}
+                    alt={p.title}
+                    class="relative w-full aspect-video object-cover elev-2"
+                  />
+                </div>
               </div>
-              <div class="w-full md:w-1/2 relative">
-                <div class={`absolute inset-0 translate-y-4 ${i % 2 === 0 ? '-translate-x-4' : 'translate-x-4'} border border-heritage-gold/40 pointer-events-none`} />
-                <img src={p.img} alt={p.title} class="relative w-full aspect-video object-cover elev-2" />
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 </PublicLayout>

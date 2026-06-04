@@ -1,0 +1,14 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import HomeCardForm from '../../../components/admin/HomeCardForm.astro';
+import { env } from '../../../lib/runtime';
+import { getAdminEmail } from '../../../lib/admin-auth';
+import { getHomeCardById } from '../../../lib/db/homeCards';
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const card = await getHomeCardById(env.DB, Number(Astro.params.id)).catch(() => null);
+if (!card) return Astro.redirect('/admin/home-cards');
+---
+<AdminLayout title={`Edit: ${card.title}`} email={email} active="home-cards">
+  <HomeCardForm card={card} />
+</AdminLayout>
