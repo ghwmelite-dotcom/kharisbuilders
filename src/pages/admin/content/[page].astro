@@ -1,0 +1,67 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import Button from '../../../components/Button.astro';
+import { env } from '../../../lib/runtime';
+import { getAdminEmail } from '../../../lib/admin-auth';
+import { getContentPage } from '../../../lib/content/fields';
+import { getAllContent } from '../../../lib/db/content';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const page = getContentPage(String(Astro.params.page));
+if (!page) return Astro.redirect('/admin/content');
+const stored = await getAllContent(env.DB).catch(() => ({}) as Record<string, string>);
+const saved = Astro.url.searchParams.get('saved') === '1';
+const val = (key: string, def: string) => (stored[key] != null && stored[key] !== '' ? stored[key] : def);
+const viewHref = page.slug === 'home' ? '/' : `/${page.slug}`;
+---
+<AdminLayout title={`Content · ${page.title}`} email={email} active="content">
+  {
+    saved && (
+      <p class="mb-6 bg-accent/10 text-primary text-sm px-4 py-3">
+        Saved.{' '}
+        <a href={viewHref} class="underline" target="_blank">
+          View page →
+        </a>
+      </p>
+    )
+  }
+  <form method="POST" action="/api/admin/content" class="max-w-2xl space-y-10">
+    <input type="hidden" name="_page" value={page.slug} />
+    {
+      page.groups.map((g) => (
+        <fieldset class="border-t border-champagne pt-6">
+          <legend class="font-display text-lg text-primary mb-4">{g.title}</legend>
+          <div class="space-y-5">
+            {g.fields.map((f) => (
+              <div class="flex flex-col gap-1">
+                <label for={f.key} class="text-xs uppercase tracking-wider text-on-surface-variant">
+                  {f.label}
+                </label>
+                {f.type === 'textarea' ? (
+                  <textarea
+                    id={f.key}
+                    name={f.key}
+                    rows="3"
+                    class="border border-champagne bg-surface px-4 py-2 font-body text-sm text-primary"
+                    set:text={val(f.key, f.default)}
+                  />
+                ) : (
+                  <input
+                    id={f.key}
+                    name={f.key}
+                    type="text"
+                    class="border border-champagne bg-surface px-4 py-2 font-body text-sm text-primary"
+                    value={val(f.key, f.default)}
+                  />
+                )}
+                {f.help && <p class="text-xs text-on-surface-variant">{f.help}</p>}
+              </div>
+            ))}
+          </div>
+        </fieldset>
+      ))
+    }
+    <Button type="submit" variant="primary">Save changes</Button>
+  </form>
+</AdminLayout>

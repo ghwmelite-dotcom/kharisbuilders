@@ -1,0 +1,25 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { env } from '../../../lib/runtime';
+import { getAdminEmail } from '../../../lib/admin-auth';
+import { CONTENT_PAGES } from '../../../lib/content/fields';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+---
+<AdminLayout title="Content" email={email} active="content">
+  <p class="text-on-surface-variant text-sm mb-6">
+    Edit the wording on each public page. Blank a field to restore its original text.
+  </p>
+  <ul class="space-y-3">
+    {
+      CONTENT_PAGES.map((p) => (
+        <li>
+          <a href={`/admin/content/${p.slug}`} class="text-primary hover:text-accent text-lg font-display">
+            {p.title} page →
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</AdminLayout>
