@@ -1,5 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { validateChurchInput, deriveNames, renderChurchConfigTs } from '../../scripts/lib/provision.mjs';
+import {
+  validateChurchInput,
+  deriveNames,
+  renderChurchConfigTs,
+  renderWranglerJsonc,
+} from '../../scripts/lib/provision.mjs';
+
+// Strip // line comments so the JSONC body can be JSON.parsed.
+function parseJsonc(text: string) {
+  return JSON.parse(text.replace(/^\s*\/\/.*$/gm, ''));
+}
 
 const valid = {
   name: 'Grace Community Church',
@@ -68,5 +78,22 @@ describe('renderChurchConfigTs', () => {
   });
   it('leaves no unfilled template markers', () => {
     expect(out).not.toMatch(/\$\{|PASTE_FROM|TODO/);
+  });
+});
+
+describe('renderWranglerJsonc', () => {
+  const out = renderWranglerJsonc(deriveNames('grace-community'));
+  it('is valid JSONC with slug-derived resource names', () => {
+    const cfg = parseJsonc(out);
+    expect(cfg.name).toBe('grace-community');
+    expect(cfg.d1_databases[0].database_name).toBe('grace-community');
+    expect(cfg.r2_buckets[0].bucket_name).toBe('grace-community-media');
+    expect(cfg.vectorize[0].index_name).toBe('grace-community-sermons');
+    expect(cfg.kv_namespaces[0].binding).toBe('SESSION');
+  });
+  it('emits id markers that the checklist tells the user to replace', () => {
+    const cfg = parseJsonc(out);
+    expect(cfg.d1_databases[0].database_id).toBe('PASTE_FROM_D1_CREATE');
+    expect(cfg.kv_namespaces[0].id).toBe('PASTE_FROM_KV_CREATE');
   });
 });

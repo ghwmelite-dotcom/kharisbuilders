@@ -121,3 +121,50 @@ export function feature(name: keyof ChurchFeatures): boolean {
 }
 `;
 }
+
+/** @param {DerivedNames} names @returns {string} */
+export function renderWranglerJsonc(names) {
+  return `{
+\t"compatibility_date": "2026-06-02",
+\t"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+\t"name": "${names.worker}",
+\t"main": "@astrojs/cloudflare/entrypoints/server",
+\t"assets": {
+\t\t"directory": "./dist",
+\t\t"binding": "ASSETS"
+\t},
+\t"observability": {
+\t\t"enabled": true
+\t},
+\t// Structured content (sermons, events, ministries, visitors, donations, settings).
+\t// database_id is filled in after \`wrangler d1 create ${names.database}\`.
+\t"d1_databases": [
+\t\t{
+\t\t\t"binding": "DB",
+\t\t\t"database_name": "${names.database}",
+\t\t\t"database_id": "PASTE_FROM_D1_CREATE"
+\t\t}
+\t],
+\t// Uploaded media (event/ministry images, sermon thumbnails, portraits).
+\t"r2_buckets": [
+\t\t{
+\t\t\t"binding": "MEDIA",
+\t\t\t"bucket_name": "${names.bucket}"
+\t\t}
+\t],
+\t// Session storage required by the Astro Cloudflare adapter.
+\t// id is filled in after \`wrangler kv namespace create SESSION\`.
+\t"kv_namespaces": [
+\t\t{
+\t\t\t"binding": "SESSION",
+\t\t\t"id": "PASTE_FROM_KV_CREATE"
+\t\t}
+\t],
+\t// Workers AI (embeddings + study-guide generation) and Vectorize (sermon search index).
+\t"ai": { "binding": "AI" },
+\t"vectorize": [
+\t\t{ "binding": "SERMONS", "index_name": "${names.vectorize}" }
+\t]
+}
+`;
+}
