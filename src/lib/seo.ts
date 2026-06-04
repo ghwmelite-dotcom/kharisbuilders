@@ -1,15 +1,14 @@
 import { toEmbedUrl, type VideoProvider } from './video';
+import { CHURCH } from '../config/church';
 
+/** SEO identity, sourced entirely from church.config (the one file to customise per church). */
 export const SITE = {
-  name: 'Kharisbuilders',
-  /** Live origin today; change when a custom domain is added. Used as fallback when Astro.site is unset. */
-  url: 'https://kharisbuilders.missdiasporagh.workers.dev',
-  tagline: 'Building Lives, Shaping Destinies.',
-  description:
-    'Kharisbuilders is a modern, Christ-centred church — sermons, events, ministries, and a place to belong. Building Lives, Shaping Destinies.',
-  logo: '/images/kharis-logo.png',
-  /** Default social/OG preview image. */
-  ogImage: '/images/home-1.jpg',
+  name: CHURCH.name,
+  url: CHURCH.url,
+  tagline: CHURCH.tagline,
+  description: CHURCH.description,
+  logo: CHURCH.logo,
+  ogImage: CHURCH.ogImage,
 } as const;
 
 /** Resolve a path (or pass through an absolute URL) against an origin. */
