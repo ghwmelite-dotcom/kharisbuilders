@@ -4,6 +4,7 @@ import PageHero from '../../components/PageHero.astro';
 import Field from '../../components/Field.astro';
 import { env } from '../../lib/runtime';
 import { mediaUrl } from '../../lib/media';
+import { PLACEHOLDER } from '../../lib/images';
 import { SITE, eventJsonLd } from '../../lib/seo';
 import { getEventBySlug } from '../../lib/db/events';
 import { countRegistrations } from '../../lib/db/registrations';
@@ -33,7 +34,7 @@ if (event.registration_enabled && event.capacity != null) {
 const registered = Astro.url.searchParams.get('registered') === '1';
 const fullParam = Astro.url.searchParams.get('full') === '1';
 const date = event.start_at?.slice(0, 16).replace('T', ' ') ?? '';
-const heroImg = mediaUrl(event.image_key) ?? '/images/home-4.jpg';
+const heroImg = mediaUrl(event.image_key) ?? PLACEHOLDER.wide;
 const origin = (Astro.site ?? new URL(SITE.url)).origin;
 const eventNode = eventJsonLd(origin, event);
 ---

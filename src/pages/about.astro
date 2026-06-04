@@ -6,6 +6,7 @@ import { env } from '../lib/runtime';
 import { getAllContent } from '../lib/db/content';
 import { makeContent, makeImage } from '../lib/content/content';
 import { mediaUrl } from '../lib/media';
+import { PLACEHOLDER } from '../lib/images';
 import { listLeaders } from '../lib/db/leaders';
 import { listJourney } from '../lib/db/journey';
 
@@ -14,8 +15,8 @@ const c = makeContent(contentMap);
 const cimg = makeImage(contentMap);
 const leaders = await listLeaders(env.DB).catch(() => []);
 const journey = await listJourney(env.DB).catch(() => []);
-const leaderFallback = ['/images/about-3.jpg', '/images/about-4.jpg', '/images/about-5.jpg'];
-const journeyFallback = ['/images/about-6.jpg', '/images/about-7.jpg', '/images/about-8.jpg'];
+const leaderFallback = [PLACEHOLDER.portrait, PLACEHOLDER.portrait, PLACEHOLDER.portrait];
+const journeyFallback = [PLACEHOLDER.card, PLACEHOLDER.card, PLACEHOLDER.card];
 ---
 <PublicLayout title="About Us | Kharisbuilders" description="Architects of Faith, Builders of Destinies.">
   <!-- Hero -->

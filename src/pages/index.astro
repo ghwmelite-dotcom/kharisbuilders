@@ -10,6 +10,7 @@ import { getAllContent } from '../lib/db/content';
 import { makeContent, makeImage } from '../lib/content/content';
 import { mediaUrl } from '../lib/media';
 import { listHomeCards } from '../lib/db/homeCards';
+import { PLACEHOLDER } from '../lib/images';
 import { feature } from '../config/church';
 
 let latestSermon: Awaited<ReturnType<typeof listPublishedSermons>>[number] | null = null;
@@ -36,11 +37,11 @@ try {
 const c = makeContent(contentMap);
 const cimg = makeImage(contentMap);
 const scriptureBg = `linear-gradient(rgba(44,23,69,0.86), rgba(44,23,69,0.92)), url('${cimg('home.scripture_image')}')`;
-const eventImages = ['/images/home-4.jpg', '/images/home-5.jpg', '/images/home-6.jpg'];
+const eventImages = [PLACEHOLDER.card, PLACEHOLDER.card, PLACEHOLDER.card];
 const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
 // Intro cards that overlap the hero's bottom edge — the signature church-theme depth device.
 // Render from the editable home_cards list, falling back to the original three when empty.
-const cardFallbackImg = ['/images/visit-1.jpg', '/images/home-3.jpg', '/images/home-2.jpg'];
+const cardFallbackImg = [PLACEHOLDER.card, PLACEHOLDER.card, PLACEHOLDER.card];
 const defaultCards = [
   { eyebrow: 'New Here?', title: 'Plan a Visit', href: '/visit', description: 'Know what to expect and let us welcome you home.', image_key: null },
   { eyebrow: 'Messages', title: 'Watch Sermons', href: '/sermons', description: 'Catch up on recent messages, anytime, anywhere.', image_key: null },
@@ -289,7 +290,7 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
         data-reveal
         style="--reveal-delay:120ms"
       >
-        <img src="/images/home-3.jpg" alt="Latest sermon" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" />
+        <img src={PLACEHOLDER.card} alt="Latest sermon" class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-1000" />
         <div class="absolute inset-0 flex items-center justify-center">
           <div class="w-20 h-20 md:w-24 md:h-24 rounded-full border border-heritage-gold/50 flex items-center justify-center bg-white/5 backdrop-blur-sm group-hover:scale-110 transition-transform duration-500">
             <svg class="w-10 h-10 text-white translate-x-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>

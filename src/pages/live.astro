@@ -11,6 +11,7 @@ import { computeLiveStatus, type ScheduleEntry } from '../lib/live/status';
 import { toLiveEmbed } from '../lib/live/embed';
 import { listPublishedSermons } from '../lib/db/sermons';
 import { mediaUrl } from '../lib/media';
+import { PLACEHOLDER } from '../lib/images';
 import { SITE } from '../lib/seo';
 import { CHURCH, feature } from '../config/church';
 
@@ -102,7 +103,7 @@ const isLive = status.isLive;
             !isLive && latest && (
               <a href={`/sermons/${latest.slug}`} class="card-lift group block overflow-hidden border border-champagne elev-1" data-reveal>
                 <div class="relative aspect-video overflow-hidden">
-                  <img src={mediaUrl(latest.thumbnail_key) ?? '/images/home-3.jpg'} alt={latest.title} class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" />
+                  <img src={mediaUrl(latest.thumbnail_key) ?? PLACEHOLDER.card} alt={latest.title} class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" />
                   <div class="absolute inset-0 flex items-center justify-center">
                     <div class="w-16 h-16 rounded-full border border-heritage-gold/60 flex items-center justify-center bg-white/10 backdrop-blur-sm">
                       <svg class="w-7 h-7 text-white translate-x-0.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
