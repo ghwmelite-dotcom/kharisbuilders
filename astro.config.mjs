@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://kharisbuilders.missdiasporagh.workers.dev',
+  site: 'https://example.com',
   output: 'server',
   adapter: cloudflare({ platformProxy: { enabled: true } }),
   integrations: [react()],
