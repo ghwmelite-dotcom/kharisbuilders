@@ -59,14 +59,17 @@ The script is **dry**: it patches files deterministically on the working tree an
 
 Two layers — a **pure, unit-tested core** and a **thin fs runner** — so all transformation logic is testable offline (consistent with the project rule: keep testable logic in pure functions; bindings/fs at the edges).
 
-### 4.1 Pure core — `src/lib/template/provision.ts`
+**Runtime:** plain Node ESM (`.mjs`), zero new dependencies, run with `node` directly (no `vite-node`/TS build — `vite-node` is not installed and the script must run on a fresh clone with only `npm install` done). Validation is hand-rolled (no zod) so the script imports nothing outside `node:` builtins.
 
-No `fs`, no network. Exported functions:
+### 4.1 Pure core — `scripts/lib/provision.mjs`
 
-- **`validateChurchInput(raw: unknown): ChurchInput`**
-  - zod schema (zod v4, already a dep). Validates: `slug` matches `/^[a-z0-9]([a-z0-9-]{0,38}[a-z0-9])$/`; each `theme.*` matches `/^#[0-9a-fA-F]{6}$/`; `currency` is 3 uppercase letters; `features.*` booleans; `timezoneOffsetMin` integer in `[-720, 840]`.
+No `fs`, no network, no third-party imports. Exported functions:
+
+- **`validateChurchInput(raw): { ok: true, value: ChurchInput } | { ok: false, errors: string[] }`**
+  - Hand-rolled checks: `slug` matches `/^[a-z0-9]([a-z0-9-]{0,38}[a-z0-9])$/`; each `theme.*` matches `/^#[0-9a-fA-F]{6}$/`; `currency` is 3 uppercase letters; `features.*` booleans; `timezoneOffsetMin` integer in `[-720, 840]`; required strings non-empty.
   - Rejects the example sentinel (`slug === 'example-church'`) with a clear "copy and edit the config first" error.
-  - Returns the parsed input plus a derived `names` object (`{ worker, database, bucket, vectorize }`).
+  - On success, `value` includes a derived `names` object (`{ worker, database, bucket, vectorize }`).
+  - `ChurchInput` is a JSDoc typedef (no static TS).
 
 - **`renderChurchConfigTs(input: ChurchInput): string`**
   - Emits the full `src/config/church.ts` from a fixed template string. The `interface` blocks and `feature()` helper are reproduced verbatim; only the `CHURCH` object literal is filled from the input. Strings are JSON-escaped to be safe inside single-or-template quotes.
@@ -79,7 +82,7 @@ No `fs`, no network. Exported functions:
 - **`buildChecklist(input: ChurchInput): string`**
   - Returns the `PROVISIONING.md` body as markdown. **Feature-aware:** Vectorize-create + AI-reindex steps only when `features.ai`; Paystack secret + giving settings only when `features.giving`; live notes only when `features.live`. Always includes D1/KV/R2 create, migrate, seed, Turnstile secret (forms), Access app, deploy, and post-deploy settings.
 
-### 4.2 Thin runner — `scripts/new-church.ts` (run via `npx vite-node scripts/new-church.ts`)
+### 4.2 Thin runner — `scripts/new-church.mjs` (run via `node scripts/new-church.mjs`)
 
 Side-effecting orchestration only:
 
@@ -113,7 +116,7 @@ Ordered, copy-pasteable. Illustrative (feature-aware) sequence:
 
 ## 6. Testing
 
-`tests/template/provision.test.ts` (vitest, offline):
+`tests/template/provision.test.ts` (vitest, offline; imports `../../scripts/lib/provision.mjs`):
 
 - `validateChurchInput`: rejects bad slug (uppercase, leading hyphen, too short), bad hex, bad currency; rejects the example sentinel; accepts a valid input and derives the four resource names correctly.
 - `renderChurchConfigTs`: output contains the church `name`/`currency`/feature flags; contains `export const CHURCH` and `export function feature`; no leftover template placeholders.
@@ -125,8 +128,8 @@ No test touches `fs`/network; the runner is verified manually by a smoke run tha
 
 ## 7. Definition of Done
 
-- `scripts/new-church.config.example.json`, `scripts/new-church.ts`, `src/lib/template/provision.ts`, `tests/template/provision.test.ts` exist; `.gitignore` excludes `scripts/new-church.config.json`.
-- `npx vite-node scripts/new-church.ts` with a sample config writes patched `church.ts`/`wrangler.jsonc`/SVGs/`package.json`/`astro.config.mjs`/`PROVISIONING.md`; output is idempotent.
+- `scripts/new-church.config.example.json`, `scripts/new-church.mjs`, `scripts/lib/provision.mjs`, `tests/template/provision.test.ts` exist; `.gitignore` excludes `scripts/new-church.config.json`.
+- `node scripts/new-church.mjs` with a sample config writes patched `church.ts`/`wrangler.jsonc`/SVGs/`package.json`/`astro.config.mjs`/`PROVISIONING.md`; output is idempotent.
 - Feeding a config equal to the current generic identity reproduces the existing files (clean `git diff` on `church.ts`/`wrangler.jsonc` apart from the intended id markers).
 - `npx vitest run` stays green (existing 189 + new provision tests).
 - `npx astro build` passes after a provision run.
