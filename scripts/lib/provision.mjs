@@ -168,3 +168,63 @@ export function renderWranglerJsonc(names) {
 }
 `;
 }
+
+/** @type {Record<'wide'|'portrait'|'card'|'logo', (t: ChurchTheme) => string>} */
+export const retintSvg = {
+  wide: ({ primary, accent, dark }) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Placeholder image">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="${primary}"/>
+      <stop offset="1" stop-color="${dark}"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#g)"/>
+  <g fill="none" stroke="${accent}" stroke-opacity="0.45" stroke-width="6">
+    <circle cx="800" cy="430" r="120"/>
+    <circle cx="800" cy="430" r="70"/>
+  </g>
+  <circle cx="800" cy="430" r="14" fill="${accent}" fill-opacity="0.55"/>
+  <text x="1560" y="868" font-family="system-ui, sans-serif" font-size="26" fill="#ffffff" fill-opacity="0.5" text-anchor="end">Replace in Admin</text>
+</svg>
+`,
+  portrait: ({ primary, accent, dark }) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Placeholder image">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="${primary}"/>
+      <stop offset="1" stop-color="${dark}"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#g)"/>
+  <g fill="none" stroke="${accent}" stroke-opacity="0.45" stroke-width="6">
+    <circle cx="400" cy="470" r="110"/>
+    <circle cx="400" cy="470" r="64"/>
+  </g>
+  <circle cx="400" cy="470" r="13" fill="${accent}" fill-opacity="0.55"/>
+  <text x="760" y="968" font-family="system-ui, sans-serif" font-size="26" fill="#ffffff" fill-opacity="0.5" text-anchor="end">Replace in Admin</text>
+</svg>
+`,
+  card: ({ primary, accent, dark }) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="Placeholder image">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="${primary}"/>
+      <stop offset="1" stop-color="${dark}"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#g)"/>
+  <g fill="none" stroke="${accent}" stroke-opacity="0.45" stroke-width="6">
+    <circle cx="600" cy="420" r="100"/>
+    <circle cx="600" cy="420" r="58"/>
+  </g>
+  <circle cx="600" cy="420" r="12" fill="${accent}" fill-opacity="0.55"/>
+  <text x="1160" y="868" font-family="system-ui, sans-serif" font-size="24" fill="#ffffff" fill-opacity="0.5" text-anchor="end">Replace in Admin</text>
+</svg>
+`,
+  logo: ({ primary, accent }) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Logo placeholder">
+  <g fill="none" stroke="${accent}" stroke-width="22">
+    <circle cx="256" cy="256" r="150"/>
+    <circle cx="256" cy="256" r="88"/>
+  </g>
+  <circle cx="256" cy="256" r="30" fill="${primary}"/>
+</svg>
+`,
+};
