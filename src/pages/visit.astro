@@ -5,18 +5,23 @@ import SectionIntro from '../components/SectionIntro.astro';
 import Field from '../components/Field.astro';
 import { env } from '../lib/runtime';
 import { getAllSettings } from '../lib/db/settings';
+import { getAllContent } from '../lib/db/content';
+import { makeContent } from '../lib/content/content';
 
 let address = '';
 let siteKey = '1x00000000000000000000AA';
 let serviceTimes: Array<{ name: string; time: string; note?: string }> = [];
+let contentMap: Record<string, string> = {};
 try {
-  const settings = await getAllSettings(env.DB);
+  const [settings, cm] = await Promise.all([getAllSettings(env.DB), getAllContent(env.DB)]);
   address = settings.address ?? '';
   siteKey = settings.turnstile_site_key ?? siteKey;
   serviceTimes = settings.service_times ? JSON.parse(settings.service_times) : [];
+  contentMap = cm;
 } catch {
   /* defaults */
 }
+const c = makeContent(contentMap);
 const submitted = Astro.url.searchParams.get('submitted') === '1';
 const serviceOptions = serviceTimes.map((s) => `${s.name} ${s.time}`);
 const mapsHref = address
@@ -26,11 +31,9 @@ const mapsHref = address
 <PublicLayout title="Visit Us | Kharisbuilders" description="Plan your visit to Kharisbuilders.">
   <!-- Hero -->
   <PageHero image="/images/visit-1.jpg">
-    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Plan Your Visit</span>
-    <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-4 hero-shadow">A Place to Belong</h1>
-    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto hero-shadow">
-      Experience the intersection of tradition and transformation. We can't wait to welcome you home.
-    </p>
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">{c('visit.hero_kicker')}</span>
+    <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-4 hero-shadow">{c('visit.hero_title')}</h1>
+    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto hero-shadow whitespace-pre-line">{c('visit.hero_subtitle')}</p>
   </PageHero>
 
   <!-- Service times + Plan Your Visit -->
@@ -63,11 +66,9 @@ const mapsHref = address
           ) : (
             <div class="space-y-8">
               <div>
-                <span class="font-label-sm uppercase tracking-widest text-heritage-gold block mb-2">First Time?</span>
-                <h2 class="font-display text-headline-lg text-primary mb-4">Plan Your Visit</h2>
-                <p class="font-body text-body-md text-stone-gray mb-8">
-                  Let us know you're coming so we can have a welcome pack ready and help you find your way.
-                </p>
+                <span class="font-label-sm uppercase tracking-widest text-heritage-gold block mb-2">{c('visit.plan_eyebrow')}</span>
+                <h2 class="font-display text-headline-lg text-primary mb-4">{c('visit.plan_heading')}</h2>
+                <p class="font-body text-body-md text-stone-gray mb-8 whitespace-pre-line">{c('visit.plan_body')}</p>
               </div>
               <form method="POST" action="/api/forms/visit" class="space-y-6">
                 <Field label="Full Name" name="name" required />
@@ -109,7 +110,7 @@ const mapsHref = address
             </div>
             <div>
               <h4 class="font-label-md uppercase tracking-widest text-midnight-blue mb-1">Parking</h4>
-              <p class="font-body text-body-md text-stone-gray">Free on-site parking is available, with assistance for elderly visitors.</p>
+              <p class="font-body text-body-md text-stone-gray whitespace-pre-line">{c('visit.parking_body')}</p>
             </div>
             <div class="pt-4">
               <a href={mapsHref} target="_blank" rel="noopener" class="inline-flex items-center gap-3 font-label-md uppercase tracking-widest text-midnight-blue border-b border-heritage-gold pb-1">
@@ -124,37 +125,26 @@ const mapsHref = address
 
   <!-- What to Expect -->
   <section class="py-28 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
-    <SectionIntro eyebrow="Your First Visit" title="What to Expect" class="mb-16" />
+    <SectionIntro eyebrow={c('visit.expect_eyebrow')} title={c('visit.expect_heading')} class="mb-16" />
     <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
       <div class="md:col-span-2 bg-surface-container-lowest p-10 md:p-12 border-t-2 border-heritage-gold shadow-[0_10px_30px_-10px_rgba(26,43,66,0.08)]">
-        <h3 class="font-display text-headline-md text-primary mb-4">What should I wear?</h3>
-        <p class="font-body text-body-md text-stone-gray leading-relaxed">
-          We value your presence more than your attire. You'll find some people in suits and others in jeans — wear
-          whatever makes you feel comfortable and ready to connect with the community.
-        </p>
+        <h3 class="font-display text-headline-md text-primary mb-4">{c('visit.expect_q1_title')}</h3>
+        <p class="font-body text-body-md text-stone-gray leading-relaxed whitespace-pre-line">{c('visit.expect_q1_body')}</p>
       </div>
       <div class="bg-midnight-blue p-10 md:p-12 text-white">
-        <h3 class="font-display text-headline-md mb-4">Kids?</h3>
-        <p class="font-body text-body-md opacity-80 leading-relaxed">
-          Our 'Kharis Kids' program offers a safe, fun, and spiritually enriching environment for ages 2–11 during the
-          morning service.
-        </p>
+        <h3 class="font-display text-headline-md mb-4">{c('visit.expect_kids_title')}</h3>
+        <p class="font-body text-body-md opacity-80 leading-relaxed whitespace-pre-line">{c('visit.expect_kids_body')}</p>
       </div>
       <div class="bg-surface-container-high p-10 md:p-12">
-        <h3 class="font-display text-headline-md text-primary mb-4">The Service?</h3>
-        <p class="font-body text-body-md text-stone-gray leading-relaxed">
-          Services typically last 75 minutes — soulful music, communal prayer, and a message both ancient in truth and
-          modern in application.
-        </p>
+        <h3 class="font-display text-headline-md text-primary mb-4">{c('visit.expect_service_title')}</h3>
+        <p class="font-body text-body-md text-stone-gray leading-relaxed whitespace-pre-line">{c('visit.expect_service_body')}</p>
       </div>
       <div class="md:col-span-2 relative min-h-[300px] overflow-hidden group">
         <img src="/images/visit-2.jpg" alt="" class="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
         <div class="absolute inset-0 bg-midnight-blue/60 flex items-end p-10 md:p-12">
           <div class="text-white">
-            <h3 class="font-display text-headline-md mb-2">Afterward</h3>
-            <p class="font-body text-body-md opacity-90 max-w-md">
-              Join us in the Glass Atrium for artisanal coffee and a chance to meet our leadership team.
-            </p>
+            <h3 class="font-display text-headline-md mb-2">{c('visit.expect_afterward_title')}</h3>
+            <p class="font-body text-body-md opacity-90 max-w-md whitespace-pre-line">{c('visit.expect_afterward_body')}</p>
           </div>
         </div>
       </div>
