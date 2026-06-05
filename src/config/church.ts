@@ -11,6 +11,7 @@ export interface ChurchFeatures {
   giving: boolean;
   ai: boolean;
   live: boolean;
+  community: boolean;
 }
 export interface ChurchConfig {
   name: string;
@@ -44,7 +45,7 @@ export const CHURCH: ChurchConfig = {
   timezoneOffsetMin: 0,
   motifs: false, // Adinkra/kente are Ghana-specific; a church enables them in config
   theme: { primary: '#3b3a6b', accent: '#b08a3e', dark: '#23223f', surface: '#f7f7fb' },
-  features: { sermons: true, events: true, ministries: true, giving: true, ai: true, live: true },
+  features: { sermons: true, events: true, ministries: true, giving: true, ai: true, live: true, community: true },
 };
 
 export function feature(name: keyof ChurchFeatures): boolean {
