@@ -69,30 +69,31 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
       <span class="glow glow-purple"></span>
       <span class="glow glow-red"></span>
     </div>
-    <!-- focused scrim directly behind the headline (keeps the type legible without dimming the whole photo) -->
-    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(50% 40% at 50% 45%, color-mix(in srgb, var(--kb-primary-container) 50%, transparent), transparent 72%);"></div>
+    <!-- focused scrim behind the whole text column (eyebrow → countdown): keeps the type — esp. the
+         gold — legible over the bright window, while the arches at the edges stay fully visible -->
+    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(58% 62% at 50% 50%, color-mix(in srgb, var(--kb-primary-container) 62%, transparent) 0%, color-mix(in srgb, var(--kb-primary-container) 30%, transparent) 46%, transparent 74%);"></div>
 
     <!-- content centred in a region that clears the nav (top) and reserves space for the overlapping cards (bottom) -->
     <div class="relative z-10 flex-1 flex items-center justify-center px-6 pt-28 pb-44 md:pb-56">
       <div class="text-center max-w-4xl mx-auto w-full">
       <img src={CHURCH.logo} alt="" class="hero-swirl hero-fade w-20 h-20 md:w-24 md:h-24 mx-auto mb-7" style="--line-delay:0ms" />
-      <span class="hero-line inline-flex items-center gap-3 font-label-sm uppercase tracking-[0.45em] text-heritage-gold mb-6" style="--line-delay:140ms; text-shadow:0 1px 10px rgba(0,0,0,0.6);">
+      <span class="hero-line inline-flex items-center gap-3 font-label-sm uppercase tracking-[0.45em] text-heritage-gold mb-6" style="--line-delay:140ms; text-shadow:0 1px 2px rgba(0,0,0,0.85), 0 2px 18px rgba(0,0,0,0.75);">
         <Adinkra symbol="adinkrahene" class="w-3.5 h-3.5 opacity-80" />
         {c('home.hero_kicker')}
         <Adinkra symbol="adinkrahene" class="w-3.5 h-3.5 opacity-80" />
       </span>
       <h1 class="font-display text-display-mobile md:text-display-lg text-white mb-10" style="text-shadow:0 2px 24px rgba(0,0,0,0.55);">
         <span class="hero-line block" style="--line-delay:240ms">{c('home.hero_line1')}</span>
-        <span class="hero-line block text-gold-gradient" style="--line-delay:360ms; filter: drop-shadow(0 2px 14px rgba(0,0,0,0.6));">{c('home.hero_line2')}</span>
+        <span class="hero-line block text-gold-gradient" style="--line-delay:360ms; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.55)) drop-shadow(0 3px 18px rgba(0,0,0,0.6));">{c('home.hero_line2')}</span>
       </h1>
 
       <!-- Live next-gathering countdown -->
       <div class="hero-fade inline-flex flex-wrap justify-center items-center gap-x-5 gap-y-2 glass-card rounded-full px-7 py-3.5 mb-9" style="--line-delay:560ms">
-        <span class="font-label-sm uppercase tracking-[0.25em] text-heritage-gold">Next Gathering</span>
+        <span class="font-label-sm uppercase tracking-[0.25em] text-heritage-gold" style="text-shadow:0 1px 8px rgba(0,0,0,0.7);">Next Gathering</span>
         <span class="w-px h-6 bg-white/20 hidden sm:block"></span>
         <span id="hero-countdown" class="font-display text-white text-xl tabular-nums tracking-wide" data-schedule={c('home.gathering_schedule')}>—</span>
         <span class="w-px h-6 bg-white/20 hidden sm:block"></span>
-        <span id="hero-next" class="font-body text-body-md text-white/70 hidden sm:block">Sunday · 9:00 AM</span>
+        <span id="hero-next" class="font-body text-body-md text-white/85 hidden sm:block">Sunday · 9:00 AM</span>
       </div>
 
       <div class="hero-fade flex flex-col sm:flex-row gap-4 justify-center items-center" style="--line-delay:680ms">
