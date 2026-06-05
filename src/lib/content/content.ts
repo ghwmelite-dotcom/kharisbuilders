@@ -16,12 +16,18 @@ export function makeContent(stored: Record<string, string>): ContentFn {
 
 export type ImageFn = (key: string) => string;
 
-/** Resolve a page image: uploaded R2 key -> /media URL; else the registry default (bundled path). */
+/** Resolve a page image. A stored value that is already an absolute path/URL (starts with '/'
+ *  or 'http') is used as-is — e.g. a bundled default captured in D1; only a bare R2 object key
+ *  (e.g. "page/abc.jpg") gets the /media/ prefix. Else the registry default (bundled path). */
 export function makeImage(stored: Record<string, string>): ImageFn {
   return (key: string) => {
     const def = DEFAULTS[key] ?? '';
     const v = stored[key];
-    if (typeof v === 'string' && v.trim().length > 0) return mediaUrl(v) ?? def;
+    if (typeof v === 'string' && v.trim().length > 0) {
+      const t = v.trim();
+      if (t.startsWith('/') || t.startsWith('http')) return t;
+      return mediaUrl(t) ?? def;
+    }
     return def;
   };
 }
