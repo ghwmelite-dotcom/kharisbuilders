@@ -21,6 +21,14 @@ describe('makeImage', () => {
   it('serves an uploaded R2 key via /media', () => {
     expect(makeImage({ 'home.hero_image': 'page/abc.jpg' })('home.hero_image')).toBe('/media/page/abc.jpg');
   });
+  it('passes through an absolute path stored value (does NOT /media-wrap it)', () => {
+    // Regression: a bundled default captured into D1 (e.g. via the Kharis backfill) must render as-is,
+    // not become /media//images/... which 404s.
+    expect(makeImage({ 'home.hero_image': '/images/home-1.jpg' })('home.hero_image')).toBe('/images/home-1.jpg');
+    expect(makeImage({ 'home.hero_image': 'https://cdn.example.com/x.jpg' })('home.hero_image')).toBe(
+      'https://cdn.example.com/x.jpg',
+    );
+  });
   it('falls back to default for a blank stored value', () => {
     expect(makeImage({ 'home.hero_image': '  ' })('home.hero_image')).toBe('/images/placeholder-wide.svg');
   });
