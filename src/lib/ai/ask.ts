@@ -35,3 +35,27 @@ export function selectContexts(sermons: Sermon[], opts: SelectOpts = {}): Contex
     text: truncate(composeSermonText(s), perSermonChars),
   }));
 }
+
+export const FALLBACK_ANSWER =
+  "I couldn't find a sermon in our library that speaks directly to that yet. Try rephrasing your question, " +
+  'browse the sermons, or reach out to the church — we would love to help you personally.';
+
+/** Build the grounded chat messages. The model must answer ONLY from the numbered excerpts. */
+export function buildAskMessages(question: string, contexts: Context[]): { role: string; content: string }[] {
+  const system =
+    'You are a warm, pastoral assistant for a Christian church. Answer the visitor’s question ONLY using the ' +
+    'numbered sermon excerpts provided below. Speak kindly, clearly, and briefly. Cite the sermons you draw from ' +
+    'inline using their numbers, like [1] or [2]. If the excerpts do not address the question, say so honestly and ' +
+    'gently suggest they contact the church — do NOT use outside knowledge or invent teaching.';
+  const blocks = contexts
+    .map(
+      (c) =>
+        `[${c.n}] "${c.title}"${c.speaker ? ` — ${c.speaker}` : ''}${c.scripture_ref ? ` (${c.scripture_ref})` : ''}\n${c.text}`,
+    )
+    .join('\n\n');
+  const user = `Question: ${question}\n\nSermon excerpts:\n${blocks}`;
+  return [
+    { role: 'system', content: system },
+    { role: 'user', content: user },
+  ];
+}
