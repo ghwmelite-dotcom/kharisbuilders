@@ -1,7 +1,7 @@
 {
 	"compatibility_date": "2026-06-02",
 	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
-	"name": "church-template",
+	"name": "kharisbuilders",
 	"main": "@astrojs/cloudflare/entrypoints/server",
 	"assets": {
 		"directory": "./dist",
@@ -10,33 +10,33 @@
 	"observability": {
 		"enabled": true
 	},
-	// Structured content (sermons, events, ministries, visitors, donations, settings).
-	// database_id is filled in after `wrangler d1 create church-template` (scripts/new-church.mjs writes this per church).
+	// All structured content (sermons, events, ministries, visitors, donations, settings).
+	// database_id is filled in after `wrangler d1 create kharisbuilders`.
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "church-template",
-			"database_id": "PASTE_FROM_D1_CREATE"
+			"database_name": "kharisbuilders",
+			"database_id": "1f3056ca-a44d-4a63-bfbf-c38ba9fb957b"
 		}
 	],
 	// Uploaded media (event/ministry images, sermon thumbnails, portraits).
 	"r2_buckets": [
 		{
 			"binding": "MEDIA",
-			"bucket_name": "church-template-media"
+			"bucket_name": "kharisbuilders-media"
 		}
 	],
 	// Session storage required by the Astro Cloudflare adapter.
-	// id is filled in after `wrangler kv namespace create SESSION`.
+	// Pinned so CI/GitHub deploys reuse this namespace instead of provisioning a new one.
 	"kv_namespaces": [
 		{
 			"binding": "SESSION",
-			"id": "PASTE_FROM_KV_CREATE"
+			"id": "e1406f2f0b334423a197928f55fd90f8"
 		}
 	],
 	// Workers AI (embeddings + study-guide generation) and Vectorize (sermon search index).
 	"ai": { "binding": "AI" },
 	"vectorize": [
-		{ "binding": "SERMONS", "index_name": "church-template-sermons" }
+		{ "binding": "SERMONS", "index_name": "kharis-sermons" }
 	]
 }

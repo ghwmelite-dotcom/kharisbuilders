@@ -1,0 +1,5 @@
+# Kharis-specific deploy/identity files: keep OURS when merging the generic template (main).
+# Enable once per clone:  git config merge.ours.driver true
+src/config/church.ts merge=ours
+wrangler.jsonc merge=ours
+astro.config.mjs merge=ours

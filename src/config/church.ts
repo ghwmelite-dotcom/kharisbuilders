@@ -32,18 +32,18 @@ export interface ChurchConfig {
  * Edit these values + swap the logo/og images to re-skin the whole platform.
  */
 export const CHURCH: ChurchConfig = {
-  name: 'Grace Community Church',
-  tagline: 'A place to belong.',
+  name: 'Kharisbuilders',
+  tagline: 'Building Lives, Shaping Destinies.',
   description:
-    'A welcoming, Christ-centred church — sermons, events, ministries, and a community to call home.',
-  url: 'https://example.com',
-  logo: '/images/logo-placeholder.svg',
-  ogImage: '/images/placeholder-wide.svg',
+    'Kharisbuilders is a modern, Christ-centred church — sermons, events, ministries, and a place to belong. Building Lives, Shaping Destinies.',
+  url: 'https://kharisbuilders.missdiasporagh.workers.dev',
+  logo: '/images/kharis-logo.png',
+  ogImage: '/images/home-1.jpg',
   locale: 'en',
-  currency: 'USD',
-  timezoneOffsetMin: 0,
-  motifs: false, // Adinkra/kente are Ghana-specific; a church enables them in config
-  theme: { primary: '#3b3a6b', accent: '#b08a3e', dark: '#23223f', surface: '#f7f7fb' },
+  currency: 'GHS',
+  timezoneOffsetMin: 0, // Accra / UTC
+  motifs: true, // Adinkra + kente flourishes
+  theme: { primary: '#4a2a6b', accent: '#a87f2e', dark: '#2c1745', surface: '#faf6fe' },
   features: { sermons: true, events: true, ministries: true, giving: true, ai: true, live: true },
 };
 
