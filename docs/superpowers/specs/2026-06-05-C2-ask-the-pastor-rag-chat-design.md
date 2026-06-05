@@ -94,8 +94,12 @@ wiring thin and verified on the deployed Worker, since Workers AI + Vectorize do
 
 ### 5.4 Discovery
 
-- A prominent "Ask the Pastor" CTA card/button on `/sermons` (`src/pages/sermons/index.astro`).
-- An "Ask" entry in the public nav, rendered only when `feature('ai') && feature('sermons')`.
+- A prominent "Ask the Pastor" CTA link on `/sermons` (`src/pages/sermons/index.astro`), shown only
+  when `feature('ai')` — directly below the existing sermon search box, the natural place someone
+  looking for a message would see it.
+- **No global nav entry** — the public nav already has 8 items; a 9th two-feature-gated link would
+  crowd it. The `/sermons` CTA is the discovery point. (Refinement from brainstorming; the page is
+  still directly linkable at `/sermons/ask`.)
 
 ## 6. Testing
 
