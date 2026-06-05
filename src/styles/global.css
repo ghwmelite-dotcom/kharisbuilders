@@ -271,45 +271,201 @@ html {
   }
 }
 
-/* Dark glass nav: solid frosted-midnight bar, deepens on scroll */
-[data-nav] {
+/* ===== Premium liquid-glass nav ===== */
+/* The header is a transparent track; the glass lives on .nav-bar so it can detach
+   into a floating capsule on scroll. All colour is token-driven (works in every theme). */
+[data-nav] .nav-shell {
+  transition: padding 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-nav] .nav-bar {
+  isolation: isolate;
+  border-radius: 0;
+  background-color: color-mix(in srgb, var(--kb-primary) 72%, transparent);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid color-mix(in srgb, var(--kb-accent) 15%, transparent);
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
   transition:
-    background-color 0.4s ease,
-    box-shadow 0.4s ease,
-    border-color 0.4s ease;
-  background-color: color-mix(in srgb, var(--kb-primary) 76%, transparent);
-  backdrop-filter: blur(18px) saturate(1.3);
-  -webkit-backdrop-filter: blur(18px) saturate(1.3);
-  border-bottom: 1px solid color-mix(in srgb, var(--kb-accent) 18%, transparent);
+    margin 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.45s ease,
+    border-color 0.45s ease,
+    box-shadow 0.45s ease;
 }
-[data-nav] .nav-logo,
-[data-nav] .nav-link {
-  color: rgba(255, 255, 255, 0.82);
-  transition: color 0.35s ease;
+/* glass sheen (top inner highlight) — fades in when the capsule forms */
+[data-nav] .nav-bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 42%);
+  opacity: 0;
+  transition: opacity 0.55s ease;
+  z-index: -1;
 }
+/* luminous gold hairline along the very top edge */
+[data-nav] .nav-bar::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--kb-accent) 75%, transparent), transparent);
+  opacity: 0.6;
+  transition: opacity 0.55s ease;
+}
+
 [data-nav] .nav-logo {
   color: #fff;
 }
-[data-nav] .nav-link:hover {
+[data-nav] .nav-link {
+  position: relative;
+  z-index: 1;
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.65rem;
+  color: rgba(255, 255, 255, 0.78);
+  transition: color 0.35s ease;
+}
+[data-nav] .nav-link:hover,
+[data-nav] .nav-link:focus-visible,
+[data-nav] .nav-link.is-active {
   color: #fff;
 }
-[data-nav] .nav-cta {
-  color: #fff;
-  border: 1px solid color-mix(in srgb, var(--kb-accent) 55%, transparent);
+/* persistent glowing gold underline for the current page */
+[data-nav] .nav-link.is-active::after {
+  content: '';
+  position: absolute;
+  left: 0.85rem;
+  right: 0.85rem;
+  bottom: 0.32rem;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--kb-accent), transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--kb-accent) 70%, transparent);
+}
+/* magnetic gold pill — JS slides it under the hovered link */
+[data-nav] .nav-indicator {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0;
+  height: 2.4rem;
+  transform: translate(0, -50%);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--kb-accent) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--kb-accent) 30%, transparent);
+  box-shadow: 0 0 26px -8px color-mix(in srgb, var(--kb-accent) 65%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
   transition:
-    background-color 0.35s,
-    color 0.35s,
-    border-color 0.35s;
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.35s ease;
 }
-[data-nav] .nav-cta:hover {
-  background: var(--kb-accent);
-  border-color: var(--kb-accent);
+
+/* CTA — a gold jewel that fills on hover */
+[data-nav] .nav-cta {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 999px;
+  padding: 0.7rem 1.45rem;
+  color: #fff;
+  border: 1px solid color-mix(in srgb, var(--kb-accent) 58%, transparent);
+  transition:
+    color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.45s ease,
+    box-shadow 0.45s ease,
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-nav] .nav-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--kb-accent), color-mix(in srgb, var(--kb-accent) 60%, #ffffff));
+  transform: translateY(101%);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-nav] .nav-cta:hover,
+[data-nav] .nav-cta:focus-visible {
   color: var(--kb-primary);
+  border-color: var(--kb-accent);
+  box-shadow: 0 12px 30px -12px color-mix(in srgb, var(--kb-accent) 75%, transparent);
+  transform: translateY(-1px);
 }
-[data-nav].nav-scrolled {
-  background-color: color-mix(in srgb, var(--kb-primary) 94%, transparent);
-  box-shadow: 0 12px 34px -14px rgba(0, 0, 0, 0.55);
-  border-bottom-color: color-mix(in srgb, var(--kb-accent) 28%, transparent);
+[data-nav] .nav-cta:hover::before,
+[data-nav] .nav-cta:focus-visible::before {
+  transform: translateY(0);
+}
+
+/* mobile menu links */
+[data-nav] .nav-mobile-link {
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 0.5rem;
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease;
+}
+[data-nav] .nav-mobile-link:hover,
+[data-nav] .nav-mobile-link.is-active {
+  color: #fff;
+  background: color-mix(in srgb, var(--kb-accent) 14%, transparent);
+}
+
+/* focus rings (keyboard a11y) */
+[data-nav] .nav-link:focus-visible,
+[data-nav] .nav-cta:focus-visible,
+[data-nav] .nav-brand:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--kb-accent) 80%, transparent);
+  outline-offset: 3px;
+}
+
+/* SCROLLED → the bar lifts off the edge into a floating glass capsule */
+[data-nav].nav-scrolled .nav-shell {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+[data-nav].nav-scrolled .nav-bar {
+  margin-top: 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--kb-accent) 32%, transparent);
+  border-radius: 1.4rem;
+  background-color: color-mix(in srgb, var(--kb-primary) 88%, transparent);
+  box-shadow:
+    0 22px 55px -20px rgba(0, 0, 0, 0.62),
+    0 1px 0 0 rgba(255, 255, 255, 0.07) inset;
+}
+[data-nav].nav-scrolled .nav-bar::before {
+  opacity: 1;
+}
+[data-nav].nav-scrolled .nav-bar::after {
+  opacity: 0;
+}
+
+/* logo flourish + reduced-motion */
+@media (prefers-reduced-motion: no-preference) {
+  [data-nav] .nav-mark {
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  [data-nav] .nav-brand:hover .nav-mark {
+    transform: rotate(45deg) scale(1.05);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-nav] .nav-bar,
+  [data-nav] .nav-shell,
+  [data-nav] .nav-indicator,
+  [data-nav] .nav-cta,
+  [data-nav] .nav-cta::before {
+    transition: none;
+  }
 }
 
 /* ====== Cinematic hero ====== */
