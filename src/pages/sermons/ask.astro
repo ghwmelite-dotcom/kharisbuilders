@@ -1,0 +1,128 @@
+---
+import PublicLayout from '../../layouts/PublicLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import { env } from '../../lib/runtime';
+import { getAllSettings } from '../../lib/db/settings';
+import { getAllContent } from '../../lib/db/content';
+import { makeImage } from '../../lib/content/content';
+import { SITE } from '../../lib/seo';
+import { feature } from '../../config/church';
+
+if (!feature('ai')) return Astro.redirect('/');
+
+let siteKey = '1x00000000000000000000AA';
+let cimg = makeImage({});
+try {
+  const settings = await getAllSettings(env.DB);
+  siteKey = settings.turnstile_site_key ?? siteKey;
+  cimg = makeImage(await getAllContent(env.DB).catch(() => ({})));
+} catch {
+  // settings/content unavailable in some envs — keep dev defaults
+}
+---
+<PublicLayout
+  title={`Ask the Pastor | ${SITE.name}`}
+  description={`Ask a question and get an answer grounded in the sermons of ${SITE.name}.`}
+>
+  <PageHero image={cimg('pages.sermons_hero')} height="h-[300px] md:h-[380px]">
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Sermon Library</span>
+    <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Ask the Pastor</h1>
+    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">
+      Ask a question and get an answer drawn from our sermons — with links to the messages it comes from.
+    </p>
+  </PageHero>
+
+  <section class="py-16 md:py-24 px-margin-mobile md:px-margin-desktop max-w-3xl mx-auto">
+    <form id="ask-form" class="space-y-5">
+      <textarea
+        id="ask-question"
+        name="question"
+        rows="3"
+        maxlength="500"
+        required
+        placeholder="e.g. What does the Bible say about anxiety?"
+        class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary"
+      ></textarea>
+      <div class="cf-turnstile" data-sitekey={siteKey}></div>
+      <button
+        type="submit"
+        id="ask-submit"
+        class="bg-heritage-gold text-primary font-label-md uppercase tracking-widest px-8 py-3 hover:bg-secondary transition-all disabled:opacity-50"
+      >
+        Ask
+      </button>
+    </form>
+
+    <p id="ask-status" class="mt-10 hidden font-body text-body-md text-stone-gray" aria-live="polite"></p>
+
+    <article id="ask-answer" class="mt-10 hidden">
+      <div class="bg-surface-container-lowest border-t-2 border-heritage-gold p-8 shadow-[0_10px_30px_-10px_rgba(26,43,66,0.1)]">
+        <h2 class="font-label-sm uppercase tracking-widest text-heritage-gold mb-4">Answer</h2>
+        <p id="ask-answer-text" class="font-body text-body-lg text-primary leading-relaxed whitespace-pre-line"></p>
+      </div>
+      <div id="ask-citations" class="mt-8 space-y-3"></div>
+    </article>
+  </section>
+
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script is:inline>
+    const form = document.getElementById('ask-form');
+    const status = document.getElementById('ask-status');
+    const answer = document.getElementById('ask-answer');
+    const answerText = document.getElementById('ask-answer-text');
+    const citations = document.getElementById('ask-citations');
+    const submit = document.getElementById('ask-submit');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const question = document.getElementById('ask-question').value.trim();
+      if (!question) return;
+      const tokenEl = form.querySelector('[name="cf-turnstile-response"]');
+      const token = tokenEl ? tokenEl.value : '';
+
+      answer.classList.add('hidden');
+      citations.innerHTML = '';
+      status.classList.remove('hidden');
+      status.textContent = 'Searching the sermons and writing an answer…';
+      submit.disabled = true;
+
+      try {
+        const res = await fetch('/api/ai/ask', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ question: question, 'cf-turnstile-response': token }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          status.textContent = data.error || 'Something went wrong. Please try again.';
+        } else {
+          status.classList.add('hidden');
+          answerText.textContent = data.answer || '';
+          for (const c of data.citations || []) {
+            const a = document.createElement('a');
+            a.href = '/sermons/' + c.slug;
+            a.className = 'block bg-surface border border-champagne px-5 py-4 hover:border-heritage-gold transition-all';
+            const title = document.createElement('div');
+            title.className = 'font-display text-headline-md text-primary';
+            title.textContent = c.title;
+            a.appendChild(title);
+            const metaText = [c.speaker, c.scripture_ref].filter(Boolean).join(' · ');
+            if (metaText) {
+              const m = document.createElement('div');
+              m.className = 'font-body text-body-md text-stone-gray mt-1';
+              m.textContent = metaText;
+              a.appendChild(m);
+            }
+            citations.appendChild(a);
+          }
+          answer.classList.remove('hidden');
+        }
+      } catch {
+        status.textContent = 'Network error. Please try again.';
+      } finally {
+        submit.disabled = false;
+        if (window.turnstile) window.turnstile.reset();
+      }
+    });
+  </script>
+</PublicLayout>
