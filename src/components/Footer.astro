@@ -1,6 +1,6 @@
 ---
 import Adinkra from './Adinkra.astro';
-import { CHURCH } from '../config/church';
+import { CHURCH, feature } from '../config/church';
 import type { SettingsMap } from '../lib/db/settings';
 interface Props {
   settings?: SettingsMap;
@@ -30,6 +30,7 @@ const explore = [
   { label: 'Ministries', href: '/ministries' },
   { label: 'Sermons', href: '/sermons' },
   { label: 'Events', href: '/events' },
+  ...(feature('community') ? [{ label: 'Next Steps', href: '/connect' }] : []),
   { label: 'Visit', href: '/visit' },
 ];
 ---
