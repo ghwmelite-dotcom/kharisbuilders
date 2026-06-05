@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import type { Sermon } from '../../src/lib/db/sermons';
-import { selectContexts, buildAskMessages, FALLBACK_ANSWER } from '../../src/lib/ai/ask';
+import { selectContexts, buildAskMessages, FALLBACK_ANSWER, answerQuestion } from '../../src/lib/ai/ask';
+import type { AIClient, VectorStore } from '../../src/lib/ai/clients';
 
 function mkSermon(over: Partial<Sermon>): Sermon {
   return {
@@ -64,5 +65,45 @@ describe('FALLBACK_ANSWER', () => {
   it('is a non-empty, non-doctrinal deflection', () => {
     expect(typeof FALLBACK_ANSWER).toBe('string');
     expect(FALLBACK_ANSWER.length).toBeGreaterThan(20);
+  });
+});
+
+function mkDeps(matches: { id: string; score: number }[], sermons: Sermon[], generated = 'Answer [1].') {
+  const ai: AIClient = {
+    embed: vi.fn(async () => [0.1, 0.2, 0.3]),
+    generate: vi.fn(async () => generated),
+  };
+  const store: VectorStore = {
+    query: vi.fn(async () => matches),
+    upsert: vi.fn(async () => {}),
+    remove: vi.fn(async () => {}),
+  };
+  const fetchSermons = vi.fn(async (ids: number[]) => sermons.filter((s) => ids.includes(s.id)));
+  return { ai, store, fetchSermons };
+}
+
+describe('answerQuestion', () => {
+  it('returns the generated answer + citations for retrieved sermons', async () => {
+    const sermons = [mkSermon({ id: 1, slug: 'a', title: 'A' }), mkSermon({ id: 2, slug: 'b', title: 'B' })];
+    const deps = mkDeps([{ id: '1', score: 0.9 }, { id: '2', score: 0.8 }], sermons, 'Here is the answer [1].');
+    const res = await answerQuestion(deps, 'a question');
+    expect(res.answer).toBe('Here is the answer [1].');
+    expect(res.citations.map((c) => c.slug)).toEqual(['a', 'b']);
+    expect(deps.ai.generate).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns the fallback WITHOUT calling generate when nothing is retrieved', async () => {
+    const deps = mkDeps([], []); // store returns no matches
+    const res = await answerQuestion(deps, 'obscure question');
+    expect(res.answer).toBe(FALLBACK_ANSWER);
+    expect(res.citations).toEqual([]);
+    expect(deps.ai.generate).not.toHaveBeenCalled();
+  });
+
+  it('returns the fallback (no generate) when ids resolve to no published sermons', async () => {
+    const deps = mkDeps([{ id: '9', score: 0.5 }], []); // match id 9, but fetch finds none
+    const res = await answerQuestion(deps, 'q');
+    expect(res.answer).toBe(FALLBACK_ANSWER);
+    expect(deps.ai.generate).not.toHaveBeenCalled();
   });
 });
