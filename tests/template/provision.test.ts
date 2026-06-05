@@ -24,7 +24,7 @@ const valid = {
   timezoneOffsetMin: 0,
   motifs: false,
   theme: { primary: '#3b3a6b', accent: '#b08a3e', dark: '#23223f', surface: '#f7f7fb' },
-  features: { sermons: true, events: true, ministries: true, giving: true, ai: true, live: true },
+  features: { sermons: true, events: true, ministries: true, giving: true, ai: true, live: true, community: true },
 };
 
 describe('deriveNames', () => {
