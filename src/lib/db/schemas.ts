@@ -121,3 +121,12 @@ export const MinistryInputSchema = z.object({
   published: z.coerce.boolean().default(false),
 });
 export type MinistryInput = z.infer<typeof MinistryInputSchema>;
+
+export const ConnectInputSchema = z.object({
+  name: z.string().trim().min(1, 'Please add your name').max(120),
+  email: z.string().trim().email('Please add a valid email').max(200),
+  phone: z.string().trim().max(40).optional().or(z.literal('')),
+  steps: z.array(z.string()).default([]),
+  message: z.string().trim().max(2000).optional().or(z.literal('')),
+});
+export type ConnectInput = z.infer<typeof ConnectInputSchema>;

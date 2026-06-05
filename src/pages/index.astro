@@ -365,4 +365,16 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
     </div>
   </section>
   )}
+  {
+    feature('community') && (
+      <section class="py-20 md:py-28 px-margin-mobile md:px-margin-desktop bg-primary-container text-on-primary">
+        <div class="max-w-3xl mx-auto text-center">
+          <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">Next Steps</span>
+          <h2 class="font-display text-headline-lg md:text-display-mobile text-white mb-5">Not sure where to start?</h2>
+          <p class="font-body text-body-lg text-white/80 max-w-xl mx-auto mb-9">Whether you're new, exploring faith, or ready to go deeper — tell us, and we'll help you take your next step.</p>
+          <a href="/connect" class="inline-block bg-heritage-gold text-primary font-label-md uppercase tracking-widest px-10 py-4 hover:bg-secondary transition-colors">Take your next step</a>
+        </div>
+      </section>
+    )
+  }
 </PublicLayout>

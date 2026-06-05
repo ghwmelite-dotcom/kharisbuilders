@@ -121,7 +121,7 @@ export const NEXT_STEPS: NextStep[] = [
   { key: 'membership', label: 'I want to become a member' },
   { key: 'group', label: "I'd like to join a group" },
   { key: 'serve', label: 'I want to serve / volunteer' },
-  { key: 'prayer', label: 'I'd like prayer or a call from a pastor' },
+  { key: 'prayer', label: "I'd like prayer or a call from a pastor" },
 ];
 
 export const STEP_KEYS: string[] = NEXT_STEPS.map((s) => s.key);
