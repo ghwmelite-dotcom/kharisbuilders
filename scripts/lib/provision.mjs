@@ -10,7 +10,7 @@
 
 const SLUG_RE = /^[a-z0-9]([a-z0-9-]{0,38}[a-z0-9])$/;
 const HEX_RE = /^#[0-9a-fA-F]{6}$/;
-const FEATURE_KEYS = ['sermons', 'events', 'ministries', 'giving', 'ai', 'live'];
+const FEATURE_KEYS = ['sermons', 'events', 'ministries', 'giving', 'ai', 'live', 'community'];
 
 /** @param {string} slug @returns {DerivedNames} */
 export function deriveNames(slug) {
@@ -113,7 +113,7 @@ export const CHURCH: ChurchConfig = {
   timezoneOffsetMin: ${input.timezoneOffsetMin},
   motifs: ${input.motifs},
   theme: { primary: ${s(th.primary)}, accent: ${s(th.accent)}, dark: ${s(th.dark)}, surface: ${s(th.surface)} },
-  features: { sermons: ${ft.sermons}, events: ${ft.events}, ministries: ${ft.ministries}, giving: ${ft.giving}, ai: ${ft.ai}, live: ${ft.live} },
+  features: { sermons: ${ft.sermons}, events: ${ft.events}, ministries: ${ft.ministries}, giving: ${ft.giving}, ai: ${ft.ai}, live: ${ft.live}, community: ${ft.community} },
 };
 
 export function feature(name: keyof ChurchFeatures): boolean {
