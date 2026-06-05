@@ -1,0 +1,116 @@
+---
+import PublicLayout from '../layouts/PublicLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { env } from '../lib/runtime';
+import { getAllSettings } from '../lib/db/settings';
+import { getAllContent } from '../lib/db/content';
+import { makeImage } from '../lib/content/content';
+import { listPublicPrayers, type PublicPrayer } from '../lib/db/prayer-requests';
+import { SITE } from '../lib/seo';
+import { feature } from '../config/church';
+
+if (!feature('community')) return Astro.redirect('/');
+
+let siteKey = '1x00000000000000000000AA';
+let cimg = makeImage({});
+let prayers: PublicPrayer[] = [];
+try {
+  const settings = await getAllSettings(env.DB);
+  siteKey = settings.turnstile_site_key ?? siteKey;
+  cimg = makeImage(await getAllContent(env.DB).catch(() => ({})));
+  prayers = await listPublicPrayers(env.DB);
+} catch {
+  // DB unavailable in some envs — render an empty wall
+}
+const status = Astro.url.searchParams.get('prayer');
+const fmt = (s: string) => s?.slice(0, 10) ?? '';
+---
+<PublicLayout title={`Prayer Wall | ${SITE.name}`} description={`Share a prayer request and pray for others at ${SITE.name}.`}>
+  <PageHero image={cimg('pages.sermons_hero')} height="h-[300px] md:h-[380px]">
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Community</span>
+    <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Prayer Wall</h1>
+    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">Share what's on your heart, and pray for one another.</p>
+  </PageHero>
+
+  <section class="py-16 md:py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+    {status === 'ok' && (
+      <div class="max-w-2xl mx-auto mb-10 border-t-2 border-heritage-gold bg-surface-container-lowest p-5 text-center font-body text-body-md text-primary">
+        Thank you — your request was received. Public requests appear once a member of our team has reviewed them.
+      </div>
+    )}
+    {status === 'err' && (
+      <div class="max-w-2xl mx-auto mb-10 border-t-2 border-accent-deep bg-surface-container-lowest p-5 text-center font-body text-body-md text-primary">
+        Sorry — we couldn't submit that. Please check your request and try again.
+      </div>
+    )}
+
+    <!-- Submit -->
+    <div class="max-w-2xl mx-auto mb-16 bg-surface-container-lowest border-t-2 border-heritage-gold elev-2 p-8 md:p-10">
+      <h2 class="font-display text-headline-md text-primary mb-2">Share a request</h2>
+      <p class="font-body text-body-md text-stone-gray mb-6">Your email (optional) is kept private — only our prayer team sees it.</p>
+      <form method="POST" action="/api/forms/prayer" class="space-y-5">
+        <input type="hidden" name="return_to" value="/prayer" />
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <input name="name" placeholder="Your name (optional)" class="border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
+          <input name="email" type="email" placeholder="Email (optional, private)" class="border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
+        </div>
+        <textarea name="request" rows="4" required maxlength="2000" placeholder="How can we pray for you?" class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary"></textarea>
+        <fieldset class="space-y-2">
+          <label class="flex items-center gap-3 font-body text-body-md text-primary">
+            <input type="radio" name="visibility" value="private" checked /> Keep private — just for the prayer team
+          </label>
+          <label class="flex items-center gap-3 font-body text-body-md text-primary">
+            <input type="radio" name="visibility" value="public" /> Share on the wall (after review)
+          </label>
+        </fieldset>
+        <div class="cf-turnstile" data-sitekey={siteKey}></div>
+        <button type="submit" class="bg-heritage-gold text-primary font-label-md uppercase tracking-widest px-8 py-3 hover:bg-secondary transition-all">Send request</button>
+      </form>
+    </div>
+
+    <!-- Wall -->
+    <h2 class="font-display text-headline-lg text-primary text-center mb-3">Prayers from our community</h2>
+    <p class="text-center font-body text-body-md text-stone-gray mb-10">Requests are reviewed before they appear here.</p>
+    {
+      prayers.length === 0 ? (
+        <p class="text-center font-body text-body-md text-stone-gray">No requests on the wall yet — be the first to share, or check back soon.</p>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {prayers.map((p) => (
+            <article class="bg-surface-container-lowest border border-champagne p-6 flex flex-col" data-prayer-card>
+              <p class="font-body text-body-md text-primary leading-relaxed whitespace-pre-line flex-1">{p.request}</p>
+              <div class="mt-5 pt-4 border-t border-champagne flex items-center justify-between">
+                <span class="font-label-sm uppercase tracking-[0.18em] text-stone-gray">{p.name || 'Anonymous'} · {fmt(p.created_at)}</span>
+                <button type="button" class="pray-btn inline-flex items-center gap-2 font-label-sm uppercase tracking-[0.14em] text-heritage-gold hover:text-primary transition-colors" data-id={p.id}>
+                  <span aria-hidden="true">&#128591;</span> Prayed <span class="pray-count font-display">{p.pray_count}</span>
+                </button>
+              </div>
+            </article>
+          ))}
+        </div>
+      )
+    }
+  </section>
+
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script is:inline>
+    let prayed = [];
+    try { prayed = JSON.parse(localStorage.getItem('prayed-ids') || '[]'); } catch (e) {}
+    document.querySelectorAll('.pray-btn').forEach((btn) => {
+      const id = Number(btn.getAttribute('data-id'));
+      if (prayed.includes(id)) { btn.disabled = true; btn.style.opacity = '0.55'; }
+      btn.addEventListener('click', async () => {
+        if (btn.disabled) return;
+        btn.disabled = true; btn.style.opacity = '0.55';
+        const countEl = btn.querySelector('.pray-count');
+        try {
+          const res = await fetch('/api/prayer/pray', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id }) });
+          const data = await res.json();
+          if (typeof data.count === 'number') countEl.textContent = data.count;
+          prayed.push(id);
+          try { localStorage.setItem('prayed-ids', JSON.stringify(prayed)); } catch (e) {}
+        } catch (e) { btn.disabled = false; btn.style.opacity = '1'; }
+      });
+    });
+  </script>
+</PublicLayout>
