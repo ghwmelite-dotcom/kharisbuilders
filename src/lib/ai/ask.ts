@@ -1,5 +1,7 @@
 import type { Sermon } from '../db/sermons';
+import type { AIClient, VectorStore } from './clients';
 import { composeSermonText, truncate } from './text';
+import { searchSermonIds } from './search';
 
 export interface Context {
   n: number;
@@ -58,4 +60,38 @@ export function buildAskMessages(question: string, contexts: Context[]): { role:
     { role: 'system', content: system },
     { role: 'user', content: user },
   ];
+}
+
+export interface AnswerDeps {
+  ai: AIClient;
+  store: VectorStore;
+  fetchSermons: (ids: number[]) => Promise<Sermon[]>;
+}
+
+export interface AnswerResult {
+  answer: string;
+  citations: Citation[];
+}
+
+export interface AnswerOpts {
+  topK?: number;
+  maxSermons?: number;
+  perSermonChars?: number;
+}
+
+/** Retrieve relevant sermons and answer the question grounded in them. No match => fallback, no LLM call. */
+export async function answerQuestion(deps: AnswerDeps, question: string, opts: AnswerOpts = {}): Promise<AnswerResult> {
+  const topK = opts.topK ?? 4;
+  const ids = await searchSermonIds({ ai: deps.ai, store: deps.store }, question, topK);
+  const sermons = ids.length ? await deps.fetchSermons(ids) : [];
+  if (sermons.length === 0) return { answer: FALLBACK_ANSWER, citations: [] };
+  const contexts = selectContexts(sermons, { maxSermons: opts.maxSermons, perSermonChars: opts.perSermonChars });
+  const generated = (await deps.ai.generate(buildAskMessages(question, contexts))).trim();
+  const citations: Citation[] = contexts.map((c) => ({
+    slug: c.slug,
+    title: c.title,
+    speaker: c.speaker,
+    scripture_ref: c.scripture_ref,
+  }));
+  return { answer: generated || FALLBACK_ANSWER, citations };
 }
