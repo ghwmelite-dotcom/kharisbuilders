@@ -289,3 +289,36 @@ export function buildChecklist(input) {
   L.push('');
   return L.join('\n');
 }
+
+/** Extract the database_id from `wrangler d1 create` / `d1 info` output. */
+export function parseD1Id(output) {
+  const m = String(output).match(/"database_id":\s*"([^"]+)"/);
+  return m ? m[1] : null;
+}
+
+/** Extract the namespace id from `wrangler kv namespace create` output. */
+export function parseKvId(output) {
+  const m = String(output).match(/"id":\s*"([^"]+)"/);
+  return m ? m[1] : null;
+}
+
+/** Find a KV namespace id by title in `wrangler kv namespace list` output. */
+export function parseKvIdFromList(output, title) {
+  try {
+    const m = String(output).match(/\[[\s\S]*\]/);
+    if (!m) return null;
+    const arr = JSON.parse(m[0]);
+    const found = Array.isArray(arr) ? arr.find((x) => x && x.title === title) : null;
+    return found ? found.id : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Replace the PASTE_FROM_* id markers in wrangler.jsonc with real ids (only when provided). */
+export function applyResourceIds(wranglerText, ids) {
+  let t = wranglerText;
+  if (ids.databaseId) t = t.replace('PASTE_FROM_D1_CREATE', ids.databaseId);
+  if (ids.kvId) t = t.replace('PASTE_FROM_KV_CREATE', ids.kvId);
+  return t;
+}
