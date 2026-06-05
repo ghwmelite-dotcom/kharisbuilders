@@ -3,8 +3,10 @@
 A complete, re-skinnable church website — a fast public site plus a staff-maintainable admin —
 built on **Astro + Cloudflare**. Spin up a new church by editing one file and running one script.
 
-> 👉 **New to the whole thing? Start with the friendly, plain-English [docs/SYSTEM-GUIDE.md](docs/SYSTEM-GUIDE.md)** —
-> it explains the system in 30 seconds and points you to exactly the part you need.
+> 👉 **New to the whole thing?** Open the sleek interactive **[docs/guide.html](docs/guide.html)** in a browser
+> (an audience-routed walkthrough with a go-live checklist), or read the plain-text
+> **[docs/SYSTEM-GUIDE.md](docs/SYSTEM-GUIDE.md)** — both explain the system in 30 seconds and point you to
+> exactly the part you need.
 
 - **Public site:** home, about, ministries, sermons (with AI search + study guides), events
   (with registration), visit (with a contact form), online giving, and a live/online-campus page.
