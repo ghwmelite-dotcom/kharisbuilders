@@ -137,3 +137,49 @@ describe('buildChecklist', () => {
     expect(off).not.toContain('PAYSTACK_SECRET_KEY');
   });
 });
+
+import { parseD1Id, parseKvId, parseKvIdFromList, applyResourceIds } from '../../scripts/lib/provision.mjs';
+
+describe('wrangler output parsers', () => {
+  it('parseD1Id pulls the database_id', () => {
+    const out = `✅ Created DB\n{\n  "d1_databases": [\n    { "binding": "DB", "database_name": "grace", "database_id": "a5bb3493-a21c-4ce0-8de9-320acd564056" }\n  ]\n}`;
+    expect(parseD1Id(out)).toBe('a5bb3493-a21c-4ce0-8de9-320acd564056');
+    expect(parseD1Id('no id here')).toBeNull();
+  });
+  it('parseKvId pulls the namespace id', () => {
+    expect(parseKvId('✨ Success!\n      "id": "0e45875a4d87416eab4da7d189896c37"')).toBe('0e45875a4d87416eab4da7d189896c37');
+    expect(parseKvId('nope')).toBeNull();
+  });
+  it('parseKvIdFromList finds the id by title', () => {
+    const out = `Resource location: remote\n[\n  { "id": "aaa", "title": "other-SESSION" },\n  { "id": "bbb", "title": "grace-SESSION" }\n]`;
+    expect(parseKvIdFromList(out, 'grace-SESSION')).toBe('bbb');
+    expect(parseKvIdFromList(out, 'missing')).toBeNull();
+    expect(parseKvIdFromList('not json', 'x')).toBeNull();
+  });
+  it('applyResourceIds replaces only the provided markers', () => {
+    const w = '"database_id": "PASTE_FROM_D1_CREATE"\n"id": "PASTE_FROM_KV_CREATE"';
+    expect(applyResourceIds(w, { databaseId: 'd1', kvId: 'kv' })).toBe('"database_id": "d1"\n"id": "kv"');
+    expect(applyResourceIds(w, { databaseId: 'd1' })).toContain('PASTE_FROM_KV_CREATE');
+  });
+});
+
+import { provisionPlan } from '../../scripts/lib/provision.mjs';
+
+describe('provisionPlan', () => {
+  const base = validateChurchInput(valid).value;
+  it('orders the steps and derives names from the slug', () => {
+    const keys = provisionPlan(base).map((s) => s.key);
+    expect(keys).toEqual(['d1', 'kv', 'r2', 'vectorize', 'migrate', 'seed1', 'seed2', 'seed3', 'turnstile', 'build', 'deploy']);
+    const d1 = provisionPlan(base).find((s) => s.key === 'd1');
+    expect(d1.cmd).toBe('npx wrangler d1 create grace-community');
+    expect(d1.capture).toBe('d1Id');
+    const kv = provisionPlan(base).find((s) => s.key === 'kv');
+    expect(kv.cmd).toBe('npx wrangler kv namespace create grace-community-SESSION');
+    expect(kv.kvTitle).toBe('grace-community-SESSION');
+    expect(provisionPlan(base).find((s) => s.key === 'deploy').cmd).toBe('npx wrangler deploy');
+  });
+  it('omits the vectorize step when ai is off', () => {
+    const off = provisionPlan({ ...base, features: { ...base.features, ai: false } });
+    expect(off.some((s) => s.key === 'vectorize')).toBe(false);
+  });
+});
