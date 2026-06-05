@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Complete Guide · Church Website Platform</title>
+<meta name="description" content="An interactive guide to the whole system — running it, putting it live, and launching a new church." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #0f0a1d;
+    --aubergine: #1c1030;
+    --plum: #2c1745;
+    --royal: #4a2a6b;
+    --gold: #cda353;
+    --gold-soft: #b88a3e;
+    --paper: #f4eef9;
+    --muted: #b7a8cb;
+    --muted-dim: #897aa3;
+    --line: rgba(205,163,83,0.20);
+    --glass: rgba(255,255,255,0.045);
+    --glass-strong: rgba(255,255,255,0.07);
+    --display: 'Playfair Display', Georgia, serif;
+    --body: 'Manrope', system-ui, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --maxw: 920px;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    font-family: var(--body);
+    color: var(--paper);
+    background: var(--ink);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ---- atmosphere: drifting brand glows + grain ---- */
+  .bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none;
+        background:
+          radial-gradient(1200px 700px at 18% -8%, rgba(74,42,107,0.55), transparent 60%),
+          radial-gradient(1000px 800px at 100% 6%, rgba(44,23,69,0.7), transparent 55%),
+          linear-gradient(180deg, #140c24 0%, #0f0a1d 55%, #0c0817 100%); }
+  .bg .glow { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .35; mix-blend-mode: screen; }
+  .bg .g1 { width: 42vw; height: 42vw; left: -8vw; top: 8vh; background: #b88a3e; }
+  .bg .g2 { width: 38vw; height: 38vw; right: -6vw; top: 32vh; background: #5b3a8a; }
+  .bg .g3 { width: 34vw; height: 34vw; left: 28vw; bottom: -10vh; background: #3a6f5f; opacity:.22; }
+  .grain { position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  @media (prefers-reduced-motion: no-preference) {
+    .bg .glow { animation: drift 26s var(--ease) infinite alternate; }
+    .bg .g2 { animation-duration: 32s; } .bg .g3 { animation-duration: 38s; }
+    @keyframes drift { to { transform: translate(4vw, -3vh) scale(1.12); } }
+  }
+
+  /* ---- scroll progress ---- */
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0;
+    background: linear-gradient(90deg, var(--gold-soft), var(--gold)); z-index: 60;
+    box-shadow: 0 0 14px rgba(205,163,83,.6); }
+
+  /* ---- layout ---- */
+  .shell { display: grid; grid-template-columns: 290px 1fr; gap: 0; }
+  @media (max-width: 900px) { .shell { grid-template-columns: 1fr; } }
+
+  /* ---- sidebar ---- */
+  aside { position: sticky; top: 0; height: 100vh; padding: 38px 26px; display: flex; flex-direction: column;
+          border-right: 1px solid var(--line); backdrop-filter: blur(8px); }
+  @media (max-width: 900px) {
+    aside { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+    .nav-rail, .aside-foot { display: none; }
+  }
+  .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; }
+  .brand .mark { width: 38px; height: 38px; border-radius: 50%; flex: none;
+    background: radial-gradient(circle at 35% 30%, #e0922f, #c0392b 40%, #6b4c7a 70%, #3b6fb6);
+    box-shadow: 0 0 0 1px rgba(205,163,83,.4), 0 6px 18px -6px rgba(0,0,0,.6); }
+  .brand b { font-family: var(--display); font-weight: 600; font-size: 19px; letter-spacing: .2px; }
+  .brand small { display:block; font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+
+  .nav-rail { list-style: none; display: flex; flex-direction: column; gap: 2px; margin-top: 6px; }
+  .nav-rail a { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 10px;
+    color: var(--muted); text-decoration: none; font-size: 13.5px; font-weight: 500; letter-spacing: .01em;
+    transition: color .3s var(--ease), background .3s var(--ease); }
+  .nav-rail a .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .35; transition: .3s var(--ease); }
+  .nav-rail a:hover { color: var(--paper); }
+  .nav-rail a.active { color: var(--paper); background: rgba(205,163,83,.10); }
+  .nav-rail a.active .dot { background: var(--gold); opacity: 1; box-shadow: 0 0 10px var(--gold); }
+  .aside-foot { margin-top: auto; padding-top: 22px; font-size: 12px; color: var(--muted-dim); line-height: 1.7; }
+  .aside-foot a { color: var(--gold-soft); text-decoration: none; }
+
+  /* ---- main ---- */
+  main { padding: 0 clamp(22px, 5vw, 70px) 120px; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; }
+  section { padding: 64px 0 8px; scroll-margin-top: 24px; }
+
+  .eyebrow { font-size: 12px; letter-spacing: .32em; text-transform: uppercase; color: var(--gold);
+    display: inline-flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  .eyebrow::before { content:''; width: 26px; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); }
+  h1 { font-family: var(--display); font-weight: 600; line-height: 1.02; letter-spacing: -.01em;
+    font-size: clamp(40px, 7vw, 82px); }
+  h2 { font-family: var(--display); font-weight: 600; font-size: clamp(27px, 4vw, 40px); line-height: 1.12; letter-spacing: -.01em; }
+  h3 { font-family: var(--display); font-weight: 600; font-size: 21px; }
+  .lead { font-size: clamp(17px, 2.4vw, 21px); color: var(--muted); max-width: 60ch; margin-top: 18px; line-height: 1.7; }
+  p { color: var(--muted); }
+  .sec-intro { color: var(--muted); margin: 14px 0 26px; max-width: 64ch; }
+  .gold { color: var(--gold); }
+  .pp { color: var(--paper); }
+
+  /* ---- hero ---- */
+  .hero { min-height: 88vh; display: flex; flex-direction: column; justify-content: center; padding-top: 40px; }
+  .hero h1 .l2 { display:block; background: linear-gradient(100deg, #e7c987, var(--gold) 45%, #9a7430);
+    -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+  .chip { font-size: 12.5px; letter-spacing: .04em; padding: 8px 14px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--glass); color: var(--muted); }
+  .chip b { color: var(--paper); font-weight: 600; }
+  .scroll-cue { margin-top: 46px; display: inline-flex; align-items: center; gap: 12px; color: var(--gold);
+    text-decoration: none; font-size: 13px; letter-spacing: .18em; text-transform: uppercase; }
+  .scroll-cue span.arr { width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line);
+    display: grid; place-items: center; }
+  @media (prefers-reduced-motion: no-preference) { .scroll-cue span.arr { animation: bob 2.2s ease-in-out infinite; } @keyframes bob { 50% { transform: translateY(4px);} } }
+
+  /* ---- glass cards ---- */
+  .card { background: var(--glass); border: 1px solid var(--line); border-radius: 18px;
+    backdrop-filter: blur(14px); padding: 26px; position: relative; overflow: hidden; }
+  .card::before { content:''; position:absolute; inset:0; border-radius: inherit; pointer-events:none;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), transparent 30%); }
+
+  /* ---- audience router ---- */
+  .router { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 8px; }
+  @media (max-width: 720px) { .router { grid-template-columns: 1fr; } }
+  .path { text-align: left; cursor: pointer; border: 1px solid var(--line); background: var(--glass);
+    border-radius: 18px; padding: 24px; color: var(--paper); font: inherit; transition: transform .4s var(--ease), border-color .4s var(--ease), background .4s var(--ease); }
+  .path:hover { transform: translateY(-5px); border-color: rgba(205,163,83,.5); background: var(--glass-strong); }
+  .path .ic { width: 44px; height: 44px; border-radius: 12px; display:grid; place-items:center; margin-bottom: 16px;
+    background: rgba(205,163,83,.12); border: 1px solid var(--line); }
+  .path .ic svg { width: 22px; height: 22px; stroke: var(--gold); fill: none; stroke-width: 1.6; }
+  .path h3 { margin-bottom: 6px; }
+  .path p { font-size: 14px; }
+  .path .go { margin-top: 16px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); display:inline-flex; gap:8px; align-items:center; }
+  .path.sel { border-color: var(--gold); background: rgba(205,163,83,.10); box-shadow: 0 18px 50px -24px rgba(205,163,83,.5); }
+  .filter-bar { margin-top: 22px; font-size: 13px; color: var(--muted-dim); display:none; align-items:center; gap:14px; }
+  body.filtering .filter-bar { display:flex; }
+  .filter-bar b { color: var(--gold); }
+  .reset { background: none; border: 1px solid var(--line); color: var(--muted); border-radius: 999px;
+    padding: 6px 14px; font: inherit; font-size: 12px; cursor: pointer; transition: .3s var(--ease); }
+  .reset:hover { color: var(--paper); border-color: var(--gold); }
+  /* focus mode hides non-matching filterable sections */
+  body.show-staff section[data-aud]:not([data-aud~="staff"]),
+  body.show-operator section[data-aud]:not([data-aud~="operator"]),
+  body.show-dev section[data-aud]:not([data-aud~="dev"]) { display: none; }
+
+  /* ---- the model diagram ---- */
+  .model { display: grid; grid-template-columns: 1fr; gap: 0; margin-top: 8px; }
+  .node { display: flex; align-items: center; gap: 18px; padding: 20px 22px; border: 1px solid var(--line);
+    border-radius: 16px; background: var(--glass); position: relative; }
+  .node .n-ic { width: 46px; height: 46px; border-radius: 12px; flex: none; display: grid; place-items: center;
+    background: rgba(205,163,83,.12); border: 1px solid var(--line); }
+  .node .n-ic svg { width: 24px; height: 24px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+  .node b { font-family: var(--display); font-size: 18px; }
+  .node p { font-size: 14px; margin-top: 2px; }
+  .connector { height: 38px; width: 1px; margin: 0 auto; background: linear-gradient(var(--gold), transparent); position: relative; }
+  .connector::after { content: attr(data-label); position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted-dim); white-space: nowrap; }
+
+  /* ---- task accordion ---- */
+  .tasks { margin-top: 10px; border-top: 1px solid var(--line); }
+  .task { border-bottom: 1px solid var(--line); }
+  .task > button { width: 100%; text-align: left; background: none; border: 0; color: var(--paper); font: inherit;
+    cursor: pointer; padding: 18px 6px; display: flex; align-items: center; gap: 16px; }
+  .task .t-where { margin-left: auto; font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gold); border: 1px solid var(--line); border-radius: 999px; padding: 4px 11px; flex: none; }
+  .task .t-title { font-weight: 600; font-size: 15.5px; }
+  .task .chev { width: 18px; height: 18px; flex: none; stroke: var(--gold); fill: none; stroke-width: 1.8; transition: transform .4s var(--ease); }
+  .task .panel { overflow: hidden; max-height: 0; transition: max-height .45s var(--ease); }
+  .task .panel .inner { padding: 0 6px 20px 50px; color: var(--muted); font-size: 14.5px; }
+  .task.open .chev { transform: rotate(90deg); }
+  .task .num { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--line); display:grid; place-items:center;
+    font-size: 11px; color: var(--gold); flex:none; }
+
+  /* ---- code blocks ---- */
+  .code { position: relative; margin: 18px 0; border: 1px solid var(--line); border-radius: 14px;
+    background: rgba(8,5,16,.6); overflow: hidden; }
+  .code pre { font-family: var(--mono); font-size: 13px; color: #e9dcc4; padding: 18px 18px; overflow-x: auto; line-height: 1.7; }
+  .code .cm { color: var(--muted-dim); }
+  .code .cp { color: var(--gold); }
+  .copy { position: absolute; top: 10px; right: 10px; background: var(--glass-strong); border: 1px solid var(--line);
+    color: var(--muted); border-radius: 8px; font: inherit; font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+    padding: 6px 10px; cursor: pointer; transition: .3s var(--ease); }
+  .copy:hover { color: var(--paper); border-color: var(--gold); }
+  .copy.done { color: #8ad6a0; border-color: rgba(138,214,160,.5); }
+
+  /* ---- checklist ---- */
+  .checklist { display: grid; gap: 12px; margin-top: 8px; }
+  .check { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; padding: 18px 20px;
+    border: 1px solid var(--line); border-radius: 14px; background: var(--glass); cursor: pointer; transition: .3s var(--ease); }
+  .check:hover { border-color: rgba(205,163,83,.45); }
+  .check .box { width: 24px; height: 24px; border-radius: 7px; border: 1.5px solid var(--gold-soft); flex: none; margin-top: 2px;
+    display: grid; place-items: center; transition: .3s var(--ease); }
+  .check .box svg { width: 14px; height: 14px; stroke: var(--ink); stroke-width: 3; fill: none; opacity: 0; transition: .3s var(--ease); }
+  .check.done .box { background: var(--gold); border-color: var(--gold); }
+  .check.done .box svg { opacity: 1; }
+  .check.done .c-title { text-decoration: line-through; color: var(--muted-dim); }
+  .c-title { font-weight: 600; color: var(--paper); }
+  .c-desc { font-size: 13.5px; color: var(--muted); margin-top: 4px; }
+  .c-desc code { font-family: var(--mono); font-size: 12px; color: var(--gold-soft); background: rgba(205,163,83,.08); padding: 1px 6px; border-radius: 5px; }
+  .progress-note { font-size: 12.5px; color: var(--muted-dim); margin-top: 14px; }
+
+  /* ---- steps ---- */
+  .steps { counter-reset: s; display: grid; gap: 14px; margin-top: 6px; }
+  .step { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: start; }
+  .step .s-num { counter-increment: s; width: 40px; height: 40px; border-radius: 50%; flex: none;
+    border: 1px solid var(--line); background: var(--glass); display: grid; place-items: center;
+    font-family: var(--display); color: var(--gold); font-size: 17px; }
+  .step .s-num::before { content: counter(s); }
+  .step h3 { margin-bottom: 4px; }
+  .step p { font-size: 14.5px; }
+
+  /* ---- glossary ---- */
+  .glossary { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 6px; }
+  @media (max-width: 640px) { .glossary { grid-template-columns: 1fr; } }
+  .term { border: 1px solid var(--line); border-radius: 14px; background: var(--glass); padding: 16px 18px; cursor: pointer; transition: .3s var(--ease); }
+  .term:hover { border-color: rgba(205,163,83,.45); background: var(--glass-strong); }
+  .term b { font-family: var(--mono); font-size: 13px; color: var(--gold); letter-spacing: .02em; }
+  .term .def { font-size: 14px; color: var(--muted); margin-top: 8px; max-height: 0; overflow: hidden; transition: max-height .4s var(--ease), margin .4s var(--ease); }
+  .term.open .def { max-height: 160px; }
+  .term .hint { font-size: 11px; color: var(--muted-dim); letter-spacing: .1em; text-transform: uppercase; float: right; }
+
+  /* ---- fixes ---- */
+  .fixes { display: grid; gap: 10px; margin-top: 6px; }
+  .fix { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 16px 20px; border: 1px solid var(--line);
+    border-radius: 12px; background: var(--glass); }
+  @media (max-width: 640px) { .fix { grid-template-columns: 1fr; gap: 6px; } }
+  .fix .sym { color: var(--paper); font-weight: 600; font-size: 14.5px; }
+  .fix .sol { color: var(--muted); font-size: 14px; }
+  .fix .sol::before { content: '→ '; color: var(--gold); }
+
+  /* ---- reveal ---- */
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+    .reveal.in { opacity: 1; transform: none; }
+  }
+
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--line), transparent); margin: 8px 0; }
+  .kicker-note { margin-top: 30px; padding: 18px 22px; border-left: 2px solid var(--gold); background: rgba(205,163,83,.06);
+    border-radius: 0 12px 12px 0; color: var(--muted); font-size: 14.5px; }
+  .kicker-note b { color: var(--paper); }
+</style>
+</head>
+<body>
+<div class="bg"><span class="glow g1"></span><span class="glow g2"></span><span class="glow g3"></span></div>
+<div class="grain"></div>
+<div id="progress"></div>
+
+<div class="shell">
+  <aside>
+    <div class="brand">
+      <span class="mark"></span>
+      <span><small>The Platform</small><b>Complete Guide</b></span>
+    </div>
+    <nav class="nav-rail" id="rail">
+      <a href="#top"><span class="dot"></span> Overview</a>
+      <a href="#paths"><span class="dot"></span> Find your path</a>
+      <a href="#model"><span class="dot"></span> How it fits together</a>
+      <a href="#run"><span class="dot"></span> Run it day-to-day</a>
+      <a href="#operate"><span class="dot"></span> Operate &amp; go live</a>
+      <a href="#launch"><span class="dot"></span> Launch a new church</a>
+      <a href="#glossary"><span class="dot"></span> Plain-English glossary</a>
+      <a href="#fixes"><span class="dot"></span> Quick fixes</a>
+    </nav>
+    <div class="aside-foot">
+      A complete church website + an admin anyone can run.<br />
+      Deeper docs: <a href="ADMIN-GUIDE.md">Admin guide</a> · <a href="../README.md">README</a>
+    </div>
+  </aside>
+
+  <main>
+  <div class="wrap">
+
+    <!-- HERO -->
+    <section id="top" class="hero">
+      <span class="eyebrow">The complete guide</span>
+      <h1>Your church,<span class="l2">beautifully online.</span></h1>
+      <p class="lead">A complete, modern church website — <span class="pp">plus a simple admin where anyone can change everything</span>: words, photos, sermons, events, giving. No code required. This guide is the calm front door to all of it.</p>
+      <div class="chips">
+        <span class="chip"><b>Public site</b> &nbsp;home · sermons · events · giving · live</span>
+        <span class="chip"><b>Admin</b> &nbsp;edit it all, no code</span>
+        <span class="chip"><b>Smart</b> &nbsp;AI sermon search &amp; “Ask the Pastor”</span>
+        <span class="chip"><b>Re-skinnable</b> &nbsp;launch a new church in minutes</span>
+      </div>
+      <a href="#paths" class="scroll-cue"><span class="arr"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span> Find your path</a>
+    </section>
+
+    <!-- ROUTER -->
+    <section id="paths">
+      <span class="eyebrow reveal">Start here</span>
+      <h2 class="reveal">Who are you today?</h2>
+      <p class="sec-intro reveal">Pick a path and the guide focuses on just what you need. You can switch or show everything anytime.</p>
+      <div class="router reveal">
+        <button class="path" data-path="staff">
+          <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 19v-1a4 4 0 014-4h2M15 7a3 3 0 11-6 0 3 3 0 016 0zM18 21l3-3-3-3M21 18h-7"/></svg></span>
+          <h3>Church staff</h3>
+          <p>You update the website — text, photos, sermons, events, giving.</p>
+          <span class="go">Show my parts →</span>
+        </button>
+        <button class="path" data-path="operator">
+          <span class="ic"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19 12a7 7 0 00-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 00-2-1.2L16 2H8l-.5 2.6a7 7 0 00-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 003 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 002 1.2L8 22h8l.5-2.6a7 7 0 002-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/></svg></span>
+          <h3>Keeping it online</h3>
+          <p>You deploy updates and switch on giving, email, and security.</p>
+          <span class="go">Show my parts →</span>
+        </button>
+        <button class="path" data-path="dev">
+          <span class="ic"><svg viewBox="0 0 24 24"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg></span>
+          <h3>Developer</h3>
+          <p>You’re launching a brand-new church from the template.</p>
+          <span class="go">Show my parts →</span>
+        </button>
+      </div>
+      <div class="filter-bar"><span>Focused on <b id="aud-label">everyone</b>.</span><button class="reset" id="reset">Show everything</button></div>
+    </section>
+
+    <!-- MODEL -->
+    <section id="model">
+      <span class="eyebrow reveal">In 30 seconds</span>
+      <h2 class="reveal">How it all fits together</h2>
+      <p class="sec-intro reveal">There are only three parts. Everything you type or upload in the <span class="gold">admin</span> appears instantly on the <span class="gold">public website</span>.</p>
+      <div class="model reveal">
+        <div class="node">
+          <span class="n-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8"/></svg></span>
+          <span><b>Visitors</b><p>Everyone who comes to your website.</p></span>
+        </div>
+        <div class="connector" data-label="see"></div>
+        <div class="node">
+          <span class="n-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
+          <span><b>The public website</b><p>Home, about, sermons, events, giving, watch live…</p></span>
+        </div>
+        <div class="connector" data-label="shows content from"></div>
+        <div class="node">
+          <span class="n-ic"><svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-2.7 1.1V21a2 2 0 11-4 0v-.1A1.6 1.6 0 007 19.4a1.6 1.6 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.6 1.6 0 00-1.1-2.7H1a2 2 0 110-4h.1A1.6 1.6 0 002.6 7a1.6 1.6 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.6 1.6 0 001.8.3H7a1.6 1.6 0 001-1.5V1a2 2 0 114 0v.1A1.6 1.6 0 0017 2.6a1.6 1.6 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00-.3 1.8V7a1.6 1.6 0 001.5 1H23a2 2 0 110 4h-.1a1.6 1.6 0 00-1.5 1z"/></svg></span>
+          <span><b>The admin</b><p>You sign in at <span class="gold">/admin</span> to change everything. Sign in with your email + a one-time code — no password.</p></span>
+        </div>
+      </div>
+      <div class="kicker-note reveal">Under the hood it runs on <b>Cloudflare</b> — but you almost never need to think about that. Unfamiliar word? The <a href="#glossary" class="gold">glossary</a> explains every term in one friendly line.</div>
+    </section>
+
+    <!-- RUN (staff) -->
+    <section id="run" data-aud="staff">
+      <span class="eyebrow reveal">For church staff</span>
+      <h2 class="reveal">Run the website day-to-day</h2>
+      <p class="sec-intro reveal">Everything lives at <span class="gold">your-site/admin</span>. Sign in, then use the sidebar. Tap a task to see how — full click-by-click steps are in the <a href="ADMIN-GUIDE.md" class="gold">Admin guide</a>.</p>
+
+      <div class="tasks reveal">
+        <div class="task"><button><span class="num">1</span><span class="t-title">Change wording on a page</span><span class="t-where">Content</span><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+          <div class="panel"><div class="inner">Open <b>Content</b>, pick a page, edit the boxes, hit <b>Save</b>. To restore the original wording, just clear the box and save — you can’t break a page by emptying a field.</div></div></div>
+        <div class="task"><button><span class="num">2</span><span class="t-title">Replace a photo</span><span class="t-where">Content</span><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+          <div class="panel"><div class="inner">On the same Content pages, image slots have a <b>Choose file</b> button. Upload a JPG/PNG up to 6&nbsp;MB and save. Saving text never deletes a photo, and vice-versa.</div></div></div>
+        <div class="task"><button><span class="num">3</span><span class="t-title">Add a sermon</span><span class="t-where">Sermons</span><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+          <div class="panel"><div class="inner">Paste the <b>YouTube or Vimeo link</b> — the site embeds the player. Optionally paste a transcript (it powers the AI study guide &amp; “Ask the Pastor”). Tick <b>Published</b> to show it.</div></div></div>
+        <div class="task"><button><span class="num">4</span><span class="t-title">Add an event</span><span class="t-where">Events</span><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+          <div class="panel"><div class="inner">Set the date, time and location. Turn on <b>registration</b> with a capacity if people should sign up — the form stops when it’s full. You can export the sign-up list as a CSV.</div></div></div>
+        <div class="task"><button><span class="num">5</span><span class="t-title">Manage online giving</span><span class="t-where">Funds · Giving</span><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+          <div class="panel"><div class="inner">Create the <b>Funds</b> people can give to (Tithe, Offering, Building…), see every donation under <b>Giving</b>, and manage recurring gifts under <b>Recurring</b>. (Giving must be switched on first — see “Operate &amp; go live”.)</div></div></div>
+        <div class="task"><button><span class="num">6</span><span class="t-title">Run the live-stream page</span><span class="t-where">Live</span><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+          <div class="panel"><div class="inner">Set the stream link and an <b>Auto / Live / Off</b> switch. When offline, the page shows a countdown to the next gathering and your latest sermon.</div></div></div>
+        <div class="task"><button><span class="num">7</span><span class="t-title">Service times, address, socials</span><span class="t-where">Settings</span><svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+          <div class="panel"><div class="inner">In <b>Settings</b>. These appear in the footer and on the Visit page. Also home to leadership, the story timeline, and home-page cards (each its own simple list).</div></div></div>
+      </div>
+
+      <div class="kicker-note reveal"><b>Three golden rules.</b> &nbsp;1) Changes go live the moment you click <b>Save</b>. &nbsp;2) Sermons, events &amp; ministries only show publicly when marked <b>Published</b>. &nbsp;3) Empty a text box + save to bring back the original wording.</div>
+    </section>
+
+    <!-- OPERATE (operator) -->
+    <section id="operate" data-aud="operator">
+      <span class="eyebrow reveal">For whoever keeps it online</span>
+      <h2 class="reveal">Operate &amp; go live</h2>
+      <p class="sec-intro reveal">The site runs immediately. A few services stay <span class="gold">dormant</span> until you switch them on — nothing breaks until you do.</p>
+
+      <h3 class="reveal" style="margin-top:24px">Update the live site</h3>
+      <p class="reveal" style="font-size:14.5px;margin-top:8px">New features land on <code style="font-family:var(--mono);color:var(--gold-soft)">main</code>; your live branch keeps your church’s branding automatically.</p>
+      <div class="code reveal"><button class="copy">Copy</button><pre><span class="cm"># one-time per computer</span>
+git config merge.ours.driver true
+
+git checkout kharis        <span class="cm"># your live branch</span>
+git merge main             <span class="cm"># pull in the latest improvements</span>
+npm run build
+npx wrangler deploy        <span class="cm"># push it live</span></pre></div>
+
+      <h3 class="reveal" style="margin-top:34px">Going-live checklist</h3>
+      <p class="reveal" style="font-size:14.5px;margin-top:8px">Each is a quick, one-sitting task. Tick them off — your progress is saved on this device.</p>
+      <div class="checklist reveal">
+        <div class="check" data-key="paystack"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><div><div class="c-title">Online giving — Paystack</div><div class="c-desc">Create an account → keys → <code>wrangler secret put PAYSTACK_SECRET_KEY</code> → in Settings set <code>paystack_public_key</code>, <code>currency</code>, <code>giving_enabled=true</code> → set the webhook to <code>/api/webhooks/paystack</code>.</div></div></div>
+        <div class="check" data-key="turnstile"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><div><div class="c-title">Spam protection — Turnstile</div><div class="c-desc">Make a widget in Cloudflare → <code>wrangler secret put TURNSTILE_SECRET_KEY</code> → in Settings set the matching <code>turnstile_site_key</code>.</div></div></div>
+        <div class="check" data-key="resend"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><div><div class="c-title">Staff email alerts — Resend</div><div class="c-desc">Account + verified domain + key → <code>wrangler secret put RESEND_API_KEY</code> (plus <code>STAFF_EMAIL</code>, <code>FROM_EMAIL</code>).</div></div></div>
+        <div class="check" data-key="access"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><div><div class="c-title">Lock the admin — Cloudflare Access</div><div class="c-desc">In Zero Trust → Access, allow each staff member’s email over <code>/admin</code> + <code>/api/admin</code>.</div></div></div>
+        <div class="check" data-key="reindex"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><div><div class="c-title">Smart sermon search — Reindex</div><div class="c-desc">Admin → Sermons → <b>Reindex AI search</b> (run once after adding lots of sermons). Until then, search falls back to simple keyword matching.</div></div></div>
+      </div>
+      <p class="progress-note" id="ck-note">0 of 5 done.</p>
+    </section>
+
+    <!-- LAUNCH (dev) -->
+    <section id="launch" data-aud="dev">
+      <span class="eyebrow reveal">For developers</span>
+      <h2 class="reveal">Launch a brand-new church</h2>
+      <p class="sec-intro reveal">The whole thing is a re-skinnable template — <span class="gold">one config file</span> turns it into any church’s site.</p>
+      <div class="steps reveal">
+        <div class="step"><span class="s-num"></span><div><h3>Clone &amp; install</h3><p>Clone the project and run <code style="font-family:var(--mono);color:var(--gold-soft)">npm install</code>.</p></div></div>
+        <div class="step"><span class="s-num"></span><div><h3>Fill in one file</h3><p>Copy the example config and edit it — name, slug, web address, brand colours, currency, timezone, and which features to enable.</p></div></div>
+        <div class="step"><span class="s-num"></span><div><h3>Run one script</h3><p>It writes the config, names every cloud resource, re-tints the placeholder images to the new brand, and generates a <b>PROVISIONING.md</b> with the exact next commands.</p></div></div>
+        <div class="step"><span class="s-num"></span><div><h3>Follow PROVISIONING.md</h3><p>It lists everything to create the database, storage, and search index, set secrets, lock the admin, and deploy — adapting to the features you enabled.</p></div></div>
+        <div class="step"><span class="s-num"></span><div><h3>Commit &amp; deploy</h3><p>A fully working church site in your brand. Full detail lives in the <a href="../README.md" class="gold">README</a>.</p></div></div>
+      </div>
+      <div class="code reveal"><button class="copy">Copy</button><pre>cp scripts/new-church.config.example.json scripts/new-church.config.json
+<span class="cm"># edit it, then:</span>
+node scripts/new-church.mjs
+<span class="cm"># then follow the generated PROVISIONING.md</span></pre></div>
+    </section>
+
+    <!-- GLOSSARY -->
+    <section id="glossary">
+      <span class="eyebrow reveal">No jargon left behind</span>
+      <h2 class="reveal">Plain-English glossary</h2>
+      <p class="sec-intro reveal">Tap any term to reveal what it means in one friendly line.</p>
+      <div class="glossary reveal" id="gloss">
+        <div class="term"><span class="hint">tap</span><b>Cloudflare</b><div class="def">The company that hosts and runs your website.</div></div>
+        <div class="term"><span class="hint">tap</span><b>Worker</b><div class="def">The “engine” that serves your website on Cloudflare.</div></div>
+        <div class="term"><span class="hint">tap</span><b>D1</b><div class="def">The database — stores your text, sermons, events, donations and settings.</div></div>
+        <div class="term"><span class="hint">tap</span><b>R2</b><div class="def">File storage — where uploaded photos live.</div></div>
+        <div class="term"><span class="hint">tap</span><b>Workers AI · Vectorize</b><div class="def">The smart sermon features — semantic search, study guides, and “Ask the Pastor”.</div></div>
+        <div class="term"><span class="hint">tap</span><b>Cloudflare Access</b><div class="def">The lock on the admin — only approved emails get in, via a one-time code.</div></div>
+        <div class="term"><span class="hint">tap</span><b>Turnstile</b><div class="def">A friendly spam shield on your forms (replaces annoying CAPTCHAs).</div></div>
+        <div class="term"><span class="hint">tap</span><b>Paystack</b><div class="def">The payments provider that powers online giving.</div></div>
+        <div class="term"><span class="hint">tap</span><b>main · kharis branch</b><div class="def"><code style="font-family:var(--mono)">main</code> is the shareable template; your church branch is what’s live.</div></div>
+        <div class="term"><span class="hint">tap</span><b>wrangler</b><div class="def">The command-line tool that deploys the site to Cloudflare.</div></div>
+        <div class="term"><span class="hint">tap</span><b>Published</b><div class="def">A toggle — content only shows publicly when it’s marked Published.</div></div>
+        <div class="term"><span class="hint">tap</span><b>Astro</b><div class="def">The web framework the site is built with — fast pages, modern tooling.</div></div>
+      </div>
+    </section>
+
+    <!-- FIXES -->
+    <section id="fixes">
+      <span class="eyebrow reveal">Help, something’s off</span>
+      <h2 class="reveal">Quick fixes</h2>
+      <div class="fixes reveal">
+        <div class="fix"><div class="sym">I changed something but don’t see it</div><div class="sol">Did you click <b>Save</b>? Is the item <b>Published</b>? Refresh the page.</div></div>
+        <div class="fix"><div class="sym">I want the original wording back</div><div class="sol">Clear the text box and <b>Save</b>.</div></div>
+        <div class="fix"><div class="sym">A photo won’t upload</div><div class="sol">Must be under 6&nbsp;MB and a JPG / PNG / WebP.</div></div>
+        <div class="fix"><div class="sym">A photo shows broken or blank</div><div class="sol">Re-upload it in <b>Content</b> — the stored path may be off.</div></div>
+        <div class="fix"><div class="sym">The website name or logo is wrong</div><div class="sol">Set once in the config — ask whoever runs the technical side.</div></div>
+        <div class="fix"><div class="sym">I’m locked out of the admin</div><div class="sol">Ask your administrator to approve your email in Cloudflare Access.</div></div>
+        <div class="fix"><div class="sym">Giving says “coming soon”</div><div class="sol">Paystack isn’t switched on yet — see <b>Operate &amp; go live</b>.</div></div>
+        <div class="fix"><div class="sym">Sermon search seems basic</div><div class="sol">Run <b>Admin → Sermons → Reindex AI search</b> once.</div></div>
+      </div>
+      <div class="divider" style="margin-top:46px"></div>
+      <p style="text-align:center;color:var(--muted-dim);font-size:13px;margin-top:26px">New here? Scroll back to the top — the overview gives you the whole picture in 30 seconds.</p>
+    </section>
+
+  </div>
+  </main>
+</div>
+
+<script>
+  // progress bar
+  const prog = document.getElementById('progress');
+  const onScroll = () => {
+    const h = document.documentElement;
+    const p = h.scrollTop / (h.scrollHeight - h.clientHeight || 1);
+    prog.style.width = (p * 100) + '%';
+  };
+  document.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // scroll-spy
+  const rail = document.getElementById('rail');
+  const links = Array.from(rail.querySelectorAll('a'));
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  const spy = new IntersectionObserver((es) => {
+    es.forEach(e => { if (e.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const a = map.get(e.target.id); if (a) a.classList.add('active');
+    }});
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  document.querySelectorAll('section[id]').forEach(s => spy.observe(s));
+
+  // reveal
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (!mq.matches) {
+    const rev = new IntersectionObserver((es) => {
+      es.forEach((e, i) => { if (e.isIntersecting) { e.target.classList.add('in'); rev.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -10% 0px' });
+    document.querySelectorAll('.reveal').forEach(el => rev.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  }
+
+  // audience router
+  const labels = { staff: 'church staff', operator: 'keeping it online', dev: 'developers' };
+  function setPath(p) {
+    document.body.classList.remove('show-staff','show-operator','show-dev');
+    document.querySelectorAll('.path').forEach(b => b.classList.toggle('sel', b.dataset.path === p));
+    if (p) { document.body.classList.add('filtering', 'show-' + p); document.getElementById('aud-label').textContent = labels[p]; }
+    else { document.body.classList.remove('filtering'); }
+  }
+  document.querySelectorAll('.path').forEach(b => b.addEventListener('click', () => {
+    const p = b.dataset.path;
+    if (b.classList.contains('sel')) { setPath(null); }
+    else { setPath(p); const t = document.getElementById(p === 'staff' ? 'run' : p === 'operator' ? 'operate' : 'launch'); t && t.scrollIntoView({ behavior: mq.matches ? 'auto' : 'smooth' }); }
+  }));
+  document.getElementById('reset').addEventListener('click', () => { setPath(null); document.querySelectorAll('.path').forEach(b=>b.classList.remove('sel')); });
+
+  // task accordions
+  document.querySelectorAll('.task > button').forEach(btn => btn.addEventListener('click', () => {
+    const t = btn.parentElement; const panel = t.querySelector('.panel');
+    const open = t.classList.toggle('open');
+    panel.style.maxHeight = open ? panel.querySelector('.inner').scrollHeight + 'px' : '0';
+  }));
+
+  // glossary
+  document.querySelectorAll('.term').forEach(t => t.addEventListener('click', () => t.classList.toggle('open')));
+
+  // copy buttons
+  document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', () => {
+    const text = btn.parentElement.querySelector('pre').innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied'; btn.classList.add('done');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1600);
+    });
+  }));
+
+  // go-live checklist with localStorage
+  const KEY = 'church-golive';
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) {}
+  const checks = document.querySelectorAll('.check');
+  const note = document.getElementById('ck-note');
+  function renderChecks() {
+    let done = 0;
+    checks.forEach(c => { const on = !!state[c.dataset.key]; c.classList.toggle('done', on); if (on) done++; });
+    note.textContent = done + ' of ' + checks.length + ' done' + (done === checks.length ? ' — you’re fully live. 🎉' : '.');
+  }
+  checks.forEach(c => c.addEventListener('click', () => {
+    state[c.dataset.key] = !state[c.dataset.key];
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+    renderChecks();
+  }));
+  renderChecks();
+</script>
+</body>
+</html>
