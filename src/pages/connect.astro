@@ -1,0 +1,68 @@
+---
+import PublicLayout from '../layouts/PublicLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { env } from '../lib/runtime';
+import { getAllSettings } from '../lib/db/settings';
+import { getAllContent } from '../lib/db/content';
+import { makeImage } from '../lib/content/content';
+import { NEXT_STEPS } from '../lib/connect/steps';
+import { SITE } from '../lib/seo';
+import { feature } from '../config/church';
+
+if (!feature('community')) return Astro.redirect('/');
+
+let siteKey = '1x00000000000000000000AA';
+let cimg = makeImage({});
+try {
+  const settings = await getAllSettings(env.DB);
+  siteKey = settings.turnstile_site_key ?? siteKey;
+  cimg = makeImage(await getAllContent(env.DB).catch(() => ({})));
+} catch {
+  // settings/content unavailable in some envs — keep defaults
+}
+const status = Astro.url.searchParams.get('connect');
+---
+<PublicLayout title={`Next Steps | ${SITE.name}`} description={`Take your next step at ${SITE.name} — we'd love to help.`}>
+  <PageHero image={cimg('pages.events_hero')} height="h-[300px] md:h-[380px]">
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Next Steps</span>
+    <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Take Your Next Step</h1>
+    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">Tell us where you are — we'll help you take the next step.</p>
+  </PageHero>
+
+  <section class="py-16 md:py-24 px-margin-mobile md:px-margin-desktop max-w-2xl mx-auto">
+    {status === 'ok' && (
+      <div class="mb-10 border-t-2 border-heritage-gold bg-surface-container-lowest p-5 text-center font-body text-body-md text-primary">
+        Thank you — we've received this and someone from our team will be in touch.
+      </div>
+    )}
+    {status === 'err' && (
+      <div class="mb-10 border-t-2 border-accent-deep bg-surface-container-lowest p-5 text-center font-body text-body-md text-primary">
+        Please choose at least one step or leave a message, and check your details.
+      </div>
+    )}
+
+    <div class="bg-surface-container-lowest border-t-2 border-heritage-gold elev-2 p-8 md:p-10">
+      <form method="POST" action="/api/forms/connect" class="space-y-6">
+        <div>
+          <p class="font-label-sm uppercase tracking-widest text-heritage-gold mb-3">I'd like to…</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {NEXT_STEPS.map((s) => (
+              <label class="flex items-start gap-3 border border-champagne p-3 cursor-pointer hover:border-heritage-gold transition-colors font-body text-body-md text-primary">
+                <input type="checkbox" name="steps" value={s.key} class="mt-1" /> {s.label}
+              </label>
+            ))}
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <input name="name" required maxlength="120" placeholder="Your name" class="border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
+          <input name="email" type="email" required maxlength="200" placeholder="Email" class="border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
+        </div>
+        <input name="phone" maxlength="40" placeholder="Phone (optional)" class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
+        <textarea name="message" rows="3" maxlength="2000" placeholder="Anything you'd like to add? (optional)" class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary"></textarea>
+        <div class="cf-turnstile" data-sitekey={siteKey}></div>
+        <button type="submit" class="bg-heritage-gold text-primary font-label-md uppercase tracking-widest px-8 py-3 hover:bg-secondary transition-all">Send</button>
+      </form>
+    </div>
+  </section>
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+</PublicLayout>
