@@ -12,12 +12,11 @@ const contentClass =
     : 'text-center px-6 max-w-4xl mx-auto';
 ---
 <header class={`relative ${height} flex ${alignWrap} overflow-hidden bg-primary`}>
-  <img src={image} alt="" class="kenburns absolute inset-0 w-full h-full object-cover opacity-45" />
-  <!-- legibility veil + vertical depth -->
-  <div class="absolute inset-0 bg-[#2c1745]/56"></div>
+  <img src={image} alt="" class="kenburns absolute inset-0 w-full h-full object-cover opacity-[0.72]" />
+  <!-- theme-toned legibility gradient: lets the photo show, darkens top + bottom for the title -->
   <div
     class="absolute inset-0"
-    style="background: linear-gradient(180deg, rgba(44,23,69,0.6) 0%, rgba(44,23,69,0.27) 45%, rgba(44,23,69,0.82) 100%);"
+    style="background: linear-gradient(180deg, color-mix(in srgb, var(--kb-primary-container) 50%, transparent) 0%, color-mix(in srgb, var(--kb-primary-container) 12%, transparent) 46%, color-mix(in srgb, var(--kb-primary-container) 80%, transparent) 100%);"
   >
   </div>
   <!-- brand-color glows -->
@@ -29,7 +28,7 @@ const contentClass =
   <!-- focused scrim behind text -->
   <div
     class="absolute inset-0 pointer-events-none"
-    style="background: radial-gradient(55% 45% at 50% 50%, rgba(44,23,69,0.55), transparent 78%);"
+    style="background: radial-gradient(55% 45% at 50% 50%, color-mix(in srgb, var(--kb-primary-container) 44%, transparent), transparent 78%);"
   >
   </div>
   <div class={`relative z-10 ${contentClass}`} data-reveal>
