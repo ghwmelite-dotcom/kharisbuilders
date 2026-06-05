@@ -1,0 +1,13 @@
+{
+  "name": "Kharisbuilders",
+  "slug": "kharisbuilders",
+  "tagline": "Building Lives, Shaping Destinies.",
+  "description": "Kharisbuilders is a modern, Christ-centred church — sermons, events, ministries, and a place to belong. Building Lives, Shaping Destinies.",
+  "url": "https://kharisbuilders.missdiasporagh.workers.dev",
+  "locale": "en",
+  "currency": "GHS",
+  "timezoneOffsetMin": 0,
+  "motifs": true,
+  "theme": { "primary": "#4a2a6b", "accent": "#a87f2e", "dark": "#2c1745", "surface": "#faf6fe" },
+  "features": { "sermons": true, "events": true, "ministries": true, "giving": true, "ai": true, "live": true }
+}
