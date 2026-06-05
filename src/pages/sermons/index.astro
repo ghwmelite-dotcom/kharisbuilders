@@ -63,6 +63,18 @@ const imgs = [PLACEHOLDER.card, PLACEHOLDER.card, PLACEHOLDER.card];
       </button>
     </form>
     {
+      feature('ai') && (
+        <div class="max-w-xl mx-auto -mt-8 mb-12 text-center">
+          <a
+            href="/sermons/ask"
+            class="inline-flex items-center gap-2 font-label-md uppercase tracking-widest text-primary border-b border-heritage-gold pb-1 hover:text-heritage-gold transition-all"
+          >
+            Ask the Pastor a question →
+          </a>
+        </div>
+      )
+    }
+    {
       q && (
         <p class="text-center font-body text-body-md text-stone-gray mb-10">
           {sermons.length} result{sermons.length === 1 ? '' : 's'} for <span class="text-primary">“{q}”</span> ·{' '}
