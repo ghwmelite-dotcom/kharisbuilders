@@ -322,3 +322,40 @@ export function applyResourceIds(wranglerText, ids) {
   if (ids.kvId) t = t.replace('PASTE_FROM_KV_CREATE', ids.kvId);
   return t;
 }
+
+export const DEV_TURNSTILE_SECRET = '1x0000000000000000000000000000000AA';
+
+/**
+ * Ordered, feature-aware provisioning plan. Each step:
+ *   { key, label, cmd, capture?: 'd1Id'|'kvId', kvTitle?, idempotent?: boolean, stdin?: string }
+ * The orchestrator runs cmd via execSync; `capture` writes the parsed id back into wrangler.jsonc;
+ * `idempotent` swallows an "already exists" error; `stdin` is piped to the command's stdin.
+ * @param {ChurchInput} input
+ */
+export function provisionPlan(input) {
+  const n = input.names;
+  const kvTitle = `${input.slug}-SESSION`;
+  const steps = [
+    { key: 'd1', label: 'Create D1 database', cmd: `npx wrangler d1 create ${n.database}`, capture: 'd1Id' },
+    { key: 'kv', label: 'Create KV namespace (SESSION)', cmd: `npx wrangler kv namespace create ${kvTitle}`, capture: 'kvId', kvTitle },
+    { key: 'r2', label: 'Create R2 bucket', cmd: `npx wrangler r2 bucket create ${n.bucket}`, idempotent: true },
+  ];
+  if (input.features.ai) {
+    steps.push({
+      key: 'vectorize',
+      label: 'Create Vectorize index',
+      cmd: `npx wrangler vectorize create ${n.vectorize} --dimensions=768 --metric=cosine`,
+      idempotent: true,
+    });
+  }
+  steps.push(
+    { key: 'migrate', label: 'Apply migrations (remote)', cmd: `npx wrangler d1 migrations apply ${n.database} --remote` },
+    { key: 'seed1', label: 'Seed settings + ministries', cmd: `npx wrangler d1 execute ${n.database} --remote --file db/seed.sql` },
+    { key: 'seed2', label: 'Seed funds', cmd: `npx wrangler d1 execute ${n.database} --remote --file db/seed_funds.sql` },
+    { key: 'seed3', label: 'Seed home cards', cmd: `npx wrangler d1 execute ${n.database} --remote --file db/seed_lists.sql` },
+    { key: 'turnstile', label: 'Set dev Turnstile secret', cmd: 'npx wrangler secret put TURNSTILE_SECRET_KEY', stdin: DEV_TURNSTILE_SECRET },
+    { key: 'build', label: 'Build the site', cmd: 'npm run build' },
+    { key: 'deploy', label: 'Deploy', cmd: 'npx wrangler deploy' },
+  );
+  return steps;
+}

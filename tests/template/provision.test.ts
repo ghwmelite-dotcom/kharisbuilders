@@ -162,3 +162,24 @@ describe('wrangler output parsers', () => {
     expect(applyResourceIds(w, { databaseId: 'd1' })).toContain('PASTE_FROM_KV_CREATE');
   });
 });
+
+import { provisionPlan } from '../../scripts/lib/provision.mjs';
+
+describe('provisionPlan', () => {
+  const base = validateChurchInput(valid).value;
+  it('orders the steps and derives names from the slug', () => {
+    const keys = provisionPlan(base).map((s) => s.key);
+    expect(keys).toEqual(['d1', 'kv', 'r2', 'vectorize', 'migrate', 'seed1', 'seed2', 'seed3', 'turnstile', 'build', 'deploy']);
+    const d1 = provisionPlan(base).find((s) => s.key === 'd1');
+    expect(d1.cmd).toBe('npx wrangler d1 create grace-community');
+    expect(d1.capture).toBe('d1Id');
+    const kv = provisionPlan(base).find((s) => s.key === 'kv');
+    expect(kv.cmd).toBe('npx wrangler kv namespace create grace-community-SESSION');
+    expect(kv.kvTitle).toBe('grace-community-SESSION');
+    expect(provisionPlan(base).find((s) => s.key === 'deploy').cmd).toBe('npx wrangler deploy');
+  });
+  it('omits the vectorize step when ai is off', () => {
+    const off = provisionPlan({ ...base, features: { ...base.features, ai: false } });
+    expect(off.some((s) => s.key === 'vectorize')).toBe(false);
+  });
+});
