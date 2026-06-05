@@ -45,6 +45,11 @@ The theme is derived entirely from four brand colours in `src/config/church.ts` 
    This writes `src/config/church.ts`, `wrangler.jsonc` (resource names derived from your `slug`),
    re-tinted placeholder images, the `package.json` name, the `astro.config.mjs` site URL, and a
    **`PROVISIONING.md`** checklist.
+
+   > **One-command path:** with `CLOUDFLARE_ACCOUNT_ID` set and `wrangler` logged in, run
+   > `node scripts/new-church.mjs --provision` to also create the Cloudflare resources, migrate + seed,
+   > and deploy automatically — leaving only Cloudflare Access + optional keys. Preview it first with
+   > `node scripts/new-church.mjs --provision --dry-run`.
 4. **Follow `PROVISIONING.md`** — it lists the exact, copy-pasteable commands to create the
    Cloudflare resources (D1, KV, R2, Vectorize), migrate + seed the database, set secrets,
    protect the admin with Cloudflare Access, and deploy. The checklist adapts to the features you
