@@ -4,6 +4,7 @@
   "tagline": "A place to belong.",
   "description": "A welcoming, Christ-centred church — sermons, events, ministries, and a community to call home.",
   "url": "https://example-church.YOUR-ACCOUNT.workers.dev",
+  "customDomain": "",
   "locale": "en",
   "currency": "USD",
   "timezoneOffsetMin": 0,

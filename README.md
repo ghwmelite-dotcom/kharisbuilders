@@ -51,7 +51,13 @@ The theme is derived entirely from four brand colours in `src/config/church.ts` 
    > **One-command path:** with `CLOUDFLARE_ACCOUNT_ID` set and `wrangler` logged in, run
    > `node scripts/new-church.mjs --provision` to also create the Cloudflare resources, migrate + seed,
    > and deploy automatically — leaving only Cloudflare Access + optional keys. Preview it first with
-   > `node scripts/new-church.mjs --provision --dry-run`.
+   > `node scripts/new-church.mjs --provision --dry-run`. Set a **`customDomain`** in the config
+   > (e.g. `gracechapel.ohwpstudios.org`, with the apex already a Cloudflare zone in the account) and
+   > the deploy attaches that subdomain automatically.
+   >
+   > **Running this as a service for multiple client churches?** Follow the end-to-end operator
+   > playbook in **[docs/CLIENT-ONBOARDING.md](docs/CLIENT-ONBOARDING.md)** (configure → provision →
+   > lock the admin with Cloudflare Access → secrets → hand-over → update/teardown).
 4. **Follow `PROVISIONING.md`** — it lists the exact, copy-pasteable commands to create the
    Cloudflare resources (D1, KV, R2, Vectorize), migrate + seed the database, set secrets,
    protect the admin with Cloudflare Access, and deploy. The checklist adapts to the features you
