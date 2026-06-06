@@ -93,6 +93,10 @@ live site, not in local previews.)
 3. Tick **Published** to show it.
 4. **See who registered:** open an event and view its registrations; you can **export a CSV** for
    your records.
+5. **Spots left:** when registration has a capacity, the event page shows a live **"N spots left"**
+   count, then a "full" message once it fills.
+6. **Add to calendar:** every event page automatically offers an **Add to calendar** button —
+   an `.ics` download (Apple/Outlook/everything) plus a **Google Calendar** link. Nothing to set up.
 
 Past events drop off the public list automatically once their date passes.
 
@@ -105,10 +109,54 @@ tick **Published**. The order is controlled by the sort-order field.
 
 ---
 
+## Community & Care
+
+> These sections appear only when the **community** features are switched on for your site. They
+> power the **Prayer wall**, **Next Steps**, **Find a Group**, and **Serve** pages, plus their
+> follow-up lists. Every follow-up list works the same way: mark each entry **Contacted** or
+> **Done**, or **Delete** it once handled.
+
+### Prayer wall
+
+**Admin → Prayer.** Every request submitted from the public **Prayer wall** lands here. You decide
+what's visible: approve a request to show it **publicly and anonymously** on the wall, keep it
+**private** for the prayer team, or **delete** it. Visitors can tap **"I prayed"** on public
+requests, and the count is shown.
+
+### Next steps (Connect)
+
+**Admin → Connect.** Submissions from the **Next Steps** page — someone choosing "I'm new here",
+"I'd like to be baptized", "I want to serve", and so on. Follow each one up and mark it
+**Contacted**/**Done**.
+
+### Groups
+
+**Admin → Groups** manages the cards on the public **Find a Group** page; **Admin → Group Signups**
+is the follow-up list.
+
+1. **Add a group** with name, leader, day, time, location, **format** (in person / online / hybrid),
+   **audience** (everyone, men, women, youth…), description, and a photo. Tick **Published** to show it.
+2. People browse and filter groups on the **/groups** page and tap **"I'm interested"**.
+3. Their interest appears under **Group Signups** — pass each to the group's leader.
+
+### Serving (volunteers)
+
+**Admin → Serve Roles** manages the public **Serve** opportunity board; **Admin → Serve Signups** is
+the follow-up list.
+
+1. **Add a role** with name, **area** (Kids, Worship, Hospitality, Media…), **commitment** (one-time
+   / weekly / monthly / as-needed), a free-text **schedule**, optional **requirements** (e.g.
+   "Background check required"), team lead, description, and a photo. Tick **Published**.
+2. People browse and filter roles on the **/serve** page and tap **"I want to serve"**.
+3. Their signup appears under **Serve Signups** — pass each to the team lead.
+
+---
+
 ## People (visitors & contacts)
 
-**Admin → People.** Everyone who submits the **Plan a Visit** form (and online connect/prayer
-requests from the live page) is listed here so you can follow up. This is view-only.
+**Admin → People.** Everyone who submits the **Plan a Visit** form is listed here so you can follow
+up. This is view-only. (Prayer, connect, group, and serving submissions each have their own section
+under **Community & Care** above.)
 
 ---
 
