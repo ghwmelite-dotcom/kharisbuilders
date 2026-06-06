@@ -37,7 +37,7 @@ export const CHURCH: ChurchConfig = {
   tagline: 'Building Lives, Shaping Destinies.',
   description:
     'Kharisbuilders is a modern, Christ-centred church — sermons, events, ministries, and a place to belong. Building Lives, Shaping Destinies.',
-  url: 'https://kharisbuilders.missdiasporagh.workers.dev',
+  url: 'https://church.ohwpstudios.org',
   logo: '/images/kharis-logo.png',
   ogImage: '/images/home-1.jpg',
   locale: 'en',
