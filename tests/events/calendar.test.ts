@@ -22,6 +22,8 @@ describe('toIcsUtc', () => {
     expect(toIcsUtc('2026-07-01T18:00', 0)).toBe('20260701T180000Z');
     expect(toIcsUtc('2026-07-01T18:00', 60)).toBe('20260701T170000Z'); // local is +60min ahead of UTC
     expect(toIcsUtc('2026-07-01T18:00:45', 0)).toBe('20260701T180045Z'); // tolerates seconds
+    expect(toIcsUtc('2026-07-01 18:00', 0)).toBe('20260701T180000Z'); // SQLite datetime() space separator
+    expect(toIcsUtc('2026-07-01 18:00:00', 60)).toBe('20260701T170000Z'); // space + seconds + offset
   });
 });
 
