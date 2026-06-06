@@ -3,7 +3,7 @@ import { env } from '../../lib/runtime';
 
 // Only image objects under these prefixes are ever publicly served, so the
 // "images-only" guarantee is enforced here rather than left incidental.
-const PUBLIC_PREFIXES = ['sermons/', 'events/', 'ministries/', 'leaders/', 'journey/', 'home-cards/', 'page/', 'groups/'];
+const PUBLIC_PREFIXES = ['sermons/', 'events/', 'ministries/', 'leaders/', 'journey/', 'home-cards/', 'page/', 'groups/', 'volunteer/'];
 
 export const GET: APIRoute = async ({ params }) => {
   const key = params.key;
