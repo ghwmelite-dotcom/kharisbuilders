@@ -1,0 +1,37 @@
+---
+import Field from '../Field.astro';
+import Button from '../Button.astro';
+import { AREAS, COMMITMENTS } from '../../lib/community/volunteer-options';
+import type { VolunteerRoleFull } from '../../lib/db/volunteer-roles';
+interface Props {
+  role?: VolunteerRoleFull | null;
+}
+const { role } = Astro.props;
+const isEdit = !!role;
+const sel = (a: string | null | undefined, b: string) => (a ?? '') === b;
+---
+<form method="POST" action="/api/admin/volunteer-roles" enctype="multipart/form-data" class="flex flex-col gap-6 max-w-xl">
+  <input type="hidden" name="_action" value={isEdit ? 'update' : 'create'} />
+  {isEdit && <input type="hidden" name="id" value={String(role!.id)} />}
+  <Field label="Name" name="name" required value={role?.name ?? ''} />
+  <Field label="Team lead" name="leader" value={role?.leader ?? ''} />
+  <div class="grid grid-cols-2 gap-4">
+    <label class="flex flex-col gap-1 text-xs uppercase tracking-wider text-on-surface-variant">Area
+      <select name="area" class="border border-champagne bg-surface px-3 py-2 text-sm text-primary normal-case tracking-normal">{AREAS.map((a) => (<option value={a.key} selected={sel(role?.area, a.key)}>{a.label}</option>))}</select>
+    </label>
+    <label class="flex flex-col gap-1 text-xs uppercase tracking-wider text-on-surface-variant">Commitment
+      <select name="commitment" class="border border-champagne bg-surface px-3 py-2 text-sm text-primary normal-case tracking-normal">{COMMITMENTS.map((c) => (<option value={c.key} selected={sel(role?.commitment, c.key)}>{c.label}</option>))}</select>
+    </label>
+  </div>
+  <Field label="Schedule (free text, e.g. Sundays 8-10am)" name="schedule" value={role?.schedule ?? ''} />
+  <Field label="Requirements (optional, e.g. Background check required)" name="requirements" value={role?.requirements ?? ''} />
+  <Field label="Sort order" name="sort_order" type="number" min={0} value={role?.sort_order != null ? String(role.sort_order) : '0'} />
+  <Field label="Description" name="description" textarea value={role?.description ?? ''} />
+  <div class="flex flex-col gap-1">
+    <label for="f-image" class="text-xs uppercase tracking-wider text-on-surface-variant">Role image (optional, max 6 MB)</label>
+    <input id="f-image" name="image" type="file" accept="image/*" class="text-sm text-on-surface-variant" />
+    {role?.image_key && <p class="text-xs text-on-surface-variant">Current: {role.image_key}</p>}
+  </div>
+  <Field label="Published" name="published" type="checkbox" checked={!!role?.published} />
+  <Button type="submit" variant="primary">{isEdit ? 'Save' : 'Create'}</Button>
+</form>
