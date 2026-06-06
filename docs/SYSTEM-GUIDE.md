@@ -60,17 +60,21 @@ Here's what each thing does — full click-by-click steps are in **[ADMIN-GUIDE.
 | Change wording on a page | **Content** | Pick a page, edit the boxes, **Save**. Empty a box to restore the original wording. |
 | Replace a photo | **Content** (image slots) | Upload a JPG/PNG (≤6 MB). Saving text never deletes a photo. |
 | Add a sermon | **Sermons** | Paste the YouTube/Vimeo link; optionally paste a transcript (powers the AI). Tick **Published**. |
-| Add an event | **Events** | Set date, location, and optionally turn on **registration** with a capacity. |
+| Add an event | **Events** | Set date, location, optional **registration** + capacity. Each event auto-offers **Add to calendar** (.ics + Google) and shows **"spots left."** |
 | List a ministry | **Ministries** | Name, description, leader, photo. Tick **Published**. |
 | Edit leaders / your story | **Leadership** / **Journey** | Simple lists shown on the About page. |
-| See who reached out | **People** | Everyone who submitted the Visit / prayer / connect forms. |
+| Take prayer requests | **Prayer** | Approve / hide / delete. Approved ones show **anonymously** on the Prayer wall; visitors can tap "I prayed." |
+| Follow up next steps | **Connect** | People who chose a next step (new here, baptism, serve…). Mark **Contacted**/**Done**. |
+| Manage small groups | **Groups** / **Group Signups** | Group cards for the **/groups** finder, plus the "I'm interested" follow-up list. |
+| Recruit volunteers | **Serve Roles** / **Serve Signups** | Role cards for the **/serve** board, plus the "I want to serve" follow-up list. |
+| See who reached out | **People** | Everyone who submitted the **Visit** form (prayer/connect/group/serve have their own lists above). |
 | Manage online giving | **Funds**, **Giving**, **Recurring** | Create funds, see donations, export CSV, cancel a recurring gift. |
 | Run the live-stream page | **Live** | Set the stream link and an Auto/Live/Off switch. |
 | Change service times, address, socials | **Settings** | These show in the footer and on the Visit page. |
 
 **Three golden rules**
 1. Changes go live the moment you click **Save**.
-2. Sermons, events, and ministries only appear publicly when marked **Published**.
+2. Sermons, events, ministries, groups, and serving roles only appear publicly when marked **Published**.
 3. In the page-text editor, clearing a box and saving brings back the original wording — you can't
    break a page by emptying a field.
 
