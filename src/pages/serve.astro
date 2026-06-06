@@ -1,0 +1,125 @@
+---
+import PublicLayout from '../layouts/PublicLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { env } from '../lib/runtime';
+import { getAllSettings } from '../lib/db/settings';
+import { getAllContent } from '../lib/db/content';
+import { makeImage } from '../lib/content/content';
+import { mediaUrl } from '../lib/media';
+import { PLACEHOLDER } from '../lib/images';
+import { listPublishedRoles, type VolunteerRole } from '../lib/db/volunteer-roles';
+import { AREAS, COMMITMENTS, optionLabel } from '../lib/community/volunteer-options';
+import { SITE } from '../lib/seo';
+import { feature } from '../config/church';
+
+if (!feature('community')) return Astro.redirect('/');
+
+let siteKey = '1x00000000000000000000AA';
+let cimg = makeImage({});
+let roles: VolunteerRole[] = [];
+try {
+  const settings = await getAllSettings(env.DB);
+  siteKey = settings.turnstile_site_key ?? siteKey;
+  cimg = makeImage(await getAllContent(env.DB).catch(() => ({})));
+  roles = await listPublishedRoles(env.DB);
+} catch {
+  // DB unavailable in some envs — render an empty board
+}
+const status = Astro.url.searchParams.get('signup');
+---
+<PublicLayout title={`Serve | ${SITE.name}`} description={`Find a place to serve and volunteer at ${SITE.name}.`}>
+  <PageHero image={cimg('pages.ministries_hero')} height="h-[300px] md:h-[380px]">
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Get Involved</span>
+    <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Serve</h1>
+    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">Every gift matters — find a place to serve.</p>
+  </PageHero>
+
+  <section class="py-16 md:py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+    {status === 'ok' && (
+      <div class="max-w-2xl mx-auto mb-10 border-t-2 border-heritage-gold bg-surface-container-lowest p-5 text-center font-body text-body-md text-primary">
+        Thank you — a team leader will be in touch soon.
+      </div>
+    )}
+    {status === 'err' && (
+      <div class="max-w-2xl mx-auto mb-10 border-t-2 border-accent-deep bg-surface-container-lowest p-5 text-center font-body text-body-md text-primary">
+        Sorry — we couldn't record that. Please try again.
+      </div>
+    )}
+
+    {roles.length === 0 ? (
+      <p class="text-center font-body text-body-md text-stone-gray">No volunteer roles listed yet — check back soon.</p>
+    ) : (
+      <>
+        <div class="flex flex-wrap gap-4 justify-center mb-10">
+          <select id="f-area" class="border border-champagne bg-surface px-4 py-2 font-body text-body-md text-primary"><option value="">Any area</option>{AREAS.map((a) => (<option value={a.key}>{a.label}</option>))}</select>
+          <select id="f-commit" class="border border-champagne bg-surface px-4 py-2 font-body text-body-md text-primary"><option value="">Any commitment</option>{COMMITMENTS.map((c) => (<option value={c.key}>{c.label}</option>))}</select>
+        </div>
+        <p id="r-empty" class="hidden text-center font-body text-body-md text-stone-gray mb-8">No roles match those filters.</p>
+
+        <div id="r-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {roles.map((role) => (
+            <article class="role-card bg-surface-container-lowest border border-champagne flex flex-col overflow-hidden" data-area={role.area} data-commit={role.commitment}>
+              <div class="aspect-[16/10] overflow-hidden bg-surface-dim">
+                <img src={mediaUrl(role.image_key) ?? PLACEHOLDER.card} alt="" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-6 flex flex-col flex-1">
+                <h3 class="font-display text-headline-md text-primary mb-1">{role.name}</h3>
+                {role.schedule && <p class="font-label-sm uppercase tracking-[0.14em] text-stone-gray mb-3">{role.schedule}</p>}
+                <div class="flex flex-wrap gap-2 mb-3">
+                  <span class="text-xs px-2 py-0.5 rounded-full border border-champagne text-primary">{optionLabel(AREAS, role.area)}</span>
+                  <span class="text-xs px-2 py-0.5 rounded-full border border-champagne text-primary">{optionLabel(COMMITMENTS, role.commitment)}</span>
+                </div>
+                {role.description && <p class="font-body text-body-md text-stone-gray mb-4 flex-1 whitespace-pre-line">{role.description}</p>}
+                {role.requirements && <p class="font-body text-body-sm text-accent-deep mb-3">Note: {role.requirements}</p>}
+                {role.leader && <p class="font-body text-body-md text-stone-gray mb-4">Team lead: {role.leader}</p>}
+                <button type="button" class="serve-btn mt-auto self-start font-label-sm uppercase tracking-[0.14em] text-heritage-gold hover:text-primary transition-colors" data-id={String(role.id)} data-name={role.name}>I want to serve &rarr;</button>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div id="signup-form" class="max-w-2xl mx-auto mt-16 bg-surface-container-lowest border-t-2 border-heritage-gold elev-2 p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-primary mb-1">I want to serve</h2>
+          <p class="font-body text-body-md text-stone-gray mb-6">Role: <span id="signup-role" class="text-primary font-medium">choose a role above</span></p>
+          <form method="POST" action="/api/forms/volunteer-signup" class="space-y-5">
+            <input type="hidden" name="role_id" id="signup-role-id" value="" />
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input name="name" required maxlength="120" placeholder="Your name" class="border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
+              <input name="email" type="email" required maxlength="200" placeholder="Email" class="border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
+            </div>
+            <input name="phone" maxlength="40" placeholder="Phone (optional)" class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
+            <textarea name="message" rows="3" maxlength="2000" placeholder="Anything you'd like the team to know? (optional)" class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary"></textarea>
+            <div class="cf-turnstile" data-sitekey={siteKey}></div>
+            <button type="submit" class="bg-heritage-gold text-primary font-label-md uppercase tracking-widest px-8 py-3 hover:bg-secondary transition-all">Send</button>
+          </form>
+        </div>
+      </>
+    )}
+  </section>
+
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script is:inline>
+    const area = document.getElementById('f-area');
+    const commit = document.getElementById('f-commit');
+    const cards = Array.from(document.querySelectorAll('.role-card'));
+    const empty = document.getElementById('r-empty');
+    function applyFilter() {
+      let shown = 0;
+      cards.forEach((c) => {
+        const ok = (!area.value || c.dataset.area === area.value) && (!commit.value || c.dataset.commit === commit.value);
+        c.style.display = ok ? '' : 'none';
+        if (ok) shown++;
+      });
+      if (empty) empty.classList.toggle('hidden', shown !== 0);
+    }
+    [area, commit].forEach((s) => s && s.addEventListener('change', applyFilter));
+
+    const roleIdEl = document.getElementById('signup-role-id');
+    const roleLabel = document.getElementById('signup-role');
+    document.querySelectorAll('.serve-btn').forEach((b) => b.addEventListener('click', () => {
+      roleIdEl.value = b.getAttribute('data-id');
+      roleLabel.textContent = b.getAttribute('data-name');
+      document.getElementById('signup-form').scrollIntoView({ behavior: 'smooth' });
+    }));
+  </script>
+</PublicLayout>
