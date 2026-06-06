@@ -1,0 +1,127 @@
+---
+import PublicLayout from '../layouts/PublicLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { env } from '../lib/runtime';
+import { getAllSettings } from '../lib/db/settings';
+import { getAllContent } from '../lib/db/content';
+import { makeImage } from '../lib/content/content';
+import { mediaUrl } from '../lib/media';
+import { PLACEHOLDER } from '../lib/images';
+import { listPublishedGroups, type Group } from '../lib/db/groups';
+import { DAYS, FORMATS, AUDIENCES, optionLabel } from '../lib/community/group-options';
+import { SITE } from '../lib/seo';
+import { feature } from '../config/church';
+
+if (!feature('community')) return Astro.redirect('/');
+
+let siteKey = '1x00000000000000000000AA';
+let cimg = makeImage({});
+let groups: Group[] = [];
+try {
+  const settings = await getAllSettings(env.DB);
+  siteKey = settings.turnstile_site_key ?? siteKey;
+  cimg = makeImage(await getAllContent(env.DB).catch(() => ({})));
+  groups = await listPublishedGroups(env.DB);
+} catch {
+  // DB unavailable in some envs — render an empty finder
+}
+const status = Astro.url.searchParams.get('interest');
+---
+<PublicLayout title={`Find a Group | ${SITE.name}`} description={`Browse and join a small group at ${SITE.name}.`}>
+  <PageHero image={cimg('pages.ministries_hero')} height="h-[300px] md:h-[380px]">
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Community</span>
+    <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Find a Group</h1>
+    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">Life is better together — find a group that fits.</p>
+  </PageHero>
+
+  <section class="py-16 md:py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+    {status === 'ok' && (
+      <div class="max-w-2xl mx-auto mb-10 border-t-2 border-heritage-gold bg-surface-container-lowest p-5 text-center font-body text-body-md text-primary">
+        Thank you — the group's leader will be in touch soon.
+      </div>
+    )}
+    {status === 'err' && (
+      <div class="max-w-2xl mx-auto mb-10 border-t-2 border-accent-deep bg-surface-container-lowest p-5 text-center font-body text-body-md text-primary">
+        Sorry — we couldn't record that. Please try again.
+      </div>
+    )}
+
+    {groups.length === 0 ? (
+      <p class="text-center font-body text-body-md text-stone-gray">No groups listed yet — check back soon.</p>
+    ) : (
+      <>
+        <div class="flex flex-wrap gap-4 justify-center mb-10">
+          <select id="f-day" class="border border-champagne bg-surface px-4 py-2 font-body text-body-md text-primary"><option value="">Any day</option>{DAYS.map((d) => (<option value={d.key}>{d.label}</option>))}</select>
+          <select id="f-format" class="border border-champagne bg-surface px-4 py-2 font-body text-body-md text-primary"><option value="">Any format</option>{FORMATS.map((f) => (<option value={f.key}>{f.label}</option>))}</select>
+          <select id="f-audience" class="border border-champagne bg-surface px-4 py-2 font-body text-body-md text-primary"><option value="">Anyone</option>{AUDIENCES.map((a) => (<option value={a.key}>{a.label}</option>))}</select>
+        </div>
+        <p id="g-empty" class="hidden text-center font-body text-body-md text-stone-gray mb-8">No groups match those filters.</p>
+
+        <div id="g-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {groups.map((grp) => (
+            <article class="group-card bg-surface-container-lowest border border-champagne flex flex-col overflow-hidden" data-day={grp.day ?? ''} data-format={grp.format} data-audience={grp.audience}>
+              <div class="aspect-[16/10] overflow-hidden bg-surface-dim">
+                <img src={mediaUrl(grp.image_key) ?? PLACEHOLDER.card} alt="" class="w-full h-full object-cover" />
+              </div>
+              <div class="p-6 flex flex-col flex-1">
+                <h3 class="font-display text-headline-md text-primary mb-1">{grp.name}</h3>
+                <p class="font-label-sm uppercase tracking-[0.14em] text-stone-gray mb-3">
+                  {[grp.day, grp.time].filter(Boolean).join(' · ')}{grp.location ? ` · ${grp.location}` : ''}
+                </p>
+                <div class="flex flex-wrap gap-2 mb-3">
+                  <span class="text-xs px-2 py-0.5 rounded-full border border-champagne text-primary">{optionLabel(FORMATS, grp.format)}</span>
+                  <span class="text-xs px-2 py-0.5 rounded-full border border-champagne text-primary">{optionLabel(AUDIENCES, grp.audience)}</span>
+                </div>
+                {grp.description && <p class="font-body text-body-md text-stone-gray mb-4 flex-1 whitespace-pre-line">{grp.description}</p>}
+                {grp.leader && <p class="font-body text-body-md text-stone-gray mb-4">Led by {grp.leader}</p>}
+                <button type="button" class="interest-btn mt-auto self-start font-label-sm uppercase tracking-[0.14em] text-heritage-gold hover:text-primary transition-colors" data-id={String(grp.id)} data-name={grp.name}>I'm interested &rarr;</button>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div id="interest-form" class="max-w-2xl mx-auto mt-16 bg-surface-container-lowest border-t-2 border-heritage-gold elev-2 p-8 md:p-10">
+          <h2 class="font-display text-headline-md text-primary mb-1">I'm interested</h2>
+          <p class="font-body text-body-md text-stone-gray mb-6">Interested in: <span id="interest-group" class="text-primary font-medium">choose a group above</span></p>
+          <form method="POST" action="/api/forms/group-interest" class="space-y-5">
+            <input type="hidden" name="group_id" id="interest-group-id" value="" />
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <input name="name" required maxlength="120" placeholder="Your name" class="border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
+              <input name="email" type="email" required maxlength="200" placeholder="Email" class="border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
+            </div>
+            <textarea name="message" rows="3" maxlength="2000" placeholder="Anything you'd like the leader to know? (optional)" class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary"></textarea>
+            <div class="cf-turnstile" data-sitekey={siteKey}></div>
+            <button type="submit" class="bg-heritage-gold text-primary font-label-md uppercase tracking-widest px-8 py-3 hover:bg-secondary transition-all">Send</button>
+          </form>
+        </div>
+      </>
+    )}
+  </section>
+
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script is:inline>
+    const day = document.getElementById('f-day');
+    const fmt = document.getElementById('f-format');
+    const aud = document.getElementById('f-audience');
+    const cards = Array.from(document.querySelectorAll('.group-card'));
+    const empty = document.getElementById('g-empty');
+    function applyFilter() {
+      let shown = 0;
+      cards.forEach((c) => {
+        const ok = (!day.value || c.dataset.day === day.value) && (!fmt.value || c.dataset.format === fmt.value) && (!aud.value || c.dataset.audience === aud.value);
+        c.style.display = ok ? '' : 'none';
+        if (ok) shown++;
+      });
+      if (empty) empty.classList.toggle('hidden', shown !== 0);
+    }
+    [day, fmt, aud].forEach((s) => s && s.addEventListener('change', applyFilter));
+
+    const groupIdEl = document.getElementById('interest-group-id');
+    const groupLabel = document.getElementById('interest-group');
+    document.querySelectorAll('.interest-btn').forEach((b) => b.addEventListener('click', () => {
+      groupIdEl.value = b.getAttribute('data-id');
+      groupLabel.textContent = b.getAttribute('data-name');
+      document.getElementById('interest-form').scrollIntoView({ behavior: 'smooth' });
+    }));
+  </script>
+</PublicLayout>
