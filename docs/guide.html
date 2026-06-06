@@ -415,12 +415,13 @@ npx wrangler deploy        <span class="cm"># push it live</span></pre></div>
         <div class="step"><span class="s-num"></span><div><h3>Fill in one file</h3><p>Copy the example config and edit it — name, slug, web address, brand colours, currency, timezone, and which features to enable.</p></div></div>
         <div class="step"><span class="s-num"></span><div><h3>Run one script</h3><p>It writes the config, names every cloud resource, re-tints the placeholder images to the new brand, and generates a <b>PROVISIONING.md</b> with the exact next commands.</p></div></div>
         <div class="step"><span class="s-num"></span><div><h3>Follow PROVISIONING.md</h3><p>It lists everything to create the database, storage, and search index, set secrets, lock the admin, and deploy — adapting to the features you enabled.</p></div></div>
-        <div class="step"><span class="s-num"></span><div><h3>Commit &amp; deploy</h3><p>A fully working church site in your brand. Full detail lives in the <a href="../README.md" class="gold">README</a>.</p></div></div>
+        <div class="step"><span class="s-num"></span><div><h3>Commit &amp; deploy</h3><p>A fully working church site in your brand. Running this for multiple client churches? Follow the operator playbook in <a href="CLIENT-ONBOARDING.md" class="gold">CLIENT-ONBOARDING.md</a> — full detail also in the <a href="../README.md" class="gold">README</a>.</p></div></div>
       </div>
       <div class="code reveal"><button class="copy">Copy</button><pre>cp scripts/new-church.config.example.json scripts/new-church.config.json
-<span class="cm"># edit it, then:</span>
-node scripts/new-church.mjs
-<span class="cm"># then follow the generated PROVISIONING.md</span></pre></div>
+<span class="cm"># edit it (set name, slug, customDomain, features), then either:</span>
+node scripts/new-church.mjs                 <span class="cm"># write files + a PROVISIONING.md checklist</span>
+<span class="cm"># …or do it all in one go (resources + custom domain + deploy):</span>
+CLOUDFLARE_ACCOUNT_ID=your_id node scripts/new-church.mjs --provision --yes</pre></div>
     </section>
 
     <!-- GLOSSARY -->

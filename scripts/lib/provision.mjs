@@ -43,6 +43,15 @@ export function validateChurchInput(raw) {
   }
   if (typeof r.motifs !== 'boolean') errors.push('"motifs" must be a boolean');
 
+  let customDomain;
+  if (r.customDomain !== undefined && r.customDomain !== '') {
+    if (typeof r.customDomain !== 'string' || !/^([a-z0-9-]+\.)+[a-z]{2,}$/i.test(r.customDomain)) {
+      errors.push('"customDomain" must be a hostname like church.example.org (or omit it / leave it empty for a *.workers.dev URL)');
+    } else {
+      customDomain = r.customDomain;
+    }
+  }
+
   const t = r.theme ?? {};
   for (const k of ['primary', 'accent', 'dark', 'surface']) {
     if (typeof t[k] !== 'string' || !HEX_RE.test(t[k])) errors.push(`"theme.${k}" must be a 6-digit hex colour like #3b3a6b`);
@@ -60,6 +69,7 @@ export function validateChurchInput(raw) {
     theme: { primary: t.primary, accent: t.accent, dark: t.dark, surface: t.surface },
     features: Object.fromEntries(FEATURE_KEYS.map((k) => [k, f[k]])),
     names: deriveNames(r.slug),
+    customDomain,
   };
   return { ok: true, value };
 }
@@ -81,6 +91,7 @@ export interface ChurchFeatures {
   giving: boolean;
   ai: boolean;
   live: boolean;
+  community: boolean;
 }
 export interface ChurchConfig {
   name: string;
@@ -122,13 +133,16 @@ export function feature(name: keyof ChurchFeatures): boolean {
 `;
 }
 
-/** @param {DerivedNames} names @returns {string} */
-export function renderWranglerJsonc(names) {
+/** @param {DerivedNames} names @param {string=} customDomain @returns {string} */
+export function renderWranglerJsonc(names, customDomain) {
+  const routesBlock = customDomain
+    ? `\t"routes": [\n\t\t{ "pattern": "${customDomain}", "custom_domain": true }\n\t],\n`
+    : '';
   return `{
 \t"compatibility_date": "2026-06-02",
 \t"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
 \t"name": "${names.worker}",
-\t"main": "@astrojs/cloudflare/entrypoints/server",
+${routesBlock}\t"main": "@astrojs/cloudflare/entrypoints/server",
 \t"assets": {
 \t\t"directory": "./dist",
 \t\t"binding": "ASSETS"

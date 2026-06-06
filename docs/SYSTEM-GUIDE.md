@@ -143,7 +143,13 @@ The whole thing is a **re-skinnable template** — one config file turns it into
    set secrets, lock the admin, and deploy. (It adapts to the features you enabled.)
 5. **Commit and deploy.** Done — a fully working church site in your brand.
 
-Full details: **[README.md](../README.md)** ("Spin up a new church").
+**One-command path:** with `CLOUDFLARE_ACCOUNT_ID` set and `wrangler` logged in, set a
+`customDomain` in the config and run `node scripts/new-church.mjs --provision --yes` to create every
+resource, attach the custom subdomain, and deploy — all in one go.
+
+Running this as a service for multiple client churches? The full operator playbook —
+configure → provision → lock the admin with Cloudflare Access → secrets → hand-over → update/teardown —
+is in **[CLIENT-ONBOARDING.md](CLIENT-ONBOARDING.md)**. General reference: **[README.md](../README.md)**.
 
 ---
 
