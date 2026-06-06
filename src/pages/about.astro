@@ -10,6 +10,7 @@ import { PLACEHOLDER } from '../lib/images';
 import { SITE } from '../lib/seo';
 import { listLeaders } from '../lib/db/leaders';
 import { listJourney } from '../lib/db/journey';
+import { feature } from '../config/church';
 
 const contentMap = await getAllContent(env.DB).catch(() => ({}));
 const c = makeContent(contentMap);
@@ -27,6 +28,17 @@ const journeyFallback = [PLACEHOLDER.card, PLACEHOLDER.card, PLACEHOLDER.card];
       {c('about.hero_title')}
     </h1>
   </PageHero>
+
+  {
+    feature('community') && (
+      <div class="bg-primary-container text-on-primary py-10 px-margin-mobile md:px-margin-desktop">
+        <div class="max-w-[var(--container-max)] mx-auto flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left">
+          <p class="font-display text-headline-md text-white">Find your place — serve with us.</p>
+          <a href="/serve" class="flex-none bg-heritage-gold text-primary font-label-md uppercase tracking-widest px-8 py-3 hover:bg-secondary transition-colors">Explore serving</a>
+        </div>
+      </div>
+    )
+  }
 
   <!-- Vision & Mission -->
   <section class="py-24 md:py-32 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
