@@ -1,0 +1,18 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import VolunteerRoleForm from '../../../components/admin/VolunteerRoleForm.astro';
+import { env } from '../../../lib/runtime';
+import { getAdminEmail } from '../../../lib/admin-auth';
+import { getRoleById } from '../../../lib/db/volunteer-roles';
+import { feature } from '../../../config/church';
+
+if (!feature('community')) return Astro.redirect('/');
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+const role = await getRoleById(env.DB, Number(Astro.params.id)).catch(() => null);
+if (!role) return Astro.redirect('/admin/volunteer-roles');
+---
+<AdminLayout title="Edit Role" email={email} active="volunteer-roles">
+  <VolunteerRoleForm role={role} />
+  <a href="/admin/volunteer-roles" class="inline-block mt-8 text-accent text-sm uppercase tracking-widest">← Back</a>
+</AdminLayout>

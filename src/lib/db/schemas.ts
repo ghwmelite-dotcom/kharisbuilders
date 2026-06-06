@@ -152,3 +152,25 @@ export const GroupInterestInputSchema = z.object({
   message: z.string().trim().max(2000).optional().or(z.literal('')),
 });
 export type GroupInterestInput = z.infer<typeof GroupInterestInputSchema>;
+
+export const VolunteerRoleInputSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  description: z.string().trim().max(2000).optional().or(z.literal('')),
+  area: z.string().trim().max(30).default('general'),
+  commitment: z.string().trim().max(20).default('as_needed'),
+  schedule: z.string().trim().max(120).optional().or(z.literal('')),
+  requirements: z.string().trim().max(500).optional().or(z.literal('')),
+  leader: z.string().trim().max(120).optional().or(z.literal('')),
+  sort_order: z.coerce.number().int().min(0).default(0),
+  published: z.coerce.boolean().default(false),
+});
+export type VolunteerRoleInput = z.infer<typeof VolunteerRoleInputSchema>;
+
+export const VolunteerSignupInputSchema = z.object({
+  role_id: z.coerce.number().int().positive(),
+  name: z.string().trim().min(1).max(120),
+  email: z.string().trim().email().max(200),
+  phone: z.string().trim().max(40).optional().or(z.literal('')),
+  message: z.string().trim().max(2000).optional().or(z.literal('')),
+});
+export type VolunteerSignupInput = z.infer<typeof VolunteerSignupInputSchema>;
