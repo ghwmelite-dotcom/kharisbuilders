@@ -9,7 +9,8 @@ import { SITE, eventJsonLd } from '../../lib/seo';
 import { getEventBySlug } from '../../lib/db/events';
 import { countRegistrations } from '../../lib/db/registrations';
 import { getAllSettings } from '../../lib/db/settings';
-import { feature } from '../../config/church';
+import { feature, CHURCH } from '../../config/church';
+import { googleCalendarUrl } from '../../lib/events/calendar';
 
 if (!feature('events')) return Astro.redirect('/');
 
@@ -23,20 +24,23 @@ try {
 } catch {
   /* default test key */
 }
-let isFull = false;
+let remaining: number | null = null; // null = unlimited / not tracked
 if (event.registration_enabled && event.capacity != null) {
   try {
-    isFull = (await countRegistrations(env.DB, event.id)) >= event.capacity;
+    remaining = Math.max(0, event.capacity - (await countRegistrations(env.DB, event.id)));
   } catch {
-    isFull = false;
+    remaining = null;
   }
 }
+const isFull = remaining === 0;
 const registered = Astro.url.searchParams.get('registered') === '1';
 const fullParam = Astro.url.searchParams.get('full') === '1';
 const date = event.start_at?.slice(0, 16).replace('T', ' ') ?? '';
 const heroImg = mediaUrl(event.image_key) ?? PLACEHOLDER.wide;
 const origin = (Astro.site ?? new URL(SITE.url)).origin;
 const eventNode = eventJsonLd(origin, event);
+const icsHref = `/events/${event.slug}.ics`;
+const gcalUrl = googleCalendarUrl(event, origin, CHURCH.timezoneOffsetMin);
 ---
 <PublicLayout
   title={`${event.title} | Events`}
@@ -59,18 +63,35 @@ const eventNode = eventJsonLd(origin, event);
         ← All events
       </a>
     </div>
-    <div class="md:col-span-5">
+    <div class="md:col-span-5 space-y-6">
+      <div class="bg-surface-container-lowest border border-champagne p-6">
+        <p class="font-label-sm uppercase tracking-widest text-heritage-gold mb-3">Add to calendar</p>
+        <div class="flex flex-wrap gap-3">
+          <a href={icsHref} class="font-body text-body-md text-primary border border-champagne px-4 py-2 hover:border-heritage-gold transition-colors">Apple / Outlook (.ics)</a>
+          <a href={gcalUrl} target="_blank" rel="noopener" class="font-body text-body-md text-primary border border-champagne px-4 py-2 hover:border-heritage-gold transition-colors">Google Calendar</a>
+        </div>
+      </div>
       <div class="bg-surface-container p-8 md:p-10 elev-2">
         {
           !event.registration_enabled ? (
             <p class="font-body text-body-md text-stone-gray">Registration isn't required for this event — just come along!</p>
           ) : registered ? (
-            <p class="font-display text-headline-md text-primary">You're registered — see you there!</p>
+            <div class="space-y-4">
+              <p class="font-display text-headline-md text-primary">You're registered — see you there!</p>
+              <p class="font-body text-body-md text-stone-gray">Save the date:</p>
+              <div class="flex flex-wrap gap-3">
+                <a href={icsHref} class="font-body text-body-md text-primary border border-champagne px-4 py-2 hover:border-heritage-gold transition-colors">Apple / Outlook (.ics)</a>
+                <a href={gcalUrl} target="_blank" rel="noopener" class="font-body text-body-md text-primary border border-champagne px-4 py-2 hover:border-heritage-gold transition-colors">Google Calendar</a>
+              </div>
+            </div>
           ) : isFull || fullParam ? (
             <p class="font-display text-headline-md text-primary">This event is full. Please contact us to join the waitlist.</p>
           ) : (
             <div class="space-y-6">
               <h2 class="font-display text-headline-md text-primary">Reserve your place</h2>
+              {remaining != null && (
+                <p class="font-body text-body-md text-heritage-gold">{remaining} {remaining === 1 ? 'spot' : 'spots'} left</p>
+              )}
               <form method="POST" action="/api/forms/register" class="space-y-6">
                 <input type="hidden" name="event_id" value={String(event.id)} />
                 <Field label="Full Name" name="name" required />
