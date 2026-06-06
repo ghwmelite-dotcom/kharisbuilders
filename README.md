@@ -9,7 +9,9 @@ built on **Astro + Cloudflare**. Spin up a new church by editing one file and ru
 > exactly the part you need.
 
 - **Public site:** home, about, ministries, sermons (with AI search + study guides), events
-  (with registration), visit (with a contact form), online giving, and a live/online-campus page.
+  (with registration + add-to-calendar), visit (with a contact form), online giving, a
+  live/online-campus page, and the community/care pages — prayer wall, next-steps/connect,
+  small-group finder (`/groups`), and a serve/volunteer board (`/serve`).
 - **Admin:** everything on the site is editable by non-technical staff at `/admin` (behind
   Cloudflare Access). See **[docs/ADMIN-GUIDE.md](docs/ADMIN-GUIDE.md)**.
 - **Re-skinnable:** one config file (`src/config/church.ts`) plus a provisioning script turns this
