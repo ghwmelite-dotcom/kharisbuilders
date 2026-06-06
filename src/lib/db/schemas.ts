@@ -130,3 +130,25 @@ export const ConnectInputSchema = z.object({
   message: z.string().trim().max(2000).optional().or(z.literal('')),
 });
 export type ConnectInput = z.infer<typeof ConnectInputSchema>;
+
+export const GroupInputSchema = z.object({
+  name: z.string().trim().min(1).max(120),
+  description: z.string().trim().max(2000).optional().or(z.literal('')),
+  day: z.string().trim().max(40).optional().or(z.literal('')),
+  time: z.string().trim().max(40).optional().or(z.literal('')),
+  location: z.string().trim().max(160).optional().or(z.literal('')),
+  format: z.string().trim().max(20).default('in_person'),
+  audience: z.string().trim().max(30).default('everyone'),
+  leader: z.string().trim().max(120).optional().or(z.literal('')),
+  sort_order: z.coerce.number().int().min(0).default(0),
+  published: z.coerce.boolean().default(false),
+});
+export type GroupInput = z.infer<typeof GroupInputSchema>;
+
+export const GroupInterestInputSchema = z.object({
+  group_id: z.coerce.number().int().positive(),
+  name: z.string().trim().min(1).max(120),
+  email: z.string().trim().email().max(200),
+  message: z.string().trim().max(2000).optional().or(z.literal('')),
+});
+export type GroupInterestInput = z.infer<typeof GroupInterestInputSchema>;

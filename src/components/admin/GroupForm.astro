@@ -1,0 +1,42 @@
+---
+import Field from '../Field.astro';
+import Button from '../Button.astro';
+import { DAYS, FORMATS, AUDIENCES } from '../../lib/community/group-options';
+import type { GroupFull } from '../../lib/db/groups';
+interface Props {
+  group?: GroupFull | null;
+}
+const { group } = Astro.props;
+const isEdit = !!group;
+const sel = (a: string | null | undefined, b: string) => (a ?? '') === b;
+---
+<form method="POST" action="/api/admin/groups" enctype="multipart/form-data" class="flex flex-col gap-6 max-w-xl">
+  <input type="hidden" name="_action" value={isEdit ? 'update' : 'create'} />
+  {isEdit && <input type="hidden" name="id" value={String(group!.id)} />}
+  <Field label="Name" name="name" required value={group?.name ?? ''} />
+  <Field label="Leader" name="leader" value={group?.leader ?? ''} />
+  <div class="grid grid-cols-2 gap-4">
+    <label class="flex flex-col gap-1 text-xs uppercase tracking-wider text-on-surface-variant">Day
+      <select name="day" class="border border-champagne bg-surface px-3 py-2 text-sm text-primary normal-case tracking-normal"><option value="">—</option>{DAYS.map((d) => (<option value={d.key} selected={sel(group?.day, d.key)}>{d.label}</option>))}</select>
+    </label>
+    <Field label="Time" name="time" value={group?.time ?? ''} />
+  </div>
+  <Field label="Location / area" name="location" value={group?.location ?? ''} />
+  <div class="grid grid-cols-2 gap-4">
+    <label class="flex flex-col gap-1 text-xs uppercase tracking-wider text-on-surface-variant">Format
+      <select name="format" class="border border-champagne bg-surface px-3 py-2 text-sm text-primary normal-case tracking-normal">{FORMATS.map((f) => (<option value={f.key} selected={sel(group?.format, f.key)}>{f.label}</option>))}</select>
+    </label>
+    <label class="flex flex-col gap-1 text-xs uppercase tracking-wider text-on-surface-variant">Audience
+      <select name="audience" class="border border-champagne bg-surface px-3 py-2 text-sm text-primary normal-case tracking-normal">{AUDIENCES.map((a) => (<option value={a.key} selected={sel(group?.audience, a.key)}>{a.label}</option>))}</select>
+    </label>
+  </div>
+  <Field label="Sort order" name="sort_order" type="number" min={0} value={group?.sort_order != null ? String(group.sort_order) : '0'} />
+  <Field label="Description" name="description" textarea value={group?.description ?? ''} />
+  <div class="flex flex-col gap-1">
+    <label for="f-image" class="text-xs uppercase tracking-wider text-on-surface-variant">Group image (optional, max 6 MB)</label>
+    <input id="f-image" name="image" type="file" accept="image/*" class="text-sm text-on-surface-variant" />
+    {group?.image_key && <p class="text-xs text-on-surface-variant">Current: {group.image_key}</p>}
+  </div>
+  <Field label="Published" name="published" type="checkbox" checked={!!group?.published} />
+  <Button type="submit" variant="primary">{isEdit ? 'Save' : 'Create'}</Button>
+</form>
