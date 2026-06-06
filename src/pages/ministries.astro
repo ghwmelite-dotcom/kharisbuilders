@@ -44,6 +44,17 @@ const cfg = (i: number) => bento[i] ?? { span: 'md:col-span-4', img: PLACEHOLDER
     </p>
   </PageHero>
 
+  {
+    feature('community') && (
+      <div class="bg-primary-container text-on-primary py-10 px-margin-mobile md:px-margin-desktop">
+        <div class="max-w-[var(--container-max)] mx-auto flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left">
+          <p class="font-display text-headline-md text-white">Looking for a smaller circle? Find a group.</p>
+          <a href="/groups" class="flex-none bg-heritage-gold text-primary font-label-md uppercase tracking-widest px-8 py-3 hover:bg-secondary transition-colors">Find a group</a>
+        </div>
+      </div>
+    )
+  }
+
   <!-- Bento grid -->
   <main class="py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
     {
