@@ -4,7 +4,8 @@ const DEFAULT_DURATION_MS = 2 * 60 * 60 * 1000; // 2 hours when no end_at
 
 /** Parse a naive "YYYY-MM-DDTHH:MM(:SS)?" local wall-clock string into a UTC instant (ms). */
 function toUtcMs(naive: string, tzOffsetMin: number): number {
-  const m = naive.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?/);
+  // Accept either "T" or a space between date and time (SQLite datetime() uses a space).
+  const m = naive.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})(?::(\d{2}))?/);
   if (!m) return NaN;
   const [, y, mo, d, h, mi, s] = m;
   return Date.UTC(Number(y), Number(mo) - 1, Number(d), Number(h), Number(mi), s ? Number(s) : 0) - tzOffsetMin * 60000;
