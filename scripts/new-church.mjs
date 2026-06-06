@@ -48,7 +48,7 @@ const input = result.value;
 
 const writes = [
   ['src/config/church.ts', renderChurchConfigTs(input)],
-  ['wrangler.jsonc', renderWranglerJsonc(input.names)],
+  ['wrangler.jsonc', renderWranglerJsonc(input.names, input.customDomain)],
   ['public/images/placeholder-wide.svg', retintSvg.wide(input.theme)],
   ['public/images/placeholder-portrait.svg', retintSvg.portrait(input.theme)],
   ['public/images/placeholder-card.svg', retintSvg.card(input.theme)],
