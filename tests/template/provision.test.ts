@@ -63,6 +63,14 @@ describe('validateChurchInput', () => {
     expect(validateChurchInput({ ...valid, features: { ...valid.features, ai: 'yes' } }).ok).toBe(false);
     expect(validateChurchInput({ ...valid, timezoneOffsetMin: 9999 }).ok).toBe(false);
   });
+  it('accepts an optional customDomain, rejects a malformed one, and allows it to be omitted/empty', () => {
+    const ok = validateChurchInput({ ...valid, customDomain: 'church.example.org' });
+    expect(ok.ok).toBe(true);
+    expect(ok.value.customDomain).toBe('church.example.org');
+    expect(validateChurchInput({ ...valid, customDomain: 'not a domain' }).ok).toBe(false);
+    expect(validateChurchInput({ ...valid, customDomain: '' }).ok).toBe(true);
+    expect(validateChurchInput({ ...valid }).ok).toBe(true);
+  });
 });
 
 describe('renderChurchConfigTs', () => {
@@ -81,6 +89,10 @@ describe('renderChurchConfigTs', () => {
   it('leaves no unfilled template markers', () => {
     expect(out).not.toMatch(/\$\{|PASTE_FROM|TODO/);
   });
+  it('declares the community feature in the generated interface', () => {
+    expect(out).toContain('community: boolean;');
+    expect(out).toContain('community: true');
+  });
 });
 
 describe('renderWranglerJsonc', () => {
@@ -97,6 +109,15 @@ describe('renderWranglerJsonc', () => {
     const cfg = parseJsonc(out);
     expect(cfg.d1_databases[0].database_id).toBe('PASTE_FROM_D1_CREATE');
     expect(cfg.kv_namespaces[0].id).toBe('PASTE_FROM_KV_CREATE');
+  });
+  it('omits routes when no custom domain is given', () => {
+    expect(parseJsonc(out).routes).toBeUndefined();
+  });
+  it('emits a custom-domain route when one is provided', () => {
+    const cfg = parseJsonc(renderWranglerJsonc(deriveNames('grace-community'), 'church.example.org'));
+    expect(cfg.routes[0].pattern).toBe('church.example.org');
+    expect(cfg.routes[0].custom_domain).toBe(true);
+    expect(cfg.name).toBe('grace-community');
   });
 });
 
