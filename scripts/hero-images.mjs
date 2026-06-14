@@ -2,7 +2,7 @@
 // post-process to wide WebP. Uses getPlatformProxy() so the deployed env.AI
 // binding is reachable locally — no API key needed.
 //
-//   CLOUDFLARE_ACCOUNT_ID=233d917842862e30ed5207cf7b95bc33 node scripts/hero-images.mjs
+//   CLOUDFLARE_ACCOUNT_ID=<your-account-id> node scripts/hero-images.mjs
 //
 // Writes N candidates per slot to public/images/hero/_candidates/, so you can
 // pick the best and copy it to slide-<n>.webp (see plan Task 3).
