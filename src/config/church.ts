@@ -36,7 +36,7 @@ export const CHURCH: ChurchConfig = {
   name: "Kharis Builders",
   tagline: "Built on grace, growing in faith.",
   description: "Kharis Builders is a Christ-centred church family building lives on the foundation of God's grace — through worship, sound teaching, and authentic community.",
-  url: "https://kharisbuilders.missdiasporagh.workers.dev",
+  url: "https://kharisbuilders.com",
   logo: '/images/logo.png',
   ogImage: '/images/placeholder-wide.svg',
   locale: "en",
