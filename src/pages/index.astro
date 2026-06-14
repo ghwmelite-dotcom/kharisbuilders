@@ -2,6 +2,7 @@
 import PublicLayout from '../layouts/PublicLayout.astro';
 import Adinkra from '../components/Adinkra.astro';
 import SectionIntro from '../components/SectionIntro.astro';
+import HeroSlides from '../components/HeroSlides.astro';
 import { env } from '../lib/runtime';
 import { listPublishedSermons } from '../lib/db/sermons';
 import { listUpcomingEvents } from '../lib/db/events';
@@ -37,6 +38,11 @@ try {
 }
 const c = makeContent(contentMap);
 const cimg = makeImage(contentMap);
+const heroSlides = [
+  { src: '/images/hero/slide-1.webp' },
+  { src: '/images/hero/slide-2.webp' },
+  { src: '/images/hero/slide-3.webp' },
+];
 const scriptureBg = `linear-gradient(rgba(44,23,69,0.86), rgba(44,23,69,0.92)), url('${cimg('home.scripture_image')}')`;
 const eventImages = [PLACEHOLDER.card, PLACEHOLDER.card, PLACEHOLDER.card];
 const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
@@ -56,10 +62,10 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
   img: mediaUrl(cd.image_key ?? null) ?? cardFallbackImg[i % cardFallbackImg.length],
 }));
 ---
-<PublicLayout title={`${SITE.name} | ${SITE.tagline}`} image={cimg('home.hero_image')}>
+<PublicLayout title={`${SITE.name} | ${SITE.tagline}`} image={heroSlides[0].src}>
   <!-- Cinematic hero -->
   <section class="relative min-h-dvh flex flex-col overflow-hidden bg-primary">
-    <img src={cimg('home.hero_image')} alt="" class="kenburns absolute inset-0 w-full h-full object-cover opacity-[0.9]" />
+    <HeroSlides slides={heroSlides} />
     <!-- theme-toned legibility gradient: darkens top (nav) + bottom (cards), lets the photo shine through the middle -->
     <div class="absolute inset-0" style="background: linear-gradient(180deg, color-mix(in srgb, var(--kb-primary-container) 48%, transparent) 0%, color-mix(in srgb, var(--kb-primary-container) 5%, transparent) 44%, color-mix(in srgb, var(--kb-primary-container) 18%, transparent) 68%, color-mix(in srgb, var(--kb-primary-container) 86%, transparent) 100%);"></div>
     <!-- brand-color glows sit over the scene (screen blend) — kept subtle so the photo reads -->
