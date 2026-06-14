@@ -1,0 +1,129 @@
+---
+interface Slide {
+  src: string;
+  alt?: string;
+}
+interface Props {
+  slides: Slide[];
+}
+const { slides } = Astro.props;
+---
+<div class="hero-slides absolute inset-0" data-hero-slides>
+  {
+    slides.map((s, i) => (
+      <img
+        src={s.src}
+        alt={s.alt ?? ''}
+        class:list={['hero-slide absolute inset-0 w-full h-full object-cover', { 'is-active': i === 0 }]}
+        data-slide={i}
+        loading={i === 0 ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+    ))
+  }
+  <div class="hero-dots absolute left-1/2 -translate-x-1/2 bottom-28 md:bottom-32 z-20 flex gap-2.5" role="tablist" aria-label="Hero slides">
+    {
+      slides.map((_, i) => (
+        <button
+          type="button"
+          class:list={['hero-dot', { 'is-active': i === 0 }]}
+          data-dot={i}
+          aria-label={`Show slide ${i + 1}`}
+          aria-current={i === 0 ? 'true' : undefined}
+        />
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .hero-slide {
+    opacity: 0;
+    transition: opacity 1200ms ease-in-out;
+    will-change: opacity;
+  }
+  .hero-slide.is-active {
+    opacity: 0.9;
+    animation: hero-kenburns 12s ease-out forwards;
+  }
+  @keyframes hero-kenburns {
+    from { transform: scale(1.04) translate3d(0, 0, 0); }
+    to   { transform: scale(1.14) translate3d(0, -1.5%, 0); }
+  }
+  .hero-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    cursor: pointer;
+    transition: background 250ms ease, transform 250ms ease;
+  }
+  .hero-dot:hover { background: rgba(255, 255, 255, 0.7); }
+  .hero-dot.is-active {
+    background: var(--kb-accent, #b08a3e);
+    border-color: var(--kb-accent, #b08a3e);
+    transform: scale(1.25);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-slide { transition: none; animation: none !important; }
+  }
+</style>
+
+<script>
+  import { nextIndex } from '../lib/slider';
+
+  const root = document.querySelector('[data-hero-slides]');
+  if (root) {
+    const slides = Array.from(root.querySelectorAll('.hero-slide')) as HTMLElement[];
+    const dots = Array.from(root.querySelectorAll('.hero-dot')) as HTMLElement[];
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const INTERVAL = 6000;
+    let current = 0;
+    let timer: number | undefined;
+
+    const show = (i: number) => {
+      slides.forEach((el, n) => el.classList.toggle('is-active', n === i));
+      dots.forEach((el, n) => {
+        el.classList.toggle('is-active', n === i);
+        if (n === i) el.setAttribute('aria-current', 'true');
+        else el.removeAttribute('aria-current');
+      });
+      // Force the Ken Burns animation to restart on the newly-active slide.
+      const active = slides[i];
+      active.style.animation = 'none';
+      void active.offsetWidth;
+      active.style.animation = '';
+      current = i;
+    };
+
+    const advance = () => show(nextIndex(current, slides.length));
+    const start = () => {
+      if (!reduce && slides.length > 1 && timer === undefined) {
+        timer = window.setInterval(advance, INTERVAL);
+      }
+    };
+    const stop = () => {
+      if (timer !== undefined) {
+        clearInterval(timer);
+        timer = undefined;
+      }
+    };
+
+    dots.forEach((dot, i) =>
+      dot.addEventListener('click', () => {
+        stop();
+        show(i);
+        start();
+      }),
+    );
+
+    const hero = root.closest('section') ?? root;
+    hero.addEventListener('mouseenter', stop);
+    hero.addEventListener('mouseleave', start);
+    hero.addEventListener('focusin', stop);
+    hero.addEventListener('focusout', start);
+
+    start();
+  }
+</script>
