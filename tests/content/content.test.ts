@@ -8,11 +8,11 @@ describe('makeContent', () => {
   });
   it('falls back to the registry default when missing', () => {
     const c = makeContent({});
-    expect(c('home.hero_line1')).toBe('A Place to');
+    expect(c('home.hero_line1')).toBe('Built on');
   });
   it('treats a blank/whitespace stored value as "use default"', () => {
     const c = makeContent({ 'home.hero_line1': '   ' });
-    expect(c('home.hero_line1')).toBe('A Place to');
+    expect(c('home.hero_line1')).toBe('Built on');
   });
   it('returns empty string for an unknown key', () => {
     expect(makeContent({})('home.nope')).toBe('');

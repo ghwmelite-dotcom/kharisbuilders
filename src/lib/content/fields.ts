@@ -26,9 +26,9 @@ export const CONTENT_PAGES: ContentPage[] = [
       {
         title: 'Hero',
         fields: [
-          { key: 'home.hero_kicker', label: 'Eyebrow', type: 'text', default: 'Welcome Home' },
-          { key: 'home.hero_line1', label: 'Headline line 1', type: 'text', default: 'A Place to' },
-          { key: 'home.hero_line2', label: 'Headline line 2 (gold)', type: 'text', default: 'Belong.' },
+          { key: 'home.hero_kicker', label: 'Eyebrow', type: 'text', default: 'You Belong Here' },
+          { key: 'home.hero_line1', label: 'Headline line 1', type: 'text', default: 'Built on' },
+          { key: 'home.hero_line2', label: 'Headline line 2 (gold)', type: 'text', default: 'Grace.' },
           { key: 'home.cta1_label', label: 'Button 1 label', type: 'text', default: 'Plan a Visit' },
           { key: 'home.cta1_href', label: 'Button 1 link', type: 'url', default: '/visit' },
           { key: 'home.cta2_label', label: 'Button 2 label', type: 'text', default: 'Watch Online' },

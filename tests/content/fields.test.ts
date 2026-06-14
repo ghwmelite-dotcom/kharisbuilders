@@ -22,7 +22,7 @@ describe('content registry', () => {
     const keys = contentKeySet();
     expect(Object.keys(defaults).length).toBe(keys.size);
     expect(keys.has('home.hero_line1')).toBe(true);
-    expect(defaults['home.hero_line1']).toBe('A Place to');
+    expect(defaults['home.hero_line1']).toBe('Built on');
   });
   it('looks up a page by slug', () => {
     expect(getContentPage('about')?.title).toBeTruthy();
