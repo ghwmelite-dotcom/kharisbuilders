@@ -38,9 +38,10 @@ try {
 }
 const c = makeContent(contentMap);
 const cimg = makeImage(contentMap);
+// Lead with the kente-choir shot (most striking) — also becomes the OG/share image.
 const heroSlides = [
-  { src: '/images/hero/slide-1.webp' },
   { src: '/images/hero/slide-2.webp' },
+  { src: '/images/hero/slide-1.webp' },
   { src: '/images/hero/slide-3.webp' },
 ];
 const scriptureBg = `linear-gradient(rgba(44,23,69,0.86), rgba(44,23,69,0.92)), url('${cimg('home.scripture_image')}')`;
@@ -49,6 +50,12 @@ const fmtDate = (s: string) => s?.slice(0, 10) ?? '';
 // Intro cards that overlap the hero's bottom edge — the signature church-theme depth device.
 // Render from the editable home_cards list, falling back to the original three when empty.
 const cardFallbackImg = [PLACEHOLDER.card, PLACEHOLDER.card, PLACEHOLDER.card];
+// Bundled per-destination card images (a church can still override these in /admin).
+const cardImageByHref: Record<string, string> = {
+  '/visit': '/images/home/visit.webp',
+  '/sermons': '/images/home/sermons.webp',
+  '/giving': '/images/home/give.webp',
+};
 const defaultCards = [
   { eyebrow: 'New Here?', title: 'Plan a Visit', href: '/visit', description: 'Know what to expect and let us welcome you home.', image_key: null },
   { eyebrow: 'Messages', title: 'Watch Sermons', href: '/sermons', description: 'Catch up on recent messages, anytime, anywhere.', image_key: null },
@@ -59,7 +66,7 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
   title: cd.title,
   href: cd.href,
   desc: cd.description ?? '',
-  img: mediaUrl(cd.image_key ?? null) ?? cardFallbackImg[i % cardFallbackImg.length],
+  img: mediaUrl(cd.image_key ?? null) ?? cardImageByHref[cd.href] ?? cardFallbackImg[i % cardFallbackImg.length],
 }));
 ---
 <PublicLayout title={`${SITE.name} | ${SITE.tagline}`} image={heroSlides[0].src}>
@@ -67,7 +74,7 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
   <section class="relative min-h-dvh flex flex-col overflow-hidden bg-primary">
     <HeroSlides slides={heroSlides} />
     <!-- theme-toned legibility gradient: darkens top (nav) + bottom (cards), lets the photo shine through the middle -->
-    <div class="absolute inset-0" style="background: linear-gradient(180deg, color-mix(in srgb, var(--kb-primary-container) 48%, transparent) 0%, color-mix(in srgb, var(--kb-primary-container) 5%, transparent) 44%, color-mix(in srgb, var(--kb-primary-container) 18%, transparent) 68%, color-mix(in srgb, var(--kb-primary-container) 86%, transparent) 100%);"></div>
+    <div class="absolute inset-0" style="background: linear-gradient(180deg, color-mix(in srgb, var(--brand-dark) 78%, transparent) 0%, color-mix(in srgb, var(--brand-dark) 34%, transparent) 32%, color-mix(in srgb, var(--brand-dark) 32%, transparent) 60%, color-mix(in srgb, var(--brand-dark) 94%, transparent) 100%);"></div>
     <!-- brand-color glows sit over the scene (screen blend) — kept subtle so the photo reads -->
     <div class="hero-glows absolute inset-0 pointer-events-none opacity-[0.4]">
       <span class="glow glow-orange"></span>
@@ -77,7 +84,7 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
     </div>
     <!-- focused scrim behind the whole text column (eyebrow → countdown): keeps the type — esp. the
          gold — legible over the bright window, while the arches at the edges stay fully visible -->
-    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(58% 62% at 50% 50%, color-mix(in srgb, var(--kb-primary-container) 62%, transparent) 0%, color-mix(in srgb, var(--kb-primary-container) 30%, transparent) 46%, transparent 74%);"></div>
+    <div class="absolute inset-0 pointer-events-none" style="background: radial-gradient(60% 64% at 50% 48%, color-mix(in srgb, var(--brand-dark) 64%, transparent) 0%, color-mix(in srgb, var(--brand-dark) 34%, transparent) 46%, transparent 76%);"></div>
 
     <!-- content centred in a region that clears the nav (top) and reserves space for the overlapping cards (bottom) -->
     <div class="relative z-10 flex-1 flex items-center justify-center px-6 pt-28 pb-44 md:pb-56">
