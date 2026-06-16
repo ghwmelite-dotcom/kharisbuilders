@@ -11,6 +11,7 @@ import {
   setPostPublished,
   deletePost,
 } from '../../src/lib/db/blog';
+import { getCounts, listAllPosts as adminListAllPosts } from '../../src/lib/db/admin';
 
 let ctx: TestDb;
 beforeAll(async () => {
@@ -85,5 +86,18 @@ describe('blog data layer', () => {
     expect((await getPostById(ctx.db, id))!.published).toBe(0);
     await deletePost(ctx.db, id);
     expect(await getPostById(ctx.db, id)).toBeNull();
+  });
+});
+
+describe('blog admin reads', () => {
+  it('getCounts includes blog (published + drafts)', async () => {
+    const c = await getCounts(ctx.db);
+    expect(typeof c.blog).toBe('number');
+    expect(c.blog).toBeGreaterThanOrEqual(1);
+  });
+  it('listAllPosts returns drafts + published, newest first', async () => {
+    const rows = await adminListAllPosts(ctx.db);
+    expect(rows.length).toBeGreaterThanOrEqual(1);
+    expect(rows[0]).toHaveProperty('published');
   });
 });
