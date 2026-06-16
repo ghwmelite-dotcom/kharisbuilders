@@ -23,7 +23,7 @@ const html = renderMarkdown(post.body);
   title={`${post.title} | ${SITE.name}`}
   description={post.excerpt ?? post.title}
   type="article"
-  image={cover ?? undefined}
+  image={cover ?? '/images/pages/blog.webp'}
 >
   <article>
     <header class="bg-primary-container py-20 md:py-28">

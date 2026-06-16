@@ -27,7 +27,7 @@ try {
 }
 const status = Astro.url.searchParams.get('interest');
 ---
-<PublicLayout title={`Find a Group | ${SITE.name}`} description={`Browse and join a small group at ${SITE.name}.`}>
+<PublicLayout title={`Find a Group | ${SITE.name}`} description={`Browse and join a small group at ${SITE.name}.`} image={cimg('pages.ministries_hero')}>
   <PageHero image={cimg('pages.ministries_hero')} height="h-[300px] md:h-[380px]">
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Community</span>
     <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Find a Group</h1>
