@@ -28,6 +28,10 @@ describe('renderMarkdown', () => {
     expect(html).not.toContain('<base');
     expect(html).not.toContain('http-equiv');
   });
+  it('neutralises data: URIs in href', () => {
+    const html = renderMarkdown('<a href="data:text/html,evil">x</a>');
+    expect(html).not.toMatch(/href\s*=\s*["']?\s*data:/i);
+  });
 });
 
 describe('deriveExcerpt', () => {
