@@ -19,7 +19,7 @@ const sermonNode = videoJsonLd(origin, sermon);
   title={`${sermon.title} | Sermons`}
   description={sermon.description ?? sermon.title}
   type="video.other"
-  image={sermon.thumbnail_key ? `/media/${sermon.thumbnail_key}` : '/images/pages/sermons.webp'}
+  image={sermon.thumbnail_key ? `/media/${sermon.thumbnail_key}` : '/images/pages/sermons.jpg'}
   jsonLd={[sermonNode]}
 >
   <!-- Dark player section -->

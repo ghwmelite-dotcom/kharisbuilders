@@ -27,7 +27,7 @@ try {
 }
 const status = Astro.url.searchParams.get('signup');
 ---
-<PublicLayout title={`Serve | ${SITE.name}`} description={`Find a place to serve and volunteer at ${SITE.name}.`} image={cimg('pages.ministries_hero')}>
+<PublicLayout title={`Serve | ${SITE.name}`} description={`Find a place to serve and volunteer at ${SITE.name}.`} image="/images/pages/ministries.jpg">
   <PageHero image={cimg('pages.ministries_hero')} height="h-[300px] md:h-[380px]">
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Get Involved</span>
     <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Serve</h1>

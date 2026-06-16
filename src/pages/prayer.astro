@@ -25,7 +25,7 @@ try {
 const status = Astro.url.searchParams.get('prayer');
 const fmt = (s: string) => s?.slice(0, 10) ?? '';
 ---
-<PublicLayout title={`Prayer Wall | ${SITE.name}`} description={`Share a prayer request and pray for others at ${SITE.name}.`} image={cimg('pages.sermons_hero')}>
+<PublicLayout title={`Prayer Wall | ${SITE.name}`} description={`Share a prayer request and pray for others at ${SITE.name}.`} image="/images/pages/sermons.jpg">
   <PageHero image={cimg('pages.sermons_hero')} height="h-[300px] md:h-[380px]">
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Community</span>
     <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Prayer Wall</h1>

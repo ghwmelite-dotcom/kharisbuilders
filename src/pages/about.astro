@@ -20,7 +20,7 @@ const journey = await listJourney(env.DB).catch(() => []);
 const leaderFallback = [PLACEHOLDER.portrait, PLACEHOLDER.portrait, PLACEHOLDER.portrait];
 const journeyFallback = [PLACEHOLDER.card, PLACEHOLDER.card, PLACEHOLDER.card];
 ---
-<PublicLayout title={`About Us | ${SITE.name}`} description="Meet our church family — who we are, what we believe, and where we're headed." image={cimg('about.hero_image')}>
+<PublicLayout title={`About Us | ${SITE.name}`} description="Meet our church family — who we are, what we believe, and where we're headed." image="/images/pages/about.jpg">
   <!-- Hero -->
   <PageHero image={cimg('about.hero_image')} height="h-[460px] md:h-[620px]">
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-6 block hero-shadow">{c('about.hero_kicker')}</span>
