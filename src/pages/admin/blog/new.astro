@@ -1,0 +1,13 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import BlogForm from '../../../components/admin/BlogForm.astro';
+import { env } from '../../../lib/runtime';
+import { getAdminEmail } from '../../../lib/admin-auth';
+
+const email = getAdminEmail(Astro.request, env, import.meta.env.DEV);
+if (!email) return Astro.redirect('/admin/denied');
+---
+<AdminLayout title="New Post" email={email} active="blog">
+  <BlogForm />
+  <a href="/admin/blog" class="inline-block mt-8 text-accent text-sm uppercase tracking-widest">← Back</a>
+</AdminLayout>
