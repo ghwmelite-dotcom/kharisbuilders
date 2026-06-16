@@ -32,6 +32,11 @@ describe('renderMarkdown', () => {
     const html = renderMarkdown('<a href="data:text/html,evil">x</a>');
     expect(html).not.toMatch(/href\s*=\s*["']?\s*data:/i);
   });
+  it('neutralises UNQUOTED javascript:/data: URIs in href', () => {
+    const html = renderMarkdown('<a href=javascript:alert(1)>x</a>\n\n<img src=data:text/html,evil>');
+    expect(html).not.toMatch(/href\s*=\s*javascript:/i);
+    expect(html).not.toMatch(/src\s*=\s*data:/i);
+  });
 });
 
 describe('deriveExcerpt', () => {

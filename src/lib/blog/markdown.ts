@@ -28,10 +28,11 @@ function sanitize(html: string): string {
     .replace(/\son\w+\s*=\s*"[^"]*"/gi, '')
     .replace(/\son\w+\s*=\s*'[^']*'/gi, '')
     .replace(/\son\w+\s*=\s*[^\s>]+/gi, '')
-    // Neutralise javascript: URIs in href/src attributes
+    // Neutralise javascript:/data: URIs in quoted href/src attributes
     .replace(/(href|src)\s*=\s*("|')\s*javascript:[^"']*\2/gi, '$1=$2#$2')
-    // Neutralise data: URIs in href/src attributes
-    .replace(/(href|src)\s*=\s*("|')\s*data:[^"']*\2/gi, '$1=$2#$2');
+    .replace(/(href|src)\s*=\s*("|')\s*data:[^"']*\2/gi, '$1=$2#$2')
+    // ...and in UNQUOTED href/src attributes (e.g. <a href=javascript:alert(1)>)
+    .replace(/(href|src)\s*=\s*(?!["'])\s*(?:javascript|data):[^\s>]*/gi, '$1=#');
 }
 
 /** Strip markdown syntax and return the first ~`words` words, with an ellipsis if truncated. */
