@@ -4,6 +4,7 @@ import { SITE, absUrl, toIso } from '../lib/seo';
 import { listPublishedSermons } from '../lib/db/sermons';
 import { listUpcomingEvents } from '../lib/db/events';
 import { listPublishedMinistries } from '../lib/db/ministries';
+import { listPublishedPosts } from '../lib/db/blog';
 
 export const GET: APIRoute = async ({ site }) => {
   const origin = (site ?? new URL(SITE.url)).origin;
@@ -13,12 +14,14 @@ export const GET: APIRoute = async ({ site }) => {
     { loc: absUrl('/ministries', origin) },
     { loc: absUrl('/sermons', origin) },
     { loc: absUrl('/events', origin) },
+    { loc: absUrl('/blog', origin) },
     { loc: absUrl('/visit', origin) },
   ];
   try {
-    const [sermons, events] = await Promise.all([listPublishedSermons(env.DB), listUpcomingEvents(env.DB)]);
+    const [sermons, events, posts] = await Promise.all([listPublishedSermons(env.DB), listUpcomingEvents(env.DB), listPublishedPosts(env.DB)]);
     for (const s of sermons) urls.push({ loc: absUrl(`/sermons/${s.slug}`, origin), lastmod: toIso(s.sermon_date) });
     for (const e of events) urls.push({ loc: absUrl(`/events/${e.slug}`, origin), lastmod: toIso(e.start_at) });
+    for (const p of posts) urls.push({ loc: absUrl(`/blog/${p.slug}`, origin), lastmod: toIso(p.published_at ?? p.created_at) });
     // ministries currently have no public detail route; surfaced only via /ministries
     await listPublishedMinistries(env.DB);
   } catch {

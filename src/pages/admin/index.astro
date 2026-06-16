@@ -12,9 +12,11 @@ const counts = await getCounts(env.DB).catch(() => ({
   ministries: 0,
   visitors: 0,
   registrations: 0,
+  blog: 0,
 }));
 const cards = [
   { label: 'Sermons', value: counts.sermons, href: '/admin/sermons' },
+  { label: 'Blog', value: counts.blog, href: '/admin/blog' },
   { label: 'Events', value: counts.events, href: '/admin/events' },
   { label: 'Ministries', value: counts.ministries, href: '/admin/ministries' },
   { label: 'Visitors', value: counts.visitors, href: '/admin/people' },

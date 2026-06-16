@@ -1,0 +1,74 @@
+---
+import Field from '../Field.astro';
+import Button from '../Button.astro';
+import type { BlogPostFull } from '../../lib/db/blog';
+interface Props {
+  post?: BlogPostFull | null;
+}
+const { post } = Astro.props;
+const isEdit = !!post;
+---
+<form method="POST" action="/api/admin/blog" enctype="multipart/form-data" class="flex flex-col gap-6 max-w-2xl">
+  <input type="hidden" name="_action" value={isEdit ? 'update' : 'create'} />
+  {isEdit && <input type="hidden" name="id" value={String(post!.id)} />}
+  <Field label="Title" name="title" required value={post?.title ?? ''} />
+  <Field label="Slug (optional)" name="slug" value={post?.slug ?? ''} />
+  <Field label="Author" name="author" value={post?.author ?? ''} />
+  <Field label="Category" name="category" value={post?.category ?? ''} />
+  <Field label="Tags (comma-separated)" name="tags" value={post?.tags ?? ''} />
+  <Field label="Excerpt (optional — auto-generated from body if blank)" name="excerpt" textarea value={post?.excerpt ?? ''} />
+
+  <div class="flex flex-col gap-1">
+    <label for="f-body" class="text-xs uppercase tracking-wider text-on-surface-variant">Body (Markdown)</label>
+    <textarea id="f-body" name="body" required rows="16" class="border border-champagne bg-surface px-4 py-3 font-mono text-sm text-primary" set:text={post?.body ?? ''} />
+    <p class="text-xs text-on-surface-variant">
+      Markdown supported: <code># Heading</code>, <code>**bold**</code>, <code>- list</code>, <code>[link](url)</code>, <code>![alt](image-url)</code>.
+    </p>
+  </div>
+
+  <div class="flex flex-col gap-2 border border-champagne/60 p-4 rounded">
+    <label for="f-inline" class="text-xs uppercase tracking-wider text-on-surface-variant">Insert an inline image</label>
+    <div class="flex items-center gap-3 flex-wrap">
+      <input id="f-inline" type="file" accept="image/*" class="text-sm text-on-surface-variant" />
+      <button type="button" id="blog-upload-btn" class="border border-primary text-primary px-4 py-2 text-xs uppercase tracking-wider">Upload &amp; insert</button>
+      <span id="blog-upload-status" class="text-xs text-on-surface-variant"></span>
+    </div>
+    <p class="text-xs text-on-surface-variant">Uploads to storage and inserts the Markdown at the end of the body. Max 6 MB.</p>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="f-image" class="text-xs uppercase tracking-wider text-on-surface-variant">Featured image (optional, max 6 MB)</label>
+    <input id="f-image" name="image" type="file" accept="image/*" class="text-sm text-on-surface-variant" />
+    {post?.cover_key && <p class="text-xs text-on-surface-variant">Current: {post.cover_key}</p>}
+  </div>
+
+  <Field label="Publish date (YYYY-MM-DD)" name="published_at" value={post?.published_at ?? ''} />
+  <Field label="Published" name="published" type="checkbox" checked={!!post?.published} />
+  <Button type="submit" variant="primary">{isEdit ? 'Save' : 'Create'}</Button>
+</form>
+
+<script>
+  const btn = document.getElementById('blog-upload-btn');
+  const input = document.getElementById('f-inline') as HTMLInputElement | null;
+  const body = document.getElementById('f-body') as HTMLTextAreaElement | null;
+  const status = document.getElementById('blog-upload-status');
+  btn?.addEventListener('click', async () => {
+    if (!input?.files?.length || !body) return;
+    const fd = new FormData();
+    fd.append('image', input.files[0]);
+    if (status) status.textContent = 'Uploading…';
+    if (btn instanceof HTMLButtonElement) btn.disabled = true; // guard against double-submit mid-upload
+    try {
+      const res = await fetch('/api/admin/blog/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      body.value += (body.value.endsWith('\n') ? '' : '\n\n') + data.markdown + '\n';
+      input.value = '';
+      if (status) status.textContent = 'Inserted ✓';
+    } catch (e) {
+      if (status) status.textContent = e instanceof Error ? e.message : 'Upload failed';
+    } finally {
+      if (btn instanceof HTMLButtonElement) btn.disabled = false;
+    }
+  });
+</script>
