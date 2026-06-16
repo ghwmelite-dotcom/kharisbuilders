@@ -1,0 +1,60 @@
+---
+import PublicLayout from '../../layouts/PublicLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { env } from '../../lib/runtime';
+import { mediaUrl } from '../../lib/media';
+import { PLACEHOLDER } from '../../lib/images';
+import { SITE } from '../../lib/seo';
+import { feature } from '../../config/church';
+import { listPublishedPosts, listPublishedPostsByCategory, listCategories, type BlogPost } from '../../lib/db/blog';
+
+if (!feature('blog')) return Astro.redirect('/');
+
+const category = (Astro.url.searchParams.get('category') ?? '').trim();
+let posts: BlogPost[] = [];
+let categories: string[] = [];
+try {
+  [posts, categories] = await Promise.all([
+    category ? listPublishedPostsByCategory(env.DB, category) : listPublishedPosts(env.DB),
+    listCategories(env.DB),
+  ]);
+} catch {
+  posts = [];
+}
+const fallback = [PLACEHOLDER.card, PLACEHOLDER.card, PLACEHOLDER.card];
+---
+<PublicLayout title={`Blog | ${SITE.name}`} description={`Reflections, teaching, and stories from ${SITE.name}.`}>
+  <PageHero image={PLACEHOLDER.wide} height="h-[360px] md:h-[460px]">
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Reflections</span>
+    <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Blog</h1>
+    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">
+      Teaching, testimony, and stories from our church family.
+    </p>
+  </PageHero>
+  <section class="py-16 md:py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
+    {
+      categories.length > 0 && (
+        <div class="flex flex-wrap justify-center gap-3 mb-12">
+          <a href="/blog" class={`font-label-sm uppercase tracking-widest px-4 py-2 border ${!category ? 'border-heritage-gold text-heritage-gold' : 'border-champagne text-stone-gray hover:text-primary'}`}>All</a>
+          {categories.map((cat) => (
+            <a href={`/blog?category=${encodeURIComponent(cat)}`} class={`font-label-sm uppercase tracking-widest px-4 py-2 border ${category === cat ? 'border-heritage-gold text-heritage-gold' : 'border-champagne text-stone-gray hover:text-primary'}`}>{cat}</a>
+          ))}
+        </div>
+      )
+    }
+    {
+      posts.length === 0 ? (
+        <p class="text-center text-stone-gray font-body">
+          {category ? 'No posts in this category yet.' : 'No posts published yet — check back soon.'}
+        </p>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10" data-reveal>
+          {posts.map((p, i) => (
+            <BlogCard post={p} image={mediaUrl(p.cover_key) ?? fallback[i % fallback.length]} />
+          ))}
+        </div>
+      )
+    }
+  </section>
+</PublicLayout>
