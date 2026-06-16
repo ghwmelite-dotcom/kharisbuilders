@@ -3,8 +3,6 @@ import PublicLayout from '../layouts/PublicLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import { env } from '../lib/runtime';
 import { getAllSettings } from '../lib/db/settings';
-import { getAllContent } from '../lib/db/content';
-import { makeImage } from '../lib/content/content';
 import { listPublicPrayers, type PublicPrayer } from '../lib/db/prayer-requests';
 import { SITE } from '../lib/seo';
 import { feature } from '../config/church';
@@ -12,77 +10,141 @@ import { feature } from '../config/church';
 if (!feature('community')) return Astro.redirect('/');
 
 let siteKey = '1x00000000000000000000AA';
-let cimg = makeImage({});
 let prayers: PublicPrayer[] = [];
 try {
   const settings = await getAllSettings(env.DB);
   siteKey = settings.turnstile_site_key ?? siteKey;
-  cimg = makeImage(await getAllContent(env.DB).catch(() => ({})));
   prayers = await listPublicPrayers(env.DB);
 } catch {
   // DB unavailable in some envs — render an empty wall
 }
 const status = Astro.url.searchParams.get('prayer');
 const fmt = (s: string) => s?.slice(0, 10) ?? '';
+const offered = prayers.reduce((sum, p) => sum + (Number(p.pray_count) || 0), 0);
 ---
-<PublicLayout title={`Prayer Wall | ${SITE.name}`} description={`Share a prayer request and pray for others at ${SITE.name}.`} image="/images/pages/sermons.jpg">
-  <PageHero image={cimg('pages.sermons_hero')} height="h-[300px] md:h-[380px]">
-    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Community</span>
+<PublicLayout
+  title={`Prayer Wall | ${SITE.name}`}
+  description={`Share a prayer request and pray for one another at ${SITE.name}.`}
+  image="/images/pages/prayer.jpg"
+>
+  <PageHero image="/images/pages/prayer.webp" height="h-[340px] md:h-[440px]">
+    <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">Carry one another</span>
     <h1 class="font-display text-display-mobile md:text-display-lg text-white hero-shadow">Prayer Wall</h1>
-    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">Share what's on your heart, and pray for one another.</p>
+    <p class="font-body text-body-lg text-white/85 max-w-2xl mx-auto mt-4 hero-shadow">
+      Share what's on your heart — and stand with others in theirs.
+    </p>
   </PageHero>
+
+  <!-- Encouragement band -->
+  <section class="bg-primary-container py-12 md:py-16">
+    <div class="max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop text-center">
+      <blockquote class="font-display text-2xl md:text-3xl leading-snug text-white hero-shadow">
+        “Pray for one another, that you may be healed.”
+      </blockquote>
+      <p class="mt-4 font-label-sm uppercase tracking-[0.3em] text-heritage-gold">James 5:16</p>
+      <div class="mt-8 flex flex-wrap justify-center items-center gap-x-8 gap-y-3">
+        <div class="text-center">
+          <div class="font-display text-3xl md:text-4xl text-white tabular-nums">{prayers.length}</div>
+          <div class="font-label-sm uppercase tracking-[0.2em] text-white/60 mt-1">on the wall</div>
+        </div>
+        <span class="hidden sm:block w-px h-10 bg-white/15"></span>
+        <div class="text-center">
+          <div class="font-display text-3xl md:text-4xl text-heritage-gold tabular-nums">{offered}</div>
+          <div class="font-label-sm uppercase tracking-[0.2em] text-white/60 mt-1">prayers offered</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="py-16 md:py-24 px-margin-mobile md:px-margin-desktop max-w-[var(--container-max)] mx-auto">
     {status === 'ok' && (
-      <div class="max-w-2xl mx-auto mb-10 border-t-2 border-heritage-gold bg-surface-container-lowest p-5 text-center font-body text-body-md text-primary">
-        Thank you — your request was received. Public requests appear once a member of our team has reviewed them.
+      <div class="max-w-3xl mx-auto mb-12 border-l-4 border-heritage-gold bg-surface-container-lowest elev-1 p-5 font-body text-body-md text-primary">
+        Thank you — your request was received. Public requests appear once our prayer team has reviewed them.
       </div>
     )}
     {status === 'err' && (
-      <div class="max-w-2xl mx-auto mb-10 border-t-2 border-accent-deep bg-surface-container-lowest p-5 text-center font-body text-body-md text-primary">
+      <div class="max-w-3xl mx-auto mb-12 border-l-4 border-accent-deep bg-surface-container-lowest elev-1 p-5 font-body text-body-md text-primary">
         Sorry — we couldn't submit that. Please check your request and try again.
       </div>
     )}
 
-    <!-- Submit -->
-    <div class="max-w-2xl mx-auto mb-16 bg-surface-container-lowest border-t-2 border-heritage-gold elev-2 p-8 md:p-10">
-      <h2 class="font-display text-headline-md text-primary mb-2">Share a request</h2>
-      <p class="font-body text-body-md text-stone-gray mb-6">Your email (optional) is kept private — only our prayer team sees it.</p>
-      <form method="POST" action="/api/forms/prayer" class="space-y-5">
-        <input type="hidden" name="return_to" value="/prayer" />
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <input name="name" placeholder="Your name (optional)" class="border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
-          <input name="email" type="email" placeholder="Email (optional, private)" class="border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary" />
-        </div>
-        <textarea name="request" rows="4" required maxlength="2000" placeholder="How can we pray for you?" class="w-full border border-champagne bg-surface px-4 py-3 font-body text-body-md text-primary"></textarea>
-        <fieldset class="space-y-2">
-          <label class="flex items-center gap-3 font-body text-body-md text-primary">
-            <input type="radio" name="visibility" value="private" checked /> Keep private — just for the prayer team
-          </label>
-          <label class="flex items-center gap-3 font-body text-body-md text-primary">
-            <input type="radio" name="visibility" value="public" /> Share on the wall (after review)
-          </label>
-        </fieldset>
-        <div class="cf-turnstile" data-sitekey={siteKey}></div>
-        <button type="submit" class="bg-heritage-gold text-primary font-label-md uppercase tracking-widest px-8 py-3 hover:bg-secondary transition-all">Send request</button>
-      </form>
+    <!-- Submit panel -->
+    <div class="prayer-panel max-w-4xl mx-auto mb-20 grid md:grid-cols-5 overflow-hidden elev-2" data-reveal>
+      <div class="md:col-span-2 p-8 md:p-10 bg-primary text-on-primary flex flex-col justify-center">
+        <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">You're not alone</span>
+        <h2 class="font-display text-headline-md text-white mb-4">Share a request</h2>
+        <p class="font-body text-body-md text-white/75 leading-relaxed">
+          Whatever you're facing, our team would be honoured to pray with you. Your email stays private — only the prayer team ever sees it.
+        </p>
+        <span class="kente-rule w-16 mt-8 is-light"></span>
+      </div>
+      <div class="md:col-span-3 p-8 md:p-10 bg-surface-container-lowest">
+        <form method="POST" action="/api/forms/prayer" class="space-y-5">
+          <input type="hidden" name="return_to" value="/prayer" />
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5">
+              <label for="p-name" class="font-label-sm uppercase tracking-wider text-stone-gray">Name <span class="text-stone-gray/60 normal-case tracking-normal">(optional)</span></label>
+              <input id="p-name" name="name" class="prayer-input" placeholder="Your name" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label for="p-email" class="font-label-sm uppercase tracking-wider text-stone-gray">Email <span class="text-stone-gray/60 normal-case tracking-normal">(private)</span></label>
+              <input id="p-email" name="email" type="email" class="prayer-input" placeholder="you@example.com" />
+            </div>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="p-request" class="font-label-sm uppercase tracking-wider text-stone-gray">How can we pray for you?</label>
+            <textarea id="p-request" name="request" rows="4" required maxlength="2000" class="prayer-input" placeholder="Share what's on your heart…"></textarea>
+          </div>
+          <fieldset>
+            <legend class="font-label-sm uppercase tracking-wider text-stone-gray mb-2">Who can see this?</legend>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <label class="prayer-choice">
+                <input type="radio" name="visibility" value="private" checked />
+                <span>
+                  <span class="prayer-choice-title">Keep it private</span>
+                  <span class="prayer-choice-sub">Only the prayer team</span>
+                </span>
+              </label>
+              <label class="prayer-choice">
+                <input type="radio" name="visibility" value="public" />
+                <span>
+                  <span class="prayer-choice-title">Share on the wall</span>
+                  <span class="prayer-choice-sub">After a quick review</span>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+          <div class="cf-turnstile" data-sitekey={siteKey}></div>
+          <button type="submit" class="w-full sm:w-auto bg-heritage-gold text-primary font-label-md uppercase tracking-widest px-8 py-3.5 hover:bg-secondary hover:text-white transition-colors">
+            Send request
+          </button>
+        </form>
+      </div>
     </div>
 
-    <!-- Wall -->
-    <h2 class="font-display text-headline-lg text-primary text-center mb-3">Prayers from our community</h2>
-    <p class="text-center font-body text-body-md text-stone-gray mb-10">Requests are reviewed before they appear here.</p>
+    <!-- The wall -->
+    <div class="text-center mb-12">
+      <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-3 block">The Wall</span>
+      <h2 class="font-display text-headline-lg text-primary">Prayers from our community</h2>
+      <p class="mt-3 font-body text-body-md text-stone-gray">Tap the flame to let someone know you've prayed. Requests are reviewed before they appear.</p>
+    </div>
     {
       prayers.length === 0 ? (
-        <p class="text-center font-body text-body-md text-stone-gray">No requests on the wall yet — be the first to share, or check back soon.</p>
+        <p class="text-center font-body text-body-md text-stone-gray py-10">No requests on the wall yet — be the first to share, or check back soon.</p>
       ) : (
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {prayers.map((p) => (
-            <article class="bg-surface-container-lowest border border-champagne p-6 flex flex-col" data-prayer-card>
-              <p class="font-body text-body-md text-primary leading-relaxed whitespace-pre-line flex-1">{p.request}</p>
-              <div class="mt-5 pt-4 border-t border-champagne flex items-center justify-between">
-                <span class="font-label-sm uppercase tracking-[0.18em] text-stone-gray">{p.name || 'Anonymous'} · {fmt(p.created_at)}</span>
-                <button type="button" class="pray-btn inline-flex items-center gap-2 font-label-sm uppercase tracking-[0.14em] text-heritage-gold hover:text-primary transition-colors" data-id={p.id}>
-                  <span aria-hidden="true">&#128591;</span> Prayed <span class="pray-count font-display">{p.pray_count}</span>
+        <div class="prayer-wall">
+          {prayers.map((p, i) => (
+            <article class="prayer-card card-lift" data-reveal style={`--reveal-delay:${(i % 6) * 70}ms`}>
+              <span class="prayer-quote" aria-hidden="true">&ldquo;</span>
+              <p class="font-body text-body-md text-primary leading-relaxed whitespace-pre-line">{p.request}</p>
+              <div class="prayer-card-foot">
+                <span class="font-label-sm uppercase tracking-[0.16em] text-stone-gray">{p.name || 'Anonymous'} · {fmt(p.created_at)}</span>
+                <button type="button" class="pray-btn" data-id={p.id} aria-label="I prayed for this request">
+                  <svg class="pray-flame" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+                  </svg>
+                  <span class="pray-label">Pray</span>
+                  <span class="pray-count tabular-nums">{p.pray_count}</span>
                 </button>
               </div>
             </article>
@@ -98,19 +160,142 @@ const fmt = (s: string) => s?.slice(0, 10) ?? '';
     try { prayed = JSON.parse(localStorage.getItem('prayed-ids') || '[]'); } catch (e) {}
     document.querySelectorAll('.pray-btn').forEach((btn) => {
       const id = Number(btn.getAttribute('data-id'));
-      if (prayed.includes(id)) { btn.disabled = true; btn.style.opacity = '0.55'; }
+      const label = btn.querySelector('.pray-label');
+      const countEl = btn.querySelector('.pray-count');
+      if (prayed.includes(id)) {
+        btn.classList.add('has-prayed');
+        btn.disabled = true;
+        if (label) label.textContent = 'Prayed';
+      }
       btn.addEventListener('click', async () => {
         if (btn.disabled) return;
-        btn.disabled = true; btn.style.opacity = '0.55';
-        const countEl = btn.querySelector('.pray-count');
+        btn.disabled = true;
+        btn.classList.add('has-prayed');
+        if (label) label.textContent = 'Prayed';
         try {
           const res = await fetch('/api/prayer/pray', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id }) });
           const data = await res.json();
-          if (typeof data.count === 'number') countEl.textContent = data.count;
+          if (countEl && typeof data.count === 'number') {
+            countEl.textContent = data.count;
+            countEl.classList.add('bump');
+            setTimeout(() => countEl.classList.remove('bump'), 350);
+          }
           prayed.push(id);
           try { localStorage.setItem('prayed-ids', JSON.stringify(prayed)); } catch (e) {}
-        } catch (e) { btn.disabled = false; btn.style.opacity = '1'; }
+        } catch (e) {
+          btn.disabled = false;
+          btn.classList.remove('has-prayed');
+          if (label) label.textContent = 'Pray';
+        }
       });
     });
   </script>
+
+  <style>
+    .prayer-panel { border-radius: 1.25rem; border: 1px solid var(--color-champagne, #e7ddc8); }
+    .prayer-input {
+      border: 1px solid var(--color-champagne, #e7ddc8);
+      background: var(--color-surface, #fff);
+      border-radius: 0.6rem;
+      padding: 0.7rem 0.9rem;
+      font-size: 1rem;
+      color: var(--kb-primary, #3b3a6b);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      width: 100%;
+    }
+    .prayer-input:focus {
+      outline: none;
+      border-color: var(--kb-accent, #b08a3e);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--kb-accent) 22%, transparent);
+    }
+    .prayer-choice {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.8rem 0.95rem;
+      border: 1px solid var(--color-champagne, #e7ddc8);
+      border-radius: 0.7rem;
+      cursor: pointer;
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+    .prayer-choice:hover { border-color: color-mix(in srgb, var(--kb-accent) 45%, transparent); }
+    .prayer-choice:has(input:checked) {
+      border-color: var(--kb-accent, #b08a3e);
+      background: color-mix(in srgb, var(--kb-accent) 8%, transparent);
+    }
+    .prayer-choice input { accent-color: var(--kb-accent, #b08a3e); width: 1.05rem; height: 1.05rem; flex: none; }
+    .prayer-choice-title { display: block; font-size: 0.95rem; color: var(--kb-primary, #3b3a6b); }
+    .prayer-choice-sub { display: block; font-size: 0.8rem; color: var(--color-stone-gray, #6b6b77); }
+
+    /* organic masonry wall */
+    .prayer-wall { columns: 1; column-gap: 1.5rem; }
+    @media (min-width: 768px) { .prayer-wall { columns: 2; } }
+    @media (min-width: 1024px) { .prayer-wall { columns: 3; } }
+    .prayer-card {
+      position: relative;
+      break-inside: avoid;
+      margin-bottom: 1.5rem;
+      padding: 1.75rem 1.5rem 1.25rem;
+      background: var(--color-surface-container-lowest, #fff);
+      border: 1px solid var(--color-champagne, #e7ddc8);
+      border-top: 3px solid var(--kb-accent, #b08a3e);
+      border-radius: 0.9rem;
+      box-shadow: 0 14px 30px -22px rgba(0, 0, 0, 0.4);
+    }
+    .prayer-quote {
+      position: absolute;
+      top: 0.1rem;
+      right: 0.9rem;
+      font-family: var(--font-display, Georgia, serif);
+      font-size: 3.5rem;
+      line-height: 1;
+      color: color-mix(in srgb, var(--kb-accent) 22%, transparent);
+      pointer-events: none;
+    }
+    .prayer-card-foot {
+      margin-top: 1.25rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid color-mix(in srgb, var(--color-champagne, #e7ddc8) 75%, transparent);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+    .pray-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--kb-accent) 35%, transparent);
+      color: var(--kb-accent, #b08a3e);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    }
+    .pray-btn:hover { background: color-mix(in srgb, var(--kb-accent) 12%, transparent); }
+    .pray-flame { width: 1rem; height: 1rem; transition: fill 0.3s ease, filter 0.3s ease, transform 0.3s ease; }
+    .pray-btn.has-prayed {
+      background: var(--kb-accent, #b08a3e);
+      color: var(--kb-primary, #3b3a6b);
+      border-color: var(--kb-accent, #b08a3e);
+      cursor: default;
+    }
+    .pray-btn.has-prayed .pray-flame {
+      fill: currentColor;
+      filter: drop-shadow(0 0 5px color-mix(in srgb, var(--kb-accent) 60%, transparent));
+      transform: scale(1.05);
+    }
+    .pray-count.bump { animation: prayBump 0.35s ease; }
+    @keyframes prayBump { 0% { transform: scale(1); } 45% { transform: scale(1.4); } 100% { transform: scale(1); } }
+    .pray-btn:focus-visible {
+      outline: 2px solid color-mix(in srgb, var(--kb-accent) 80%, transparent);
+      outline-offset: 2px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pray-flame, .pray-count.bump { transition: none; animation: none; }
+    }
+  </style>
 </PublicLayout>
