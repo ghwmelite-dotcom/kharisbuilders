@@ -1,0 +1,77 @@
+---
+import PublicLayout from '../../layouts/PublicLayout.astro';
+import { env } from '../../lib/runtime';
+import { mediaUrl } from '../../lib/media';
+import { SITE } from '../../lib/seo';
+import { feature } from '../../config/church';
+import { getPostBySlug } from '../../lib/db/blog';
+import { renderMarkdown } from '../../lib/blog/markdown';
+
+if (!feature('blog')) return Astro.redirect('/');
+
+const { slug } = Astro.params;
+const post = slug ? await getPostBySlug(env.DB, slug).catch(() => null) : null;
+if (!post) return Astro.redirect('/blog');
+
+const cover = mediaUrl(post.cover_key);
+const date = (post.published_at ?? post.created_at ?? '').slice(0, 10);
+const meta = [post.author, date, post.read_minutes ? `${post.read_minutes} min read` : null].filter(Boolean).join(' · ');
+const tags = (post.tags ?? '').split(',').map((t) => t.trim()).filter(Boolean);
+const html = renderMarkdown(post.body);
+---
+<PublicLayout
+  title={`${post.title} | ${SITE.name}`}
+  description={post.excerpt ?? post.title}
+  type="article"
+  image={cover ?? undefined}
+>
+  <article>
+    <header class="bg-primary-container py-20 md:py-28">
+      <div class="max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop text-center">
+        {post.category && <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block">{post.category}</span>}
+        <h1 class="font-display text-display-mobile md:text-headline-lg text-white mb-5">{post.title}</h1>
+        <p class="font-body text-body-md text-white/70">{meta}</p>
+      </div>
+    </header>
+
+    {cover && (
+      <div class="max-w-4xl mx-auto px-margin-mobile md:px-margin-desktop -mt-12 md:-mt-16 relative z-10">
+        <div class="aspect-[16/9] overflow-hidden border border-white/10 shadow-2xl">
+          <img src={cover} alt={post.title} loading="lazy" decoding="async" class="w-full h-full object-cover" />
+        </div>
+      </div>
+    )}
+
+    <div class="max-w-3xl mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-20">
+      <div class="article-body font-body text-body-lg text-stone-gray leading-relaxed" set:html={html} />
+
+      {tags.length > 0 && (
+        <div class="mt-12 flex flex-wrap gap-2">
+          {tags.map((t) => (
+            <span class="font-label-sm uppercase tracking-widest text-stone-gray border border-champagne px-3 py-1">{t}</span>
+          ))}
+        </div>
+      )}
+
+      <div class="mt-14">
+        <a href="/blog" class="text-heritage-gold font-label-md uppercase tracking-widest border-b border-heritage-gold/40 hover:border-heritage-gold transition-all">
+          ← All posts
+        </a>
+      </div>
+    </div>
+  </article>
+</PublicLayout>
+
+<style>
+  .article-body :global(h2) { font-family: var(--font-display); font-size: 1.75rem; color: var(--kb-primary, #3b3a6b); margin: 2rem 0 1rem; }
+  .article-body :global(h3) { font-family: var(--font-display); font-size: 1.35rem; color: var(--kb-primary, #3b3a6b); margin: 1.75rem 0 0.75rem; }
+  .article-body :global(p) { margin: 0 0 1.25rem; }
+  .article-body :global(ul), .article-body :global(ol) { margin: 0 0 1.25rem 1.25rem; list-style: disc; }
+  .article-body :global(ol) { list-style: decimal; }
+  .article-body :global(li) { margin: 0.4rem 0; }
+  .article-body :global(a) { color: var(--kb-accent, #b08a3e); text-decoration: underline; }
+  .article-body :global(blockquote) { border-left: 3px solid var(--kb-accent, #b08a3e); padding-left: 1.25rem; font-style: italic; margin: 1.5rem 0; }
+  .article-body :global(img) { width: 100%; height: auto; border-radius: 0.5rem; margin: 2rem 0; }
+  .article-body :global(code) { background: rgba(0,0,0,0.05); padding: 0.1rem 0.35rem; border-radius: 0.25rem; font-size: 0.9em; }
+  .article-body :global(pre) { background: rgba(0,0,0,0.05); padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 1.5rem 0; }
+</style>

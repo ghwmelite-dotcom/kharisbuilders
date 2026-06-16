@@ -1,0 +1,28 @@
+---
+import type { BlogPost } from '../lib/db/blog';
+interface Props {
+  post: BlogPost;
+  image: string;
+}
+const { post, image } = Astro.props;
+const date = (post.published_at ?? post.created_at ?? '').slice(0, 10);
+const meta = [post.author, date, post.read_minutes ? `${post.read_minutes} min read` : null].filter(Boolean).join(' · ');
+---
+<a
+  href={`/blog/${post.slug}`}
+  class="card-lift group block bg-surface-container-lowest border border-champagne elev-1 hover:border-heritage-gold/40 overflow-hidden"
+>
+  <div class="relative aspect-[16/10] overflow-hidden">
+    <img src={image} alt={post.title} loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+    <div class="absolute inset-0 bg-gradient-to-t from-primary/40 via-transparent to-transparent"></div>
+  </div>
+  <div class="p-8">
+    {post.category && <span class="font-label-sm uppercase tracking-widest text-heritage-gold mb-2 block">{post.category}</span>}
+    <h3 class="font-display text-headline-md text-primary mb-3 group-hover:text-heritage-gold transition-colors">{post.title}</h3>
+    {post.excerpt && <p class="font-body text-body-md text-stone-gray mb-5 line-clamp-3">{post.excerpt}</p>}
+    <div class="flex items-center justify-between">
+      <span class="font-body text-body-sm text-stone-gray">{meta}</span>
+      <span class="font-label-sm uppercase tracking-[0.14em] text-primary border-b border-primary/20 group-hover:border-heritage-gold transition-colors">Read</span>
+    </div>
+  </div>
+</a>
