@@ -19,6 +19,15 @@ describe('renderMarkdown', () => {
     expect(html).not.toContain('onerror');
     expect(html).not.toContain('alert(1)');
   });
+  it('neutralises javascript: href', () => {
+    const html = renderMarkdown('[click](javascript:alert(1))');
+    expect(html).not.toMatch(/href\s*=\s*["']?\s*javascript:/i);
+  });
+  it('strips <base> and <meta> tags', () => {
+    const html = renderMarkdown('<base href="https://evil.com/">\n\n<meta http-equiv="refresh" content="0">');
+    expect(html).not.toContain('<base');
+    expect(html).not.toContain('http-equiv');
+  });
 });
 
 describe('deriveExcerpt', () => {
@@ -33,11 +42,18 @@ describe('deriveExcerpt', () => {
   it('does not append an ellipsis for short bodies', () => {
     expect(deriveExcerpt('Just three words')).toBe('Just three words');
   });
+  it('preserves intra-word hyphens', () => {
+    expect(deriveExcerpt('state-of-the-art design principles')).toBe('state-of-the-art design principles');
+  });
 });
 
 describe('readMinutes', () => {
   it('estimates ~200 wpm, minimum 1', () => {
     expect(readMinutes('one two three')).toBe(1);
     expect(readMinutes(Array.from({ length: 400 }, () => 'w').join(' '))).toBe(2);
+  });
+  it('returns 1 for empty or whitespace-only input', () => {
+    expect(readMinutes('')).toBe(1);
+    expect(readMinutes('   ')).toBe(1);
   });
 });
