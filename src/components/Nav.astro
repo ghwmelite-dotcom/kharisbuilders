@@ -1,65 +1,102 @@
 ---
 import Icon from './Icon.astro';
 import { CHURCH, feature, type ChurchFeatures } from '../config/church';
-const allLinks = [
+
+type Leaf = { label: string; href: string; gate?: keyof ChurchFeatures };
+type Group = { label: string; children: Leaf[] };
+type Entry = Leaf | Group;
+const isGroup = (e: Entry): e is Group => 'children' in e;
+
+// Top-level nav is intentionally small (≈5 items). Secondary destinations live in
+// grouped dropdowns. "Visit" is reached via the persistent "New Here?" CTA.
+const allEntries: Entry[] = [
   { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  { label: 'Ministries', href: '/ministries' },
-  { label: 'Sermons', href: '/sermons' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Watch', href: '/live' },
-  { label: 'Events', href: '/events' },
-  { label: 'Give', href: '/giving' },
-  { label: 'Prayer', href: '/prayer' },
-  { label: 'Visit', href: '/visit' },
+  {
+    label: 'About',
+    children: [
+      { label: 'About Us', href: '/about' },
+      { label: 'Ministries', href: '/ministries', gate: 'ministries' },
+    ],
+  },
+  {
+    label: 'Watch',
+    children: [
+      { label: 'Sermons', href: '/sermons', gate: 'sermons' },
+      { label: 'Watch Live', href: '/live', gate: 'live' },
+      { label: 'Blog', href: '/blog', gate: 'blog' },
+    ],
+  },
+  {
+    label: 'Connect',
+    children: [
+      { label: 'Events', href: '/events', gate: 'events' },
+      { label: 'Prayer Wall', href: '/prayer', gate: 'community' },
+    ],
+  },
+  { label: 'Give', href: '/giving', gate: 'giving' },
 ];
-// Links whose page is feature-gated; the rest (Home/About/Visit) are always shown.
-const featureOf: Record<string, keyof ChurchFeatures | undefined> = {
-  '/ministries': 'ministries',
-  '/sermons': 'sermons',
-  '/blog': 'blog',
-  '/live': 'live',
-  '/events': 'events',
-  '/giving': 'giving',
-  '/prayer': 'community',
-};
-const links = allLinks.filter((l) => {
-  const f = featureOf[l.href];
-  return !f || feature(f);
-});
+
+const showLeaf = (l: Leaf) => !l.gate || feature(l.gate);
+// Filter gated leaves; drop any group left with no children.
+const entries: Entry[] = allEntries
+  .map((e) => (isGroup(e) ? { ...e, children: e.children.filter(showLeaf) } : e))
+  .filter((e) => (isGroup(e) ? (e as Group).children.length > 0 : showLeaf(e as Leaf)));
+
 const path = Astro.url.pathname;
-const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const leafActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const entryActive = (e: Entry) => (isGroup(e) ? e.children.some((c) => leafActive(c.href)) : leafActive(e.href));
 ---
 <header id="site-header" data-nav class="fixed top-0 inset-x-0 z-50">
   <div class="nav-shell mx-auto max-w-[var(--container-max)] px-3 md:px-6">
     <nav class="nav-bar relative flex h-[4.75rem] items-center justify-between px-5 md:px-7">
       <a href="/" class="nav-brand flex items-center gap-3 group" aria-label={`${CHURCH.name} — home`}>
-        <img
-          src={CHURCH.logo}
-          alt=""
-          width="40"
-          height="40"
-          class="nav-mark w-9 h-9 md:w-10 md:h-10"
-        />
+        <img src={CHURCH.logo} alt="" width="40" height="40" class="nav-mark w-9 h-9 md:w-10 md:h-10" />
         <span class="nav-logo font-display text-2xl tracking-tight">{CHURCH.name}</span>
       </a>
 
       <div class="hidden md:flex items-center">
-        <div class="nav-links relative flex items-center gap-1">
-          <span class="nav-indicator" aria-hidden="true"></span>
+        <div class="nav-links flex items-center gap-1">
           {
-            links.map((l) => (
-              <a
-                href={l.href}
-                class={`nav-link text-label-sm uppercase tracking-[0.14em] ${isActive(l.href) ? 'is-active' : ''}`}
-                aria-current={isActive(l.href) ? 'page' : undefined}
-              >
-                {l.label}
-              </a>
-            ))
+            entries.map((e) =>
+              isGroup(e) ? (
+                <div class="nav-group relative">
+                  <button
+                    type="button"
+                    class={`nav-link nav-trigger inline-flex items-center gap-1.5 text-label-sm uppercase tracking-[0.12em] ${entryActive(e) ? 'is-active' : ''}`}
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    {e.label}
+                    <svg class="nav-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                      <path d="M6 9l6 6 6-6" />
+                    </svg>
+                  </button>
+                  <div class="nav-menu" role="menu">
+                    {e.children.map((c) => (
+                      <a
+                        href={c.href}
+                        role="menuitem"
+                        class={`nav-menu-link text-label-sm uppercase tracking-[0.12em] ${leafActive(c.href) ? 'is-active' : ''}`}
+                        aria-current={leafActive(c.href) ? 'page' : undefined}
+                      >
+                        {c.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <a
+                  href={e.href}
+                  class={`nav-link text-label-sm uppercase tracking-[0.12em] ${entryActive(e) ? 'is-active' : ''}`}
+                  aria-current={entryActive(e) ? 'page' : undefined}
+                >
+                  {e.label}
+                </a>
+              ),
+            )
           }
         </div>
-        <a href="/visit" class="nav-cta ml-5 text-label-sm uppercase tracking-[0.14em]">New Here?</a>
+        <a href="/visit" class="nav-cta ml-6 text-label-sm uppercase tracking-[0.12em]">New Here?</a>
       </div>
 
       <button
@@ -74,20 +111,35 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     </nav>
   </div>
 
-  <div id="mobile-menu" class="md:hidden hidden mx-3 mt-2 rounded-2xl border border-accent/20 bg-primary/92 backdrop-blur-xl px-5 py-4 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)]">
+  <div id="mobile-menu" class="md:hidden hidden mx-3 mt-2 rounded-2xl border border-accent/20 bg-primary/92 backdrop-blur-xl px-5 py-5 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.6)]">
     <div class="flex flex-col gap-1">
       {
-        links.map((l) => (
-          <a
-            href={l.href}
-            class={`nav-mobile-link py-3 px-2 text-label-sm uppercase tracking-[0.14em] ${isActive(l.href) ? 'is-active' : ''}`}
-            aria-current={isActive(l.href) ? 'page' : undefined}
-          >
-            {l.label}
-          </a>
-        ))
+        entries.map((e) =>
+          isGroup(e) ? (
+            <div class="nav-mobile-group">
+              <span class="nav-mobile-label">{e.label}</span>
+              {e.children.map((c) => (
+                <a
+                  href={c.href}
+                  class={`nav-mobile-link ${leafActive(c.href) ? 'is-active' : ''}`}
+                  aria-current={leafActive(c.href) ? 'page' : undefined}
+                >
+                  {c.label}
+                </a>
+              ))}
+            </div>
+          ) : (
+            <a
+              href={e.href}
+              class={`nav-mobile-link ${entryActive(e) ? 'is-active' : ''}`}
+              aria-current={entryActive(e) ? 'page' : undefined}
+            >
+              {e.label}
+            </a>
+          ),
+        )
       }
-      <a href="/visit" class="nav-cta mt-3 text-center text-label-sm uppercase tracking-[0.14em]">New Here?</a>
+      <a href="/visit" class="nav-cta mt-4 text-center text-label-sm uppercase tracking-[0.12em]">New Here?</a>
     </div>
   </div>
 </header>
@@ -97,19 +149,30 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   onScroll();
   document.addEventListener('scroll', onScroll, { passive: true });
 
-  // Magnetic gold pill that slides under the hovered link.
-  const linksWrap = header?.querySelector('.nav-links');
-  const indicator = header?.querySelector('.nav-indicator') as HTMLElement | null;
-  const linkEls = linksWrap ? Array.from(linksWrap.querySelectorAll('.nav-link')) as HTMLElement[] : [];
-  const moveTo = (el: HTMLElement) => {
-    if (!indicator) return;
-    indicator.style.width = el.offsetWidth + 'px';
-    indicator.style.transform = `translate(${el.offsetLeft}px, -50%)`;
-    indicator.style.opacity = '1';
+  // Dropdown menus: CSS handles hover + keyboard focus-within; this adds
+  // click/tap toggling (touch devices have no hover) and outside-click / Escape close.
+  const groups = Array.from(document.querySelectorAll('[data-nav] .nav-group')) as HTMLElement[];
+  const closeAll = (except?: HTMLElement) => {
+    for (const g of groups) {
+      if (g === except) continue;
+      g.classList.remove('is-open');
+      g.querySelector('.nav-trigger')?.setAttribute('aria-expanded', 'false');
+    }
   };
-  linkEls.forEach((a) => a.addEventListener('mouseenter', () => moveTo(a)));
-  linksWrap?.addEventListener('mouseleave', () => {
-    if (indicator) indicator.style.opacity = '0';
+  for (const g of groups) {
+    const trigger = g.querySelector('.nav-trigger') as HTMLButtonElement | null;
+    trigger?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const open = g.classList.toggle('is-open');
+      trigger.setAttribute('aria-expanded', String(open));
+      closeAll(g);
+    });
+  }
+  document.addEventListener('click', (e) => {
+    if (!(e.target as HTMLElement)?.closest('.nav-group')) closeAll();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
   });
 
   const toggle = document.getElementById('mobile-menu-toggle');
