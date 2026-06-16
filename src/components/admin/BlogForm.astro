@@ -57,6 +57,7 @@ const isEdit = !!post;
     const fd = new FormData();
     fd.append('image', input.files[0]);
     if (status) status.textContent = 'Uploading…';
+    if (btn instanceof HTMLButtonElement) btn.disabled = true; // guard against double-submit mid-upload
     try {
       const res = await fetch('/api/admin/blog/upload', { method: 'POST', body: fd });
       const data = await res.json();
@@ -66,6 +67,8 @@ const isEdit = !!post;
       if (status) status.textContent = 'Inserted ✓';
     } catch (e) {
       if (status) status.textContent = e instanceof Error ? e.message : 'Upload failed';
+    } finally {
+      if (btn instanceof HTMLButtonElement) btn.disabled = false;
     }
   });
 </script>
