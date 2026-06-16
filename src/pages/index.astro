@@ -395,8 +395,8 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
             View all
           </a>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
-          {latestPosts.map((p, i) => (
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10" data-reveal>
+          {latestPosts.map((p) => (
             <BlogCard post={p} image={mediaUrl(p.cover_key) ?? PLACEHOLDER.card} />
           ))}
         </div>
