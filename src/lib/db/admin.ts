@@ -4,6 +4,7 @@ export interface AdminCounts {
   ministries: number;
   visitors: number;
   registrations: number;
+  blog: number;
 }
 
 export async function getCounts(db: D1Database): Promise<AdminCounts> {
@@ -14,10 +15,11 @@ export async function getCounts(db: D1Database): Promise<AdminCounts> {
         (SELECT COUNT(*) FROM events) AS events,
         (SELECT COUNT(*) FROM ministries) AS ministries,
         (SELECT COUNT(*) FROM visitors) AS visitors,
-        (SELECT COUNT(*) FROM event_registrations) AS registrations`,
+        (SELECT COUNT(*) FROM event_registrations) AS registrations,
+        (SELECT COUNT(*) FROM blog_posts) AS blog`,
     )
     .first<AdminCounts>();
-  return row ?? { sermons: 0, events: 0, ministries: 0, visitors: 0, registrations: 0 };
+  return row ?? { sermons: 0, events: 0, ministries: 0, visitors: 0, registrations: 0, blog: 0 };
 }
 
 export interface AdminSermonRow {
@@ -82,5 +84,23 @@ export async function listVisitors(db: D1Database): Promise<AdminVisitorRow[]> {
       'SELECT id, name, email, phone, visiting_service, status, created_at FROM visitors ORDER BY created_at DESC, id DESC',
     )
     .all<AdminVisitorRow>();
+  return results;
+}
+
+export interface AdminBlogRow {
+  id: number;
+  title: string;
+  slug: string;
+  category: string | null;
+  published_at: string | null;
+  published: number;
+}
+export async function listAllPosts(db: D1Database): Promise<AdminBlogRow[]> {
+  const { results } = await db
+    .prepare(
+      `SELECT id, title, slug, category, published_at, published FROM blog_posts
+       ORDER BY COALESCE(published_at, created_at) DESC, id DESC`,
+    )
+    .all<AdminBlogRow>();
   return results;
 }
