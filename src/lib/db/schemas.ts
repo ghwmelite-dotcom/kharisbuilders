@@ -174,3 +174,16 @@ export const VolunteerSignupInputSchema = z.object({
   message: z.string().trim().max(2000).optional().or(z.literal('')),
 });
 export type VolunteerSignupInput = z.infer<typeof VolunteerSignupInputSchema>;
+
+export const BlogPostInputSchema = z.object({
+  title: z.string().trim().min(1).max(200),
+  slug: z.string().trim().max(200).optional().or(z.literal('')),
+  author: z.string().trim().max(120).optional().or(z.literal('')),
+  category: z.string().trim().max(80).optional().or(z.literal('')),
+  tags: z.string().trim().max(300).optional().or(z.literal('')),
+  excerpt: z.string().trim().max(500).optional().or(z.literal('')),
+  body: z.string().trim().min(1).max(100000),
+  published_at: z.string().trim().max(20).optional().or(z.literal('')),
+  published: z.coerce.boolean().default(false),
+});
+export type BlogPostInput = z.infer<typeof BlogPostInputSchema>;
