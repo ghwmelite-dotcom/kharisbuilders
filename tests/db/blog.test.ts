@@ -51,11 +51,18 @@ describe('blog data layer', () => {
     expect(post!.slug).toBe('grace-abounds-2');
   });
 
-  it('lists only published posts, newest published_at first', async () => {
+  it('lists only published posts, newest first', async () => {
     await createPost(ctx.db, { title: 'Draft One', body: 'x', published: false }, 'a@x.org');
+    await createPost(ctx.db, { title: 'Older Post', body: 'x', published: true, published_at: '2020-01-01' }, 'a@x.org');
+    await createPost(ctx.db, { title: 'Newer Post', body: 'x', published: true, published_at: '2030-01-01' }, 'a@x.org');
     const published = await listPublishedPosts(ctx.db);
+    // drafts excluded
     expect(published.every((p) => p.slug !== 'draft-one')).toBe(true);
-    expect(published[0].published_at >= (published[1]?.published_at ?? '')).toBe(true);
+    // deterministic ordering: the explicitly-newer post sorts before the explicitly-older one
+    const newerIdx = published.findIndex((p) => p.slug === 'newer-post');
+    const olderIdx = published.findIndex((p) => p.slug === 'older-post');
+    expect(newerIdx).toBeGreaterThanOrEqual(0);
+    expect(olderIdx).toBeGreaterThan(newerIdx);
   });
 
   it('filters by category and lists distinct categories', async () => {
