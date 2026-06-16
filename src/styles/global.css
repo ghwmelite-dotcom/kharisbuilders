@@ -326,15 +326,26 @@ html {
 [data-nav] .nav-link {
   position: relative;
   z-index: 1;
-  padding: 0.55rem 0.85rem;
+  padding: 0.55rem 0.9rem;
   border-radius: 0.65rem;
   color: rgba(255, 255, 255, 0.78);
-  transition: color 0.35s ease;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
 }
 [data-nav] .nav-link:hover,
 [data-nav] .nav-link:focus-visible,
 [data-nav] .nav-link.is-active {
   color: #fff;
+}
+/* soft pill behind the hovered / open item (replaces the old magnetic indicator) */
+[data-nav] .nav-link:hover,
+[data-nav] .nav-group:hover .nav-trigger,
+[data-nav] .nav-group:focus-within .nav-trigger,
+[data-nav] .nav-group.is-open .nav-trigger {
+  background: color-mix(in srgb, var(--kb-accent) 14%, transparent);
 }
 /* persistent glowing gold underline for the current page */
 [data-nav] .nav-link.is-active::after {
@@ -348,25 +359,82 @@ html {
   background: linear-gradient(90deg, transparent, var(--kb-accent), transparent);
   box-shadow: 0 0 10px color-mix(in srgb, var(--kb-accent) 70%, transparent);
 }
-/* magnetic gold pill — JS slides it under the hovered link */
-[data-nav] .nav-indicator {
+/* ── Dropdown menus ───────────────────────────────────────────── */
+[data-nav] .nav-caret {
+  width: 0.7rem;
+  height: 0.7rem;
+  opacity: 0.7;
+  transition: transform 0.3s ease;
+}
+[data-nav] .nav-group:hover .nav-caret,
+[data-nav] .nav-group:focus-within .nav-caret,
+[data-nav] .nav-group.is-open .nav-caret {
+  transform: rotate(180deg);
+}
+[data-nav] .nav-menu {
   position: absolute;
-  top: 50%;
-  left: 0;
-  width: 0;
-  height: 2.4rem;
-  transform: translate(0, -50%);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--kb-accent) 15%, transparent);
-  border: 1px solid color-mix(in srgb, var(--kb-accent) 30%, transparent);
-  box-shadow: 0 0 26px -8px color-mix(in srgb, var(--kb-accent) 65%, transparent);
+  top: calc(100% + 0.5rem);
+  left: 50%;
+  min-width: 12rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.55rem;
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--kb-primary) 94%, transparent);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid color-mix(in srgb, var(--kb-accent) 24%, transparent);
+  box-shadow: 0 24px 55px -22px rgba(0, 0, 0, 0.7);
   opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 6px);
   pointer-events: none;
-  z-index: 0;
+  z-index: 20;
   transition:
-    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-    width 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.35s ease;
+    opacity 0.2s ease,
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.2s;
+}
+/* invisible bridge so the cursor can cross the gap without the menu closing */
+[data-nav] .nav-menu::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -0.6rem;
+  height: 0.6rem;
+}
+[data-nav] .nav-group:hover .nav-menu,
+[data-nav] .nav-group:focus-within .nav-menu,
+[data-nav] .nav-group.is-open .nav-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+[data-nav] .nav-menu-link {
+  position: relative;
+  padding: 0.6rem 0.85rem;
+  border-radius: 0.6rem;
+  color: rgba(255, 255, 255, 0.78);
+  white-space: nowrap;
+  transition:
+    color 0.25s ease,
+    background-color 0.25s ease;
+}
+[data-nav] .nav-menu-link:hover,
+[data-nav] .nav-menu-link:focus-visible,
+[data-nav] .nav-menu-link.is-active {
+  color: #fff;
+  background: color-mix(in srgb, var(--kb-accent) 16%, transparent);
+}
+[data-nav] .nav-menu-link.is-active {
+  color: var(--kb-accent);
+}
+[data-nav] .nav-menu-link:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--kb-accent) 80%, transparent);
+  outline-offset: 2px;
 }
 
 /* CTA — a gold jewel that fills on hover */
@@ -419,6 +487,30 @@ html {
   color: #fff;
   background: color-mix(in srgb, var(--kb-accent) 14%, transparent);
 }
+/* mobile grouped sections */
+[data-nav] .nav-mobile-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding-top: 0.4rem;
+  margin-top: 0.4rem;
+  border-top: 1px solid color-mix(in srgb, var(--kb-accent) 12%, transparent);
+}
+[data-nav] .nav-mobile-group:first-child {
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+[data-nav] .nav-mobile-label {
+  padding: 0.35rem 0.5rem 0.1rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--kb-accent) 85%, #fff);
+}
+[data-nav] .nav-mobile-group .nav-mobile-link {
+  padding-left: 1rem;
+}
 
 /* focus rings (keyboard a11y) */
 [data-nav] .nav-link:focus-visible,
@@ -461,7 +553,8 @@ html {
 @media (prefers-reduced-motion: reduce) {
   [data-nav] .nav-bar,
   [data-nav] .nav-shell,
-  [data-nav] .nav-indicator,
+  [data-nav] .nav-menu,
+  [data-nav] .nav-caret,
   [data-nav] .nav-cta,
   [data-nav] .nav-cta::before {
     transition: none;
