@@ -1,7 +1,5 @@
 import { marked } from 'marked';
 
-marked.setOptions({ gfm: true, breaks: false });
-
 /**
  * Render admin-authored Markdown to HTML for public display.
  *
@@ -10,27 +8,30 @@ marked.setOptions({ gfm: true, breaks: false });
  * Rendering happens server-side only — nothing here ships to the browser.
  */
 export function renderMarkdown(md: string): string {
-  const html = marked.parse(md ?? '', { async: false }) as string;
+  const html = marked.parse(md ?? '', { gfm: true, breaks: false, async: false }) as string;
   return sanitize(addImageLoading(html));
 }
 
-/** Inject lazy-loading + async decoding into every <img>. */
+/** Inject lazy-loading + async decoding into every <img> that doesn't already carry a loading= attribute. */
 function addImageLoading(html: string): string {
-  return html.replace(/<img\s/gi, '<img loading="lazy" decoding="async" ');
+  return html.replace(/<img(?![^>]*\bloading=)\s/gi, '<img loading="lazy" decoding="async" ');
 }
 
-/** Strip script/style/iframe tags (including their content), inline event handlers, and javascript: URLs. */
+/** Strip dangerous tags (including their content), inline event handlers, and dangerous URI schemes. */
 function sanitize(html: string): string {
   return html
     // Remove entire block tags including their inner content
-    .replace(/<(?:script|style|iframe|object|embed)\b[^>]*>[\s\S]*?<\/(?:script|style|iframe|object|embed)>/gi, '')
+    .replace(/<(?:script|style|iframe|object|embed|base|form|meta)\b[^>]*>[\s\S]*?<\/(?:script|style|iframe|object|embed|base|form|meta)>/gi, '')
     // Remove any remaining self-closing or orphaned opening/closing tags
-    .replace(/<\/?(?:script|style|iframe|object|embed)\b[^>]*>/gi, '')
+    .replace(/<\/?(?:script|style|iframe|object|embed|base|form|meta)\b[^>]*>/gi, '')
     // Strip inline event handlers (quoted and unquoted variants)
     .replace(/\son\w+\s*=\s*"[^"]*"/gi, '')
     .replace(/\son\w+\s*=\s*'[^']*'/gi, '')
     .replace(/\son\w+\s*=\s*[^\s>]+/gi, '')
-    .replace(/(href|src)\s*=\s*("|')\s*javascript:[^"']*\2/gi, '$1=$2#$2');
+    // Neutralise javascript: URIs in href/src attributes
+    .replace(/(href|src)\s*=\s*("|')\s*javascript:[^"']*\2/gi, '$1=$2#$2')
+    // Neutralise data: URIs in href/src attributes
+    .replace(/(href|src)\s*=\s*("|')\s*data:[^"']*\2/gi, '$1=$2#$2');
 }
 
 /** Strip markdown syntax and return the first ~`words` words, with an ellipsis if truncated. */
@@ -40,7 +41,8 @@ export function deriveExcerpt(body: string, words = 30): string {
     .replace(/^#{1,6}\s+.*$/gm, ' ')           // ATX headings (entire line)
     .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')      // images
     .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')    // links -> link text
-    .replace(/[>*_`~-]/g, ' ')                   // markdown punctuation (not #, already handled)
+    .replace(/^\s*[-*+]\s+/gm, ' ')               // leading list-marker hyphens/bullets
+    .replace(/[>*_`~]/g, ' ')                     // remaining markdown punctuation (preserves intra-word hyphens)
     .replace(/\s+/g, ' ')
     .trim();
   if (!text) return '';
