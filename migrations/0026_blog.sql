@@ -1,3 +1,4 @@
+-- Blog posts: Markdown body, publishing workflow, cover image stored in R2 under the blog/ prefix.
 CREATE TABLE IF NOT EXISTS blog_posts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,
