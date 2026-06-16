@@ -74,7 +74,7 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
   img: mediaUrl(cd.image_key ?? null) ?? cardImageByHref[cd.href] ?? cardFallbackImg[i % cardFallbackImg.length],
 }));
 ---
-<PublicLayout title={`${SITE.name} | ${SITE.tagline}`} image={heroSlides[0].src}>
+<PublicLayout title={`${SITE.name} | ${SITE.tagline}`} image="/images/hero/slide-2.jpg">
   <!-- Cinematic hero -->
   <section class="relative min-h-dvh flex flex-col overflow-hidden bg-primary">
     <HeroSlides slides={heroSlides} />

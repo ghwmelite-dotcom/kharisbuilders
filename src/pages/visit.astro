@@ -30,7 +30,7 @@ const mapsHref = address
   ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
   : 'https://www.google.com/maps';
 ---
-<PublicLayout title={`Visit Us | ${SITE.name}`} description={`Plan your visit to ${SITE.name}.`} image={cimg('visit.hero_image')}>
+<PublicLayout title={`Visit Us | ${SITE.name}`} description={`Plan your visit to ${SITE.name}.`} image="/images/pages/visit.jpg">
   <!-- Hero -->
   <PageHero image={cimg('visit.hero_image')}>
     <span class="font-label-sm uppercase tracking-[0.3em] text-heritage-gold mb-4 block hero-shadow">{c('visit.hero_kicker')}</span>
