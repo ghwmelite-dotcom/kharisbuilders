@@ -11,6 +11,8 @@ import { getAllContent } from '../lib/db/content';
 import { makeContent, makeImage } from '../lib/content/content';
 import { mediaUrl } from '../lib/media';
 import { listHomeCards } from '../lib/db/homeCards';
+import { listPublishedPosts } from '../lib/db/blog';
+import BlogCard from '../components/BlogCard.astro';
 import { PLACEHOLDER } from '../lib/images';
 import { SITE } from '../lib/seo';
 import { CHURCH, feature } from '../config/church';
@@ -20,19 +22,22 @@ let events: Awaited<ReturnType<typeof listUpcomingEvents>> = [];
 let serviceTimes: Array<{ name: string; time: string; note?: string }> = [];
 let contentMap: Record<string, string> = {};
 let dbCards: Awaited<ReturnType<typeof listHomeCards>> = [];
+let latestPosts: Awaited<ReturnType<typeof listPublishedPosts>> = [];
 try {
-  const [s, e, settings, cm, cards] = await Promise.all([
+  const [s, e, settings, cm, cards, posts] = await Promise.all([
     listPublishedSermons(env.DB, 1),
     listUpcomingEvents(env.DB, 3),
     getAllSettings(env.DB),
     getAllContent(env.DB),
     listHomeCards(env.DB),
+    listPublishedPosts(env.DB, 3),
   ]);
   latestSermon = s[0] ?? null;
   events = e;
   serviceTimes = settings.service_times ? JSON.parse(settings.service_times) : [];
   contentMap = cm;
   dbCards = cards;
+  latestPosts = posts;
 } catch {
   /* fall back to static content */
 }
@@ -377,6 +382,29 @@ const introCards = (dbCards.length ? dbCards : defaultCards).map((cd, i) => ({
       </div>
     </div>
   </section>
+  )}
+  {feature('blog') && latestPosts.length > 0 && (
+    <section class="py-24 md:py-36 bg-surface-container-low">
+      <div class="max-w-[var(--container-max)] mx-auto px-margin-mobile md:px-margin-desktop">
+        <div class="flex justify-between items-end mb-16" data-reveal>
+          <div>
+            <span class="text-heritage-gold font-label-sm uppercase tracking-[0.3em] mb-4 block">From the Blog</span>
+            <h2 class="font-display text-display-mobile md:text-headline-lg text-primary">Latest Reflections</h2>
+          </div>
+          <a href="/blog" class="hidden md:inline-flex items-center gap-2 text-primary font-label-md uppercase tracking-[0.14em] link-underline">
+            View all
+          </a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+          {latestPosts.map((p, i) => (
+            <BlogCard post={p} image={mediaUrl(p.cover_key) ?? PLACEHOLDER.card} />
+          ))}
+        </div>
+        <div class="text-center mt-12 md:hidden">
+          <a href="/blog" class="text-primary font-label-md uppercase tracking-[0.14em] border-b border-heritage-gold/40">View all posts</a>
+        </div>
+      </div>
+    </section>
   )}
   {
     feature('community') && (
