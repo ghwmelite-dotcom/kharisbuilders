@@ -140,7 +140,7 @@ export const CONTENT_PAGES: ContentPage[] = [
       {
         title: 'Images',
         fields: [
-          { key: 'about.hero_image', label: 'Hero background', type: 'image', default: PLACEHOLDER.wide },
+          { key: 'about.hero_image', label: 'Hero background', type: 'image', default: '/images/pages/about.webp' },
           { key: 'about.vision_image', label: 'Vision & Mission image', type: 'image', default: PLACEHOLDER.card },
         ],
       },
@@ -223,7 +223,7 @@ export const CONTENT_PAGES: ContentPage[] = [
       {
         title: 'Images',
         fields: [
-          { key: 'visit.hero_image', label: 'Hero background', type: 'image', default: PLACEHOLDER.wide },
+          { key: 'visit.hero_image', label: 'Hero background', type: 'image', default: '/images/pages/visit.webp' },
           { key: 'visit.afterward_image', label: '"Afterward" image', type: 'image', default: PLACEHOLDER.card },
         ],
       },
@@ -236,10 +236,10 @@ export const CONTENT_PAGES: ContentPage[] = [
       {
         title: 'Hero backgrounds',
         fields: [
-          { key: 'pages.sermons_hero', label: 'Sermons hero', type: 'image', default: PLACEHOLDER.wide },
-          { key: 'pages.events_hero', label: 'Events hero', type: 'image', default: PLACEHOLDER.wide },
-          { key: 'pages.ministries_hero', label: 'Ministries hero', type: 'image', default: PLACEHOLDER.wide },
-          { key: 'pages.giving_hero', label: 'Giving hero', type: 'image', default: PLACEHOLDER.wide },
+          { key: 'pages.sermons_hero', label: 'Sermons hero', type: 'image', default: '/images/pages/sermons.webp' },
+          { key: 'pages.events_hero', label: 'Events hero', type: 'image', default: '/images/pages/events.webp' },
+          { key: 'pages.ministries_hero', label: 'Ministries hero', type: 'image', default: '/images/pages/ministries.webp' },
+          { key: 'pages.giving_hero', label: 'Giving hero', type: 'image', default: '/images/pages/giving.webp' },
         ],
       },
     ],
