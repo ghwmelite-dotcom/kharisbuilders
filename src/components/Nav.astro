@@ -2,13 +2,14 @@
 import Icon from './Icon.astro';
 import { CHURCH, feature, type ChurchFeatures } from '../config/church';
 
-type Leaf = { label: string; href: string; gate?: keyof ChurchFeatures };
+// `highlight` renders the item as a distinct gold-tagged pill (used for Prayer Wall).
+type Leaf = { label: string; href: string; gate?: keyof ChurchFeatures; highlight?: boolean };
 type Group = { label: string; children: Leaf[] };
 type Entry = Leaf | Group;
 const isGroup = (e: Entry): e is Group => 'children' in e;
 
-// Top-level nav is intentionally small (≈5 items). Secondary destinations live in
-// grouped dropdowns. "Visit" is reached via the persistent "New Here?" CTA.
+// Top-level nav is intentionally small. Secondary destinations live in grouped
+// dropdowns; Prayer Wall is pulled out and highlighted; "Visit" is the "New Here?" CTA.
 const allEntries: Entry[] = [
   { label: 'Home', href: '/' },
   {
@@ -18,21 +19,16 @@ const allEntries: Entry[] = [
       { label: 'Ministries', href: '/ministries', gate: 'ministries' },
     ],
   },
-  { label: 'Sermons', href: '/sermons', gate: 'sermons' },
   {
     label: 'Media',
     children: [
+      { label: 'Sermons', href: '/sermons', gate: 'sermons' },
       { label: 'Watch Live', href: '/live', gate: 'live' },
       { label: 'Blog', href: '/blog', gate: 'blog' },
     ],
   },
-  {
-    label: 'Connect',
-    children: [
-      { label: 'Events', href: '/events', gate: 'events' },
-      { label: 'Prayer Wall', href: '/prayer', gate: 'community' },
-    ],
-  },
+  { label: 'Events', href: '/events', gate: 'events' },
+  { label: 'Prayer Wall', href: '/prayer', gate: 'community', highlight: true },
   { label: 'Give', href: '/giving', gate: 'giving' },
 ];
 
@@ -84,6 +80,17 @@ const entryActive = (e: Entry) => (isGroup(e) ? e.children.some((c) => leafActiv
                     ))}
                   </div>
                 </div>
+              ) : (e as Leaf).highlight ? (
+                <a
+                  href={e.href}
+                  class={`nav-link nav-highlight inline-flex items-center gap-1.5 text-label-sm uppercase tracking-[0.12em] ${entryActive(e) ? 'is-active' : ''}`}
+                  aria-current={entryActive(e) ? 'page' : undefined}
+                >
+                  <svg class="nav-hl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+                  </svg>
+                  {e.label}
+                </a>
               ) : (
                 <a
                   href={e.href}
@@ -131,9 +138,14 @@ const entryActive = (e: Entry) => (isGroup(e) ? e.children.some((c) => leafActiv
           ) : (
             <a
               href={e.href}
-              class={`nav-mobile-link ${entryActive(e) ? 'is-active' : ''}`}
+              class={`nav-mobile-link ${(e as Leaf).highlight ? 'nav-mobile-highlight' : ''} ${entryActive(e) ? 'is-active' : ''}`}
               aria-current={entryActive(e) ? 'page' : undefined}
             >
+              {(e as Leaf).highlight && (
+                <svg class="nav-hl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+                </svg>
+              )}
               {e.label}
             </a>
           ),
