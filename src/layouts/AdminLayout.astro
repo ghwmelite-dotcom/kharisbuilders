@@ -61,6 +61,10 @@ const nav = allNav.filter((n) => !n.gate || feature(n.gate));
         }
       </nav>
       <p class="text-on-primary/50 text-xs mt-8 break-words">{email}</p>
+      <!-- Auth is Cloudflare Access, not an app session — logout lives at Access's endpoint. -->
+      <a href="/cdn-cgi/access/logout" class="text-on-primary/50 hover:text-on-primary text-xs mt-2 inline-block uppercase tracking-wider">
+        Log out
+      </a>
     </aside>
     <main class="p-6 md:p-12 bg-surface text-on-surface">
       <h1 class="font-[var(--font-display)] text-3xl text-primary mb-8">{title}</h1>
