@@ -99,6 +99,7 @@ export interface ChurchConfig {
   description: string;
   url: string;
   logo: string;
+  logoMark: string;
   ogImage: string;
   locale: string;
   currency: string;
@@ -118,6 +119,7 @@ export const CHURCH: ChurchConfig = {
   description: ${s(input.description)},
   url: ${s(input.url)},
   logo: '/images/logo-placeholder.svg',
+  logoMark: '/images/logo-placeholder.svg',
   ogImage: '/images/placeholder-wide.svg',
   locale: ${s(input.locale)},
   currency: ${s(input.currency)},

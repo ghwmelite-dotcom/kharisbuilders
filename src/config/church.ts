@@ -20,6 +20,7 @@ export interface ChurchConfig {
   description: string;
   url: string;
   logo: string;
+  logoMark: string;
   ogImage: string;
   locale: string;
   currency: string;
@@ -39,6 +40,7 @@ export const CHURCH: ChurchConfig = {
   description: "Kharis Builders is a Christ-centred church family building lives on the foundation of God's grace — through worship, sound teaching, and authentic community.",
   url: "https://kharisbuilders.com",
   logo: '/images/logo.png',
+  logoMark: '/images/logo-mark.png',
   ogImage: '/images/placeholder-wide.svg',
   locale: "en",
   currency: "GHS",
