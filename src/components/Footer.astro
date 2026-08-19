@@ -58,9 +58,8 @@ const explore = [
     <div class="grid grid-cols-2 md:grid-cols-12 gap-10 md:gap-8">
       <!-- Brand -->
       <div class="col-span-2 md:col-span-5">
-        <div class="flex items-center gap-3 mb-5">
-          <img src={CHURCH.logo} alt="" class="w-10 h-10" />
-          <span class="font-display text-3xl text-gold-gradient">{CHURCH.name}</span>
+        <div class="mb-5">
+          <img src={CHURCH.logo} alt={CHURCH.name} width="500" height="157" class="h-12 w-auto" />
         </div>
         <p class="font-body text-body-md text-on-primary/65 max-w-xs leading-relaxed mb-8">
           {CHURCH.description}

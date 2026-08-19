@@ -45,9 +45,8 @@ const entryActive = (e: Entry) => (isGroup(e) ? e.children.some((c) => leafActiv
 <header id="site-header" data-nav class="fixed top-0 inset-x-0 z-50">
   <div class="nav-shell mx-auto max-w-[var(--container-max)] px-3 md:px-6">
     <nav class="nav-bar relative flex h-[4.75rem] items-center justify-between px-5 md:px-7">
-      <a href="/" class="nav-brand flex items-center gap-3 group" aria-label={`${CHURCH.name} — home`}>
-        <img src={CHURCH.logo} alt="" width="40" height="40" class="nav-mark w-9 h-9 md:w-10 md:h-10" />
-        <span class="nav-logo font-display text-2xl tracking-tight">{CHURCH.name}</span>
+      <a href="/" class="nav-brand flex items-center group" aria-label={`${CHURCH.name} — home`}>
+        <img src={CHURCH.logo} alt="" width="500" height="157" class="nav-mark h-9 md:h-10 w-auto" />
       </a>
 
       <div class="hidden md:flex items-center">

@@ -320,9 +320,6 @@ html {
   transition: opacity 0.55s ease;
 }
 
-[data-nav] .nav-logo {
-  color: #fff;
-}
 [data-nav] .nav-link {
   position: relative;
   z-index: 1;
@@ -582,7 +579,7 @@ html {
     transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   }
   [data-nav] .nav-brand:hover .nav-mark {
-    transform: rotate(45deg) scale(1.05);
+    transform: scale(1.03);
   }
 }
 @media (prefers-reduced-motion: reduce) {
