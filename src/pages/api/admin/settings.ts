@@ -12,6 +12,8 @@ const ALLOWED = [
   'socials',
   'default_theme',
   'turnstile_site_key',
+  'paystack_public_key',
+  'currency',
 ];
 
 export const POST: APIRoute = async ({ request }) => {
@@ -23,6 +25,8 @@ export const POST: APIRoute = async ({ request }) => {
     const v = form.get(key);
     if (v != null) entries[key] = String(v);
   }
+  // Unchecked checkboxes submit nothing — always persist the explicit state.
+  entries['giving_enabled'] = form.get('giving_enabled') != null ? 'true' : 'false';
   await setSettings(env.DB, entries);
   return new Response(null, { status: 303, headers: { Location: '/admin/settings?saved=1' } });
 };

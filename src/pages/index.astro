@@ -44,11 +44,18 @@ try {
 const c = makeContent(contentMap);
 const cimg = makeImage(contentMap);
 // Lead with the kente-choir shot (most striking) — also becomes the OG/share image.
-const heroSlides = [
-  { src: '/images/hero/slide-2.webp' },
-  { src: '/images/hero/slide-1.webp' },
-  { src: '/images/hero/slide-3.webp' },
-];
+// A hero image uploaded in /admin is stored as a bare R2 key and replaces the bundled
+// slide show; legacy absolute paths (e.g. backfilled defaults) are ignored.
+const storedHero = (contentMap['home.hero_image'] ?? '').trim();
+const customHero =
+  storedHero && !storedHero.startsWith('/') && !storedHero.startsWith('http') ? mediaUrl(storedHero) : null;
+const heroSlides = customHero
+  ? [{ src: customHero }]
+  : [
+      { src: '/images/hero/slide-2.webp' },
+      { src: '/images/hero/slide-1.webp' },
+      { src: '/images/hero/slide-3.webp' },
+    ];
 const scriptureBg = `linear-gradient(rgba(44,23,69,0.86), rgba(44,23,69,0.92)), url('${cimg('home.scripture_image')}')`;
 const eventImages = [PLACEHOLDER.card, PLACEHOLDER.card, PLACEHOLDER.card];
 const fmtDate = (s: string) => s?.slice(0, 10) ?? '';

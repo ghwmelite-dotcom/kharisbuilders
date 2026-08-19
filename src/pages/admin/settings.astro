@@ -20,6 +20,9 @@ const saved = Astro.url.searchParams.get('saved') === '1';
     <Field label="Service times (JSON)" name="service_times" textarea value={s.service_times ?? ''} />
     <Field label="Socials (JSON)" name="socials" textarea value={s.socials ?? ''} />
     <Field label="Turnstile site key" name="turnstile_site_key" value={s.turnstile_site_key ?? ''} />
+    <Field label="Paystack public key" name="paystack_public_key" value={s.paystack_public_key ?? ''} />
+    <Field label="Currency" name="currency" value={s.currency ?? ''} />
+    <Field label="Enable online giving" name="giving_enabled" type="checkbox" checked={s.giving_enabled === 'true'} />
     <Button type="submit" variant="primary">Save settings</Button>
   </form>
 </AdminLayout>

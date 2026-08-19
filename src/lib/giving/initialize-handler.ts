@@ -76,7 +76,7 @@ export async function handleInitialize(
   const turnstileOk = await verifyTurnstileWith(doFetch, env.TURNSTILE_SECRET_KEY ?? '', token, ip);
   if (!turnstileOk) return back('turnstile');
 
-  const currency = (await getSetting(env.DB, 'currency').catch(() => null)) ?? CHURCH.currency;
+  const currency = (await getSetting(env.DB, 'currency').catch(() => null)) || CHURCH.currency;
   const type = String(form.get('type') ?? 'one_time');
 
   if (type === 'recurring') {

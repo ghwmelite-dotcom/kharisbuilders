@@ -19,7 +19,7 @@ try {
   const settings = await getAllSettings(env.DB);
   givingEnabled = settings.giving_enabled === 'true';
   siteKey = settings.turnstile_site_key ?? siteKey;
-  currency = settings.currency ?? CHURCH.currency;
+  currency = settings.currency || CHURCH.currency;
   funds = await listActiveFunds(env.DB);
 } catch {
   /* defaults; page degrades gracefully */
